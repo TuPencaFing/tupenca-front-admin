@@ -54,42 +54,39 @@ function Dashboard() {
           <Grid container spacing={3}>
             <Grid item xs={12} sm={6} xl={3}>
               <MiniStatisticsCard
-                title={{ text: "today's money" }}
+                title={{ text: "Ganancias del mes" }}
                 count="$53,000"
-                percentage={{ color: "success", text: "+55%" }}
-                icon={{ color: "info", component: "paid" }}
+                percentage={{ color: "success", text: "+15%" }}
+                icon={{ color: "success", component: "paid" }}
               />
             </Grid>
             <Grid item xs={12} sm={6} xl={3}>
               <MiniStatisticsCard
-                title={{ text: "today's users" }}
-                count="2,300"
+                title={{ text: "Usuarios registrados" }}
+                count="2,100"
                 percentage={{ color: "success", text: "+3%" }}
-                icon={{ color: "info", component: "public" }}
+                icon={{ color: "success", component: "public" }}
               />
             </Grid>
             <Grid item xs={12} sm={6} xl={3}>
               <MiniStatisticsCard
-                title={{ text: "new clients" }}
-                count="+3,462"
+                title={{ text: "Empresas registradas" }}
+                count="17"
                 percentage={{ color: "error", text: "-2%" }}
-                icon={{ color: "info", component: "emoji_events" }}
+                icon={{ color: "error", component: "shopping_cart" }}
               />
             </Grid>
             <Grid item xs={12} sm={6} xl={3}>
               <MiniStatisticsCard
-                title={{ text: "sales" }}
-                count="$103,430"
+                title={{ text: "Pencas activas" }}
+                count="1302"
                 percentage={{ color: "success", text: "+5%" }}
-                icon={{
-                  color: "info",
-                  component: "shopping_cart",
-                }}
+                icon={{ color: "success", component: "emoji_events"}}
               />
             </Grid>
           </Grid>
         </SoftBox>
-        <SoftBox mb={3}>
+        {/*<SoftBox mb={3}>
           <Grid container spacing={3}>
             <Grid item xs={12} lg={7}>
               <BuildByDevelopers />
@@ -98,7 +95,7 @@ function Dashboard() {
               <WorkWithTheRockets />
             </Grid>
           </Grid>
-        </SoftBox>
+        </SoftBox> 
         <SoftBox mb={3}>
           <Grid container spacing={3}>
             <Grid item xs={12} lg={5}>
@@ -134,7 +131,7 @@ function Dashboard() {
               />
             </Grid>
           </Grid>
-        </SoftBox>
+        </SoftBox>  */}
         <Grid container spacing={3}>
           <Grid item xs={12} md={6} lg={8}>
             <Projects />
