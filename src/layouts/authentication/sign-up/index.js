@@ -27,6 +27,7 @@ import SoftBox from "components/SoftBox";
 import SoftTypography from "components/SoftTypography";
 import SoftInput from "components/SoftInput";
 import SoftButton from "components/SoftButton";
+import SoftAlert from "components/SoftAlert";
 
 // Authentication layout components
 import BasicLayout from "layouts/authentication/components/BasicLayout";
@@ -34,23 +35,64 @@ import Socials from "layouts/authentication/components/Socials";
 import Separator from "layouts/authentication/components/Separator";
 
 // Images
-import curved6 from "assets/images/curved-images/curved14.jpg";
+import curved6 from "assets/images/logo4.png";
+
+import signupApi from "../../../api/signup";
 
 function SignUp() {
   const [agreement, setAgremment] = useState(true);
+
+  const [isSuccess, setIsSuccess] = useState('');
+  const [showMsg, setShowMsg] = useState(false);
+  const [jsonResponseMessage, setJsonResponseMessage] = useState('');
+
+  const [email, setEmail] = useState('');
+
+  const [username, setUsername] = useState('');
+
+  const [password, setPassword] = useState('');
+
+  const jsonError = (name) => (
+    <SoftTypography variant="body2" color="white">
+      Error: {name}.
+    </SoftTypography>
+  );
+
+  const jsonSuccess = () => (
+    <SoftTypography variant="body2" color="white">
+      Usuario creado con éxito.
+    </SoftTypography>
+  );
+
+  const signupUser = async () => {
+
+    const data = {
+      email: email,
+      username: username,
+			password: password
+   }
+   signupApi(data).then(response => {
+      setIsSuccess(response.ok);
+      setShowMsg(true);
+      response.json().then(msg => {
+        setJsonResponseMessage(msg.message);
+      })
+   });
+
+  }
 
   const handleSetAgremment = () => setAgremment(!agreement);
 
   return (
     <BasicLayout
-      title="Welcome!"
-      description="Use these awesome forms to login or create new account in your project for free."
+      title="Bienvenido!"
+      description="Inicio de sesión exclusivo para administradores del sistema"
       image={curved6}
     >
       <Card>
         <SoftBox p={3} mb={1} textAlign="center">
           <SoftTypography variant="h5" fontWeight="medium">
-            Register with
+            Registrarse con
           </SoftTypography>
         </SoftBox>
         <SoftBox mb={2}>
@@ -60,13 +102,13 @@ function SignUp() {
         <SoftBox pt={2} pb={3} px={3}>
           <SoftBox component="form" role="form">
             <SoftBox mb={2}>
-              <SoftInput placeholder="Name" />
+              <SoftInput placeholder="Nombre" value={username} onChange={(e) => setUsername(e.target.value)}/>
             </SoftBox>
             <SoftBox mb={2}>
-              <SoftInput type="email" placeholder="Email" />
+              <SoftInput type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)}/>
             </SoftBox>
             <SoftBox mb={2}>
-              <SoftInput type="password" placeholder="Password" />
+              <SoftInput type="password" placeholder="Contraseña" value={password} onChange={(e) => setPassword(e.target.value)} />
             </SoftBox>
             <SoftBox display="flex" alignItems="center">
               <Checkbox checked={agreement} onChange={handleSetAgremment} />
@@ -76,7 +118,7 @@ function SignUp() {
                 onClick={handleSetAgremment}
                 sx={{ cursor: "poiner", userSelect: "none" }}
               >
-                &nbsp;&nbsp;I agree the&nbsp;
+                &nbsp;&nbsp;Acepto los&nbsp;
               </SoftTypography>
               <SoftTypography
                 component="a"
@@ -85,17 +127,27 @@ function SignUp() {
                 fontWeight="bold"
                 textGradient
               >
-                Terms and Conditions
+                Términos y Condiciones
               </SoftTypography>
             </SoftBox>
+            {showMsg &&!isSuccess && <SoftBox pt={2} px={2}>
+                <SoftAlert color="error">
+                  {jsonError(jsonResponseMessage)}
+                </SoftAlert>
+              </SoftBox>}
+             {showMsg && isSuccess && <SoftBox pt={2} px={2}>
+                <SoftAlert color="success">
+                  {jsonSuccess()}
+                </SoftAlert>
+              </SoftBox>}
             <SoftBox mt={4} mb={1}>
-              <SoftButton variant="gradient" color="dark" fullWidth>
-                sign up
+              <SoftButton component={Link} to="/authentication/sign-in" variant="gradient" color="dark" onClick={signupUser} fullWidth>
+                Registrarme
               </SoftButton>
             </SoftBox>
             <SoftBox mt={3} textAlign="center">
               <SoftTypography variant="button" color="text" fontWeight="regular">
-                Already have an account?&nbsp;
+                Ya tienes una cuenta?&nbsp;
                 <SoftTypography
                   component={Link}
                   to="/authentication/sign-in"
@@ -104,7 +156,7 @@ function SignUp() {
                   fontWeight="bold"
                   textGradient
                 >
-                  Sign in
+                  Inicia sesión
                 </SoftTypography>
               </SoftTypography>
             </SoftBox>
