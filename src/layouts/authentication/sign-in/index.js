@@ -35,6 +35,7 @@ import CoverLayout from "layouts/authentication/components/CoverLayout";
 import curved9 from "assets/images/logo4.png";
 
 import signinApi from "../../../api/signin";
+import jwt_decode from "jwt-decode";
 
 function SignIn() {
 
@@ -47,6 +48,7 @@ function SignIn() {
   const [isSuccess, setIsSuccess] = useState('');
   const [showMsg, setShowMsg] = useState(false);
   const [jsonResponseMessage, setJsonResponseMessage] = useState('');
+  
 
   const jsonError = (name) => (
     <SoftTypography variant="body2" color="white">
@@ -62,12 +64,8 @@ function SignIn() {
 
   const signinUser = async () => {
    signinApi(email, password).then(response => {
-      setIsSuccess(response.ok);
-      setShowMsg(true);
-      response.json().then(msg => {
-        setJsonResponseMessage(msg.message);
+        console.log(response.message);
       })
-   });
   }
 
   const handleSetRememberMe = () => setRememberMe(!rememberMe);
