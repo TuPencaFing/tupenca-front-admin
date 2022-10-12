@@ -40,7 +40,7 @@ import breakpoints from "assets/theme/base/breakpoints";
 
 // Images
 import burceMars from "assets/images/bruce-mars.jpg";
-import curved0 from "assets/images/curved-images/curved0.jpg";
+import curved0 from "assets/images/logo4.png";
 
 function Header() {
   const [tabsOrientation, setTabsOrientation] = useState("horizontal");
@@ -100,26 +100,14 @@ function Header() {
           px: 2,
         }}
       >
-        <Grid container spacing={3} alignItems="center">
-          <Grid item>
-            <SoftAvatar
-              src={burceMars}
-              alt="profile-image"
-              variant="rounded"
-              size="xl"
-              shadow="sm"
-            />
-          </Grid>
-          <Grid item>
+        <Grid item>
             <SoftBox height="100%" mt={0.5} lineHeight={1}>
               <SoftTypography variant="h5" fontWeight="medium">
-                Alex Thompson
-              </SoftTypography>
-              <SoftTypography variant="button" color="text" fontWeight="medium">
-                CEO / Co-Founder
+                Campeonato
               </SoftTypography>
             </SoftBox>
           </Grid>
+        <Grid container spacing={3} alignItems="center">
           <Grid item xs={12} md={6} lg={4} sx={{ ml: "auto" }}>
             <AppBar position="static">
               <Tabs
@@ -128,9 +116,9 @@ function Header() {
                 onChange={handleSetTabValue}
                 sx={{ background: "transparent" }}
               >
-                <Tab label="App" icon={<Cube />} />
-                <Tab label="Message" icon={<Document />} />
-                <Tab label="Settings" icon={<Settings />} />
+                <Tab label="Crear" icon={<Cube />} />
+                <Tab label="Modificar" icon={<Document />} />
+                <Tab label="Eliminar" icon={<Settings />} />
               </Tabs>
             </AppBar>
           </Grid>

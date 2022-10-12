@@ -36,17 +36,21 @@ import SoftButton from "components/SoftButton";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
+import DateTimePicker from 'react-datetime-picker'
+import createCampeonatoApi from "../../api/createCampeonato";
+// Overview page components
+import Header from "layouts/profile/components/Header";
 
 // API requests
 import { useNavigate } from "react-router-dom";
 
 function CreateCampeonato() {
   
-  const [userCountry, setUserCountry] = useState('');
   const [publicarPenca, setPublicarPenca] = useState('1')
   const [deporte, setDeporte] = useState('');
+  const [fechaInicio, setFechaInicio] = useState(new Date('2022-10-18T21:11:54'));
+  const [fechaFin, setFechaFin] = useState(new Date('2022-12-18T21:11:54'));
   const [fechaPublicacionPenca, setFechaPublicacionPenca] = useState('');
-  const [answer3openField, setAnswer3openField] = useState('');
   const [jsonResponseMessage, setJsonResponseMessage] = useState('');
   const [isSuccess, setIsSuccess] = useState('');
   const [showMsg, setShowMsg] = useState(false);
@@ -60,11 +64,7 @@ function CreateCampeonato() {
     { label: 'Ping-Pong', sport: 'pingpong' },
     { label: 'Volleybol', sport: 'volleyball' },
   ];
-  const countries = [
-    { label: 'México', country: "MX" },
-    { label: 'España', country: "ES" },
-    { label: 'Uruguay', country: "UY" },
-  ];
+
 
   const alertContent = () => (
     <SoftTypography variant="body2" color="white">
@@ -74,23 +74,36 @@ function CreateCampeonato() {
 
   const jsonError = (name) => (
     <SoftTypography variant="body2" color="white">
-      Error: {name}.
+      {name}
     </SoftTypography>
   );
 
   const jsonSuccess = () => (
     <SoftTypography variant="body2" color="white">
-      El participante se ha dado de alta con éxito.
+      El campeonato se ha dado de alta con éxito.
     </SoftTypography>
   );
 
-  const submitUser = async () => {
-   
+  const submitCampeonato = async () => {
+    const data = {
+      id: 0,
+      name: nombreCampeonato,
+      startDate: fechaInicio,
+      finishDate: fechaFin
+   }
+   createCampeonatoApi(data).then(response => {
+      setIsSuccess(response.ok);
+      setShowMsg(true);
+      response.json().then(msg => {
+        setJsonResponseMessage("No se pudo dar de alta el campeonato.");
+      })
+   });
   }
 
   return (
     <DashboardLayout>
-      <DashboardNavbar />
+      <Header />
+      
       <SoftBox mt={6} mb={3}>
         <Grid container spacing={3} justifyContent="center">
           <Grid item xs={12} lg={8}>
@@ -107,7 +120,7 @@ function CreateCampeonato() {
               <form>
                 <SoftBox p={2}>
                   <SoftTypography variant="h5">Nombre del campeonato *</SoftTypography>
-                  <TextField id="standard-basic" label="Campeonato" variant="standard" onChange={(e) => setNombreCampeonato(e.target.value)}/>
+                  <TextField id="standard-basic" variant="standard" onChange={(e) => setNombreCampeonato(e.target.value)}/>
                 </SoftBox>
                 <SoftBox p={2}>
                     <SoftTypography variant="h5">Deporte *</SoftTypography>
@@ -124,28 +137,12 @@ function CreateCampeonato() {
                 <SoftBox p={2}>
                     <SoftTypography variant="h5">Fecha de inicio *</SoftTypography>
                     <SoftBox p={1}></SoftBox>
-                    <TextField
-                        id="date"
-                        type="date"
-                        defaultValue="2022-10-11"
-                        sx={{ width: 220 }}
-                        InputLabelProps={{
-                        shrink: true,
-                        }}
-                    />
+                    <DateTimePicker onChange={setFechaInicio} value={fechaInicio} />
                 </SoftBox>
                 <SoftBox p={2}>
                     <SoftTypography variant="h5">Fecha de finalización *</SoftTypography>
                     <SoftBox p={1}></SoftBox>
-                    <TextField
-                        id="date2"
-                        type="date"
-                        defaultValue="2022-10-11"
-                        sx={{ width: 220 }}
-                        InputLabelProps={{
-                        shrink: true,
-                        }}
-                    />
+                    <DateTimePicker onChange={setFechaFin} value={fechaFin} />
                 </SoftBox>
                 <SoftBox p={2}>
                     <SoftTypography variant="h5">Publicar campeonato en la lista para nuevas pencas?</SoftTypography>
@@ -184,7 +181,7 @@ function CreateCampeonato() {
                 </SoftAlert>
               </SoftBox>}
               <SoftBox p={2}>
-                <SoftButton variant="outlined" color="info" size="small"  style={{ marginRight: "auto" }} component={Link} to="/dashboard">
+                <SoftButton variant="outlined" color="info" size="small"  style={{ marginRight: "auto" }} onClick={submitCampeonato}>
                     Añadir campeonato
                 </SoftButton>
                 <SoftButton variant="outlined" color="error" size="small"  style={{ marginRight: "auto" }} onClick={() => navigate(-1)}>

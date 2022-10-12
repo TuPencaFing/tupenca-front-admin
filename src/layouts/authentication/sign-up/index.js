@@ -54,13 +54,23 @@ function SignUp() {
 
   const jsonError = (name) => (
     <SoftTypography variant="body2" color="white">
-      Error: {name}.
+      {name}.
     </SoftTypography>
   );
 
   const jsonSuccess = () => (
     <SoftTypography variant="body2" color="white">
-      Usuario creado con éxito.
+      Usuario creado con éxito.   
+              <SoftTypography
+                  component={Link}
+                  to="/authentication/sign-in"
+                  variant="button"
+                  color="white"
+                  fontWeight="bold"
+                  textGradient
+                >
+                  Inicia sesión
+                </SoftTypography>
     </SoftTypography>
   );
 
@@ -75,7 +85,7 @@ function SignUp() {
       setIsSuccess(response.ok);
       setShowMsg(true);
       response.json().then(msg => {
-        setJsonResponseMessage(msg.message);
+        setJsonResponseMessage("Asegúrese de que su contraseña y nombre de usuario sean al menos de 6 caracteres");
       })
    });
 
@@ -141,7 +151,7 @@ function SignUp() {
                 </SoftAlert>
               </SoftBox>}
             <SoftBox mt={4} mb={1}>
-              <SoftButton component={Link} to="/authentication/sign-in" variant="gradient" color="dark" onClick={signupUser} fullWidth>
+              <SoftButton variant="gradient" color="dark" onClick={signupUser} fullWidth>
                 Registrarme
               </SoftButton>
             </SoftBox>

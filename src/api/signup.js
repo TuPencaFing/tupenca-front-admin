@@ -2,7 +2,6 @@ const API_URL = process.env.API_URL;
 
 function signup(data) {
 	return fetch(`https://tupenca-back-test.azurewebsites.net/User/register`, {
-		
 		method: "POST",
 		headers: {
 			"access-control-allow-origin": "*",

@@ -16,7 +16,7 @@ Coded by www.creative-tim.com
 import { useState } from "react";
 
 // react-router-dom components
-import { Link } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 
 // @mui material components
 import Switch from "@mui/material/Switch";
@@ -52,7 +52,7 @@ function SignIn() {
 
   const jsonError = (name) => (
     <SoftTypography variant="body2" color="white">
-      Error: {name}.
+      {name}.
     </SoftTypography>
   );
 
@@ -64,7 +64,10 @@ function SignIn() {
 
   const signinUser = async () => {
    signinApi(email, password).then(response => {
-        console.log(response.message);
+        setIsSuccess(response.ok);
+        setShowMsg(true);
+        setJsonResponseMessage("El email o contraseña son incorrectos");
+        console.log(jwt_decode("eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTUxMiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJsdS5ub2NldHRpMTk5NUBnbWFpbC5jb20iLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9naXZlbm5hbWUiOiJMdWNpYU5vY2V0dGkiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJVc2VyIiwiZXhwIjoxNjY1Njg5NDE5fQ.RNf9FXP-TIP3MCc_WuDAmIlpYZR12KA5zoSCPrcWzUv1YN5YUMbaQ2qN05_jD7LSItZMHm7kcFSLc4k0wNflTw"));
       })
   }
 
@@ -105,18 +108,13 @@ function SignIn() {
           </SoftTypography>
         </SoftBox>
         {showMsg &&!isSuccess && <SoftBox pt={2} px={2}>
-                <SoftAlert color="error">
-                  {jsonError(jsonResponseMessage)}
-                </SoftAlert>
-              </SoftBox>}
-             {showMsg && isSuccess && <SoftBox pt={2} px={2}>
-                <SoftAlert color="success">
-                  {jsonSuccess()}
-                </SoftAlert>
-              </SoftBox>}
+          <SoftAlert color="error">
+            {jsonError(jsonResponseMessage)}
+          </SoftAlert>
+          </SoftBox>}
+        {showMsg && isSuccess && <Navigate to={"/dashboard"} ></Navigate>}
         <SoftBox mt={4} mb={1}>
-          <SoftButton component={Link}
-              to={"/dashboard"} variant="gradient" color="dark" fullWidth onClick={signinUser}>
+          <SoftButton variant="gradient" color="dark" fullWidth onClick={signinUser}>
             Iniciar sesión
           </SoftButton>
         </SoftBox>
