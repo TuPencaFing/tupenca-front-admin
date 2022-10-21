@@ -38,9 +38,8 @@ Coded by www.creative-tim.com
 // Soft UI Dashboard React layouts
 import Dashboard from "layouts/dashboard";
 import Tables from "layouts/tables";
+import Tablas from "layouts/tablas";
 import Billing from "layouts/billing";
-import VirtualReality from "layouts/virtual-reality";
-import RTL from "layouts/rtl";
 import Profile from "layouts/profile";
 import SignIn from "layouts/authentication/sign-in";
 import SignUp from "layouts/authentication/sign-up";
@@ -48,13 +47,15 @@ import SignUp from "layouts/authentication/sign-up";
 // Soft UI Dashboard React icons
 import Shop from "examples/Icons/Shop";
 import Office from "examples/Icons/Office";
-import Settings from "examples/Icons/Settings";
+import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import Document from "examples/Icons/Document";
 import SpaceShip from "examples/Icons/SpaceShip";
 import CustomerSupport from "examples/Icons/CustomerSupport";
 import CreditCard from "examples/Icons/CreditCard";
 import Cube from "examples/Icons/Cube";
 import CreateCampeonato from "layouts/createCampeonato"
+import CreateTeam from "layouts/createTeam"
+import EditTeam from "layouts/editTeam"
 
 const routes = [
   {
@@ -112,6 +113,18 @@ const routes = [
     component: <SignUp />,
     noCollapse: true,
   },
+  {
+    type: "collapse",
+    name: "Equipos",
+    key: "tablas",
+    icon: <Cube size="12px" />,
+    route: "/equipos",
+
+    component:
+      <DashboardLayout>
+        <Tablas  />
+      </DashboardLayout>,
+  },
   { type: "title", title: "Manejo de cuenta", key: "account-pages" },
   {
     type: "collapse",
@@ -139,6 +152,24 @@ const routes = [
       route: "/authentication/sign-up",
       icon: <SpaceShip size="12px" />,
       component: <SignUp />,
+      noCollapse: true,
+    },
+    {
+      type: "collapse",
+      name: "Create team",
+      key: "createTeam",
+      route: "/createTeam",
+      icon: <SpaceShip size="12px" />,
+      component: <CreateTeam />,
+      noCollapse: true,
+    },
+    {
+      type: "collapse",
+      name: "Edit team",
+      key: "editTeam",
+      route: "/editTeam/:itemId",
+      icon: <SpaceShip size="12px" />,
+      component: <EditTeam />,
       noCollapse: true,
     },
   ]

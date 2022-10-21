@@ -30,6 +30,7 @@ import SoftAlert from "components/SoftAlert";
 
 // Authentication layout components
 import CoverLayout from "layouts/authentication/components/CoverLayout";
+import {Routes, Route, useNavigate} from 'react-router-dom';
 
 // Images
 import curved9 from "assets/images/logo4.png";
@@ -48,6 +49,7 @@ function SignIn() {
   const [isSuccess, setIsSuccess] = useState('');
   const [showMsg, setShowMsg] = useState(false);
   const [jsonResponseMessage, setJsonResponseMessage] = useState('');
+  const navigate = useNavigate();
   
 
   const jsonError = (name) => (
@@ -64,12 +66,21 @@ function SignIn() {
 
   const signinUser = async () => {
    signinApi(email, password).then(response => {
-        setIsSuccess(response.ok);
+    if (response.ok) {
+      response.json().then(r => {
+        localStorage.setItem("token", r.token)
+          navigate("/dashboard");
+      })
+    } else {
+      setIsSuccess(response.ok);
         setShowMsg(true);
         setJsonResponseMessage("El email o contraseña son incorrectos");
-        console.log(jwt_decode("eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTUxMiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJsdS5ub2NldHRpMTk5NUBnbWFpbC5jb20iLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9naXZlbm5hbWUiOiJMdWNpYU5vY2V0dGkiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJVc2VyIiwiZXhwIjoxNjY1Njg5NDE5fQ.RNf9FXP-TIP3MCc_WuDAmIlpYZR12KA5zoSCPrcWzUv1YN5YUMbaQ2qN05_jD7LSItZMHm7kcFSLc4k0wNflTw"));
-      })
-  }
+      }})
+
+    }
+
+        
+       
 
   const handleSetRememberMe = () => setRememberMe(!rememberMe);
 

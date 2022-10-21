@@ -13,8 +13,7 @@ Coded by www.creative-tim.com
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 */
 
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useState, useEffect} from "react";
 
 // @mui material components
 import Grid from "@mui/material/Grid";
@@ -24,12 +23,21 @@ import Autocomplete from '@mui/material/Autocomplete';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
+import AppBar from "@mui/material/AppBar";
+import Tabs from "@mui/material/Tabs";
+import Tab from "@mui/material/Tab";
+import Campeonatos from "layouts/dashboard/components/Campeonatos";
 
 // Material Dashboard 2 React components
 import SoftBox from "components/SoftBox";
 import SoftTypography from "components/SoftTypography";
 import SoftAlert from "components/SoftAlert";
 import SoftButton from "components/SoftButton";
+
+// Soft UI Dashboard React icons
+import Cube from "examples/Icons/Cube";
+import Document from "examples/Icons/Document";
+import Settings from "examples/Icons/Settings";
 
 
 // Material Dashboard 2 React example components
@@ -38,11 +46,12 @@ import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
 import DateTimePicker from 'react-datetime-picker'
 import createCampeonatoApi from "../../api/createCampeonato";
-// Overview page components
-import Header from "layouts/profile/components/Header";
+// Soft UI Dashboard React base styles
+import breakpoints from "assets/theme/base/breakpoints";
 
 // API requests
 import { useNavigate } from "react-router-dom";
+import curved0 from "assets/images/logo4.png";
 
 function CreateCampeonato() {
   
@@ -100,11 +109,90 @@ function CreateCampeonato() {
    });
   }
 
+  const [tabsOrientation, setTabsOrientation] = useState("horizontal");
+  const [tabValue, setTabValue] = useState(0);
+
+  useEffect(() => {
+    // A function that sets the orientation state of the tabs.
+    function handleTabsOrientation() {
+      return window.innerWidth < breakpoints.values.sm
+        ? setTabsOrientation("vertical")
+        : setTabsOrientation("horizontal");
+    }
+
+    /** 
+     The event listener that's calling the handleTabsOrientation function when resizing the window.
+    */
+    window.addEventListener("resize", handleTabsOrientation);
+
+    // Call the handleTabsOrientation function to set the state with the initial value.
+    handleTabsOrientation();
+
+    // Remove event listener on cleanup
+    return () => window.removeEventListener("resize", handleTabsOrientation);
+  }, [tabsOrientation]);
+
+  const handleSetTabValue = (event, newValue) => setTabValue(newValue);
+
   return (
     <DashboardLayout>
-      <Header />
-      
-      <SoftBox mt={6} mb={3}>
+          <SoftBox position="relative">
+      <DashboardNavbar absolute light />
+      <SoftBox
+        display="flex"
+        alignItems="center"
+        position="relative"
+        minHeight="18.75rem"
+        borderRadius="xl"
+        sx={{
+          backgroundImage: ({ functions: { rgba, linearGradient }, palette: { gradients } }) =>
+            `${linearGradient(
+              rgba(gradients.info.main, 0.6),
+              rgba(gradients.info.state, 0.6)
+            )}, url(${curved0})`,
+          backgroundSize: "cover",
+          backgroundPosition: "50%",
+          overflow: "hidden",
+        }}
+      />
+      <Card
+        sx={{
+          backdropFilter: `saturate(200%) blur(30px)`,
+          backgroundColor: ({ functions: { rgba }, palette: { white } }) => rgba(white.main, 0.8),
+          boxShadow: ({ boxShadows: { navbarBoxShadow } }) => navbarBoxShadow,
+          position: "relative",
+          mt: -8,
+          mx: 3,
+          py: 2,
+          px: 2,
+        }}
+      >
+        <Grid item>
+            <SoftBox height="100%" mt={0.5} lineHeight={1}>
+              <SoftTypography variant="h5" fontWeight="medium">
+                Campeonato
+              </SoftTypography>
+            </SoftBox>
+          </Grid>
+        <Grid container spacing={3} alignItems="center">
+          <Grid item xs={12} md={6} lg={4} sx={{ ml: "auto" }}>
+            <AppBar position="static">
+              <Tabs
+                orientation={tabsOrientation}
+                value={tabValue}
+                onChange={handleSetTabValue}
+                sx={{ background: "transparent" }}
+              >
+                <Tab label="Crear" icon={<Cube />} />
+                <Tab label="Modificar" icon={<Document />} />
+                <Tab label="Eliminar" icon={<Settings />} />
+              </Tabs>
+            </AppBar>
+          </Grid>
+        </Grid>
+      </Card>
+    </SoftBox>
+      {tabValue == 0 && <SoftBox mt={6} mb={3}>
         <Grid container spacing={3} justifyContent="center">
           <Grid item xs={12} lg={8}>
             <Card>
@@ -191,7 +279,31 @@ function CreateCampeonato() {
             </Card>
           </Grid>
         </Grid>
-      </SoftBox>
+      </SoftBox>}
+      {tabValue == 2  && <SoftBox pt={6} pb={3}>
+        <Grid container spacing={6}>
+          <Grid item xs={12}>
+            <Card>
+              <SoftBox
+                mx={2}
+                mt={-3}
+                py={3}
+                px={2}
+                bgColor="info"
+                borderRadius="lg"
+                style={{ display: "flex" }}
+              >
+                <SoftTypography variant="h6" color="white">
+                  Campeonatos a eliminar
+                </SoftTypography>
+              </SoftBox>
+              <SoftBox pt={3}>
+              <Campeonatos />
+              </SoftBox>
+            </Card>
+          </Grid>
+        </Grid>
+      </SoftBox>}
       <Footer />
     </DashboardLayout>
   );
