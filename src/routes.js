@@ -39,6 +39,7 @@ Coded by www.creative-tim.com
 import Dashboard from "layouts/dashboard";
 import Tables from "layouts/tables";
 import Tablas from "layouts/tablas";
+import TablaDeporte from "layouts/tablaDeporte";
 import Billing from "layouts/billing";
 import Profile from "layouts/profile";
 import SignIn from "layouts/authentication/sign-in";
@@ -56,6 +57,8 @@ import Cube from "examples/Icons/Cube";
 import CreateCampeonato from "layouts/createCampeonato"
 import CreateTeam from "layouts/createTeam"
 import EditTeam from "layouts/editTeam"
+import CreateDeporte from "layouts/createDeporte"
+import EditDeporte from "layouts/editDeporte"
 
 const routes = [
   {
@@ -125,6 +128,18 @@ const routes = [
         <Tablas  />
       </DashboardLayout>,
   },
+  {
+    type: "collapse",
+    name: "Deportes",
+    key: "tablas",
+    icon: <Cube size="12px" />,
+    route: "/deportes",
+
+    component:
+      <DashboardLayout>
+        <TablaDeporte  />
+      </DashboardLayout>,
+  },
   { type: "title", title: "Manejo de cuenta", key: "account-pages" },
   {
     type: "collapse",
@@ -170,6 +185,24 @@ const routes = [
       route: "/editTeam/:itemId",
       icon: <SpaceShip size="12px" />,
       component: <EditTeam />,
+      noCollapse: true,
+    },
+    {
+      type: "collapse",
+      name: "Create deporte",
+      key: "createDeporte",
+      route: "/createDeporte",
+      icon: <SpaceShip size="12px" />,
+      component: <CreateDeporte />,
+      noCollapse: true,
+    },
+    {
+      type: "collapse",
+      name: "Edit deporte",
+      key: "editDeporte",
+      route: "/editDeporte/:itemId",
+      icon: <SpaceShip size="12px" />,
+      component: <EditDeporte />,
       noCollapse: true,
     },
   ]

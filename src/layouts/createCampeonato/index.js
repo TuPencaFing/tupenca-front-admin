@@ -273,7 +273,7 @@ function CreateCampeonato() {
                     Añadir campeonato
                 </SoftButton>
                 <SoftButton variant="outlined" color="error" size="small"  style={{ marginRight: "auto" }} onClick={() => navigate(-1)}>
-                    Cancelar
+                    Volver
                 </SoftButton>
               </SoftBox>
             </Card>
