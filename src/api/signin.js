@@ -1,7 +1,7 @@
 const API_URL = process.env.API_URL;
 
 function signin(email, password) {
-  return fetch(`https://tupenca-back-test.azurewebsites.net/User/login`, {
+  return fetch(`https://tupenca-back-test.azurewebsites.net/Usuario/login`, {
     method: "POST",
     headers: {
       "access-control-allow-origin": "*",

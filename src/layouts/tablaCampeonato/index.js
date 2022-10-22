@@ -28,6 +28,7 @@ import { IconButton, Tooltip } from '@mui/material';
 import SoftButton from "components/SoftButton";
 import {Routes, Route, useNavigate} from 'react-router-dom';
 import deleteCampeonatoApi from "../../api/deleteCampeonato";
+import Moment from 'moment';
 
 
 function Tablas(props) {
@@ -103,8 +104,28 @@ function Tablas(props) {
             overflow: "hidden",
           }}
         />
+        <Card
+        sx={{
+          backdropFilter: `saturate(200%) blur(30px)`,
+          backgroundColor: ({ functions: { rgba }, palette: { white } }) => rgba(white.main, 0.8),
+          boxShadow: ({ boxShadows: { navbarBoxShadow } }) => navbarBoxShadow,
+          position: "relative",
+          mt: -8,
+          mx: 3,
+          py: 2,
+          px: 2,
+        }}
+      >
+        <Grid item>
+            <SoftBox height="100%" mt={0.5} lineHeight={1}>
+              <SoftTypography variant="h5" fontWeight="medium">
+                Campeonato
+              </SoftTypography>
+            </SoftBox>
+          </Grid>
+      </Card>
       </SoftBox>
-      <SoftBox pt={12} pb={6}>
+      <SoftBox pt={6} pb={3}>
         <Grid container spacing={1}>
           <Grid item xs={200}>
             <Card>
@@ -131,8 +152,10 @@ function Tablas(props) {
                 <Table  aria-label="simple table">
                 <TableHead sx={{ display: "table-header-group" }}>
                     <TableRow>
-                      <TableCell align="center">Identificador</TableCell>
                       <TableCell align="center">Nombre</TableCell>
+                      <TableCell align="center">Fecha inicio del campeonato</TableCell>
+                      <TableCell align="center">Fecha fin del campeonato</TableCell>
+                      <TableCell align="center">Deporte</TableCell>
                       <TableCell align="center">Acciones</TableCell>
                     </TableRow>
                   </TableHead>
@@ -143,9 +166,11 @@ function Tablas(props) {
                         sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                       >
                         <TableCell component="th" scope="row" align="center" style={{width: 1}}>
-                          {row.id}
+                          {row.name}
                         </TableCell>
-                        <TableCell align="center">{row.nombre}</TableCell>
+                        <TableCell align="center">{Moment(new Date(row.startDate)).format('DD-MM-YYYY HH:mm')}</TableCell>
+                        <TableCell align="center">{Moment(new Date(row.finishDate)).format('DD-MM-YYYY HH:mm')}</TableCell>
+                        <TableCell align="center">{row.deporte.nombre}</TableCell>
                         <TableCell align="center">
                         <SoftTypography component="a" href="#" variant="caption" color="text" fontWeight="medium" onClick={() => navigate("/editCampeonato/" + row.id )}>
                           <Tooltip title="Editar">

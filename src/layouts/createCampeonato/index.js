@@ -66,15 +66,6 @@ function CreateCampeonato() {
   const [nombreCampeonato, setNombreCampeonato] = useState('');
   const navigate = useNavigate();
 
-  const sports = [
-    { label: 'Fútbol', sport: 'football' },
-    { label: 'Básquetbol', sport: 'basketball' },
-    { label: 'Tenis', sport: 'tennis' },
-    { label: 'Ping-Pong', sport: 'pingpong' },
-    { label: 'Volleybol', sport: 'volleyball' },
-  ];
-
-
   const alertContent = () => (
     <SoftTypography variant="body2" color="white">
       El campeonato debe estar en progreso o a comenzar próximamente.
@@ -109,30 +100,12 @@ function CreateCampeonato() {
    });
   }
 
-  const [tabsOrientation, setTabsOrientation] = useState("horizontal");
-  const [tabValue, setTabValue] = useState(0);
+  const sports = [];
 
   useEffect(() => {
-    // A function that sets the orientation state of the tabs.
-    function handleTabsOrientation() {
-      return window.innerWidth < breakpoints.values.sm
-        ? setTabsOrientation("vertical")
-        : setTabsOrientation("horizontal");
-    }
 
-    /** 
-     The event listener that's calling the handleTabsOrientation function when resizing the window.
-    */
-    window.addEventListener("resize", handleTabsOrientation);
+    })
 
-    // Call the handleTabsOrientation function to set the state with the initial value.
-    handleTabsOrientation();
-
-    // Remove event listener on cleanup
-    return () => window.removeEventListener("resize", handleTabsOrientation);
-  }, [tabsOrientation]);
-
-  const handleSetTabValue = (event, newValue) => setTabValue(newValue);
 
   return (
     <DashboardLayout>
@@ -174,25 +147,9 @@ function CreateCampeonato() {
               </SoftTypography>
             </SoftBox>
           </Grid>
-        <Grid container spacing={3} alignItems="center">
-          <Grid item xs={12} md={6} lg={4} sx={{ ml: "auto" }}>
-            <AppBar position="static">
-              <Tabs
-                orientation={tabsOrientation}
-                value={tabValue}
-                onChange={handleSetTabValue}
-                sx={{ background: "transparent" }}
-              >
-                <Tab label="Crear" icon={<Cube />} />
-                <Tab label="Modificar" icon={<Document />} />
-                <Tab label="Eliminar" icon={<Settings />} />
-              </Tabs>
-            </AppBar>
-          </Grid>
-        </Grid>
       </Card>
     </SoftBox>
-      {tabValue == 0 && <SoftBox mt={6} mb={3}>
+      <SoftBox mt={6} mb={3}>
         <Grid container spacing={3} justifyContent="center">
           <Grid item xs={12} lg={8}>
             <Card>
@@ -279,31 +236,7 @@ function CreateCampeonato() {
             </Card>
           </Grid>
         </Grid>
-      </SoftBox>}
-      {tabValue == 2  && <SoftBox pt={6} pb={3}>
-        <Grid container spacing={6}>
-          <Grid item xs={12}>
-            <Card>
-              <SoftBox
-                mx={2}
-                mt={-3}
-                py={3}
-                px={2}
-                bgColor="info"
-                borderRadius="lg"
-                style={{ display: "flex" }}
-              >
-                <SoftTypography variant="h6" color="white">
-                  Campeonatos a eliminar
-                </SoftTypography>
-              </SoftBox>
-              <SoftBox pt={3}>
-              <Campeonatos />
-              </SoftBox>
-            </Card>
-          </Grid>
-        </Grid>
-      </SoftBox>}
+      </SoftBox>
       <Footer />
     </DashboardLayout>
   );
