@@ -18,7 +18,7 @@ import { useState, useEffect} from "react";
 // @mui material components
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
-import TextField from '@mui/material/TextField';
+import DateTimePicker from 'react-datetime-picker'
 
 
 // Material Dashboard 2 React components
@@ -35,16 +35,20 @@ import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
 
 // API requests
-import createTeamApi from "../../api/createTeam";
-import { useNavigate } from "react-router-dom";
+import editEventoApi from "../../api/editEvento";
+import { useNavigate,useParams } from "react-router-dom";
 import curved0 from "assets/images/logo4.png";
+import getEventoAPI from "../../api/getEvento";
 
-function CreateTeam() {
+function EditEvento() {
 
+  const { itemId } = useParams();
   const [jsonResponseMessage, setJsonResponseMessage] = useState('');
   const [isSuccess, setIsSuccess] = useState('');
   const [showMsg, setShowMsg] = useState(false);
-  const [nombre, setNombre] = useState('');
+  const [id, setId] = useState([]);
+  const [loadingRows, setLoadingRows] = useState(false);
+  const [fechaInicial, setFechaInicial] = useState('');
   const navigate = useNavigate();
 
 
@@ -62,22 +66,38 @@ function CreateTeam() {
 
   const jsonSuccess = () => (
     <SoftTypography variant="body2" color="white">
-      El equipo se ha dado de alta con éxito.
+      El evento se ha dado de alta con éxito.
     </SoftTypography>
   );
 
-  const submitEquipo = async () => {
+  const submitEvento = async () => {
     const data = {
-      nombre: nombre
+      fechaInicial: fechaInicial
    }
-   createTeamApi(data).then(response => {
+   editEventoApi(itemId,data).then(response => {
       setIsSuccess(response.ok);
       setShowMsg(true);
       response.json().then(msg => {
-        setJsonResponseMessage("No se pudo dar de alta el equipo.");
+        setJsonResponseMessage("No se pudo editar el evento.");
       })
    });
   }
+
+
+  useEffect(function effectFunction() {
+
+    async function fetchEvento() {
+        await getEventoAPI(itemId).then(res => {
+          res.json().then(response => {
+            setId(itemId);
+            setFechaInicial(new Date(response.fechaInicial));
+          })
+        });
+    }
+
+    fetchEvento();
+
+}, []);
 
   return (
     <DashboardLayout>
@@ -126,8 +146,7 @@ function CreateTeam() {
           <Grid item xs={12} lg={8}>
             <Card>
               <SoftBox p={2}>
-                <SoftTypography variant="h5">Fromulario de ingreso para un equipo</SoftTypography>
-                <SoftTypography variant="subtitle1">Claramente, el nombre es obligatorio</SoftTypography>
+                <SoftTypography variant="h5">Editar fecha del evento</SoftTypography>
               </SoftBox>
               <SoftBox pt={2} px={2}>
                 <SoftAlert color="info">
@@ -135,10 +154,11 @@ function CreateTeam() {
                 </SoftAlert>
               </SoftBox>
               <form>
-                <SoftBox p={2}>
-                  <SoftTypography variant="h5">Nombre del equipo *</SoftTypography>
-                  <TextField id="standard-basic" variant="standard" onChange={(e) => setNombre(e.target.value)}/>
-                </SoftBox>
+              <SoftBox p={3}>
+                    <SoftTypography variant="h5">Fecha del evento *</SoftTypography>
+                    <SoftBox p={1}></SoftBox>
+                    <DateTimePicker onChange={setFechaInicial} value={fechaInicial} />
+              </SoftBox>
               </form>
               {showMsg &&!isSuccess && <SoftBox pt={2} px={2}>
                 <SoftAlert color="error">
@@ -151,10 +171,10 @@ function CreateTeam() {
                 </SoftAlert>
               </SoftBox>}
               <SoftBox p={2}>
-                <SoftButton variant="outlined" color="info" size="small"  style={{ marginRight: "auto" }} onClick={submitEquipo}>
-                    Añadir equipo
+                <SoftButton variant="outlined" color="info" size="small"  style={{ marginRight: "auto" }} onClick={submitEvento}>
+                    Editar evento
                 </SoftButton>
-                <SoftButton variant="outlined" color="error" size="small"  style={{ marginRight: "auto" }} onClick={() => navigate(-1)}>
+                <SoftButton variant="outlined" color="error" size="small"  style={{ marginRight: "auto" }} onClick={() => navigate(-2)}>
                     Volver
                 </SoftButton>
               </SoftBox>
@@ -167,4 +187,4 @@ function CreateTeam() {
   );
 }
 
-export default CreateTeam;
+export default EditEvento;

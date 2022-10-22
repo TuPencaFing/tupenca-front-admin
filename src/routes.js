@@ -40,6 +40,8 @@ import Dashboard from "layouts/dashboard";
 import Tables from "layouts/tables";
 import Tablas from "layouts/tablas";
 import TablaDeporte from "layouts/tablaDeporte";
+import TablaCampeonatos from "layouts/tablaCampeonato";
+import TablaEventos from "layouts/tablaEvento";
 import Billing from "layouts/billing";
 import Profile from "layouts/profile";
 import SignIn from "layouts/authentication/sign-in";
@@ -54,11 +56,14 @@ import SpaceShip from "examples/Icons/SpaceShip";
 import CustomerSupport from "examples/Icons/CustomerSupport";
 import CreditCard from "examples/Icons/CreditCard";
 import Cube from "examples/Icons/Cube";
-import CreateCampeonato from "layouts/createCampeonato"
 import CreateTeam from "layouts/createTeam"
 import EditTeam from "layouts/editTeam"
 import CreateDeporte from "layouts/createDeporte"
 import EditDeporte from "layouts/editDeporte"
+import CreateCampeonato from "layouts/createCampeonato"
+import EditCampeonato from "layouts/editCampeonato"
+import CreateEvento from "layouts/createEvento"
+import EditEvento from "layouts/editEvento"
 
 const routes = [
   {
@@ -91,24 +96,6 @@ const routes = [
   { type: "title", title: "Entrada de datos", key: "data-entry" },
   {
     type: "collapse",
-    name: "Campeonatos",
-    key: "campeonato",
-    route: "/createCampeonato",
-    icon: <Cube size="12px" />,
-    component: <CreateCampeonato />,
-    noCollapse: true,
-  },
-  {
-    type: "collapse",
-    name: "Eventos",
-    key: "evento",
-    route: "/evento",
-    icon: <Cube size="12px" />,
-    component: <SignIn />,
-    noCollapse: true,
-  },
-  {
-    type: "collapse",
     name: "Pencas",
     key: "penca",
     route: "/penca",
@@ -119,7 +106,7 @@ const routes = [
   {
     type: "collapse",
     name: "Equipos",
-    key: "tablas",
+    key: "tablasEquipos",
     icon: <Cube size="12px" />,
     route: "/equipos",
 
@@ -131,13 +118,37 @@ const routes = [
   {
     type: "collapse",
     name: "Deportes",
-    key: "tablas",
+    key: "tablasDeportes",
     icon: <Cube size="12px" />,
     route: "/deportes",
 
     component:
       <DashboardLayout>
         <TablaDeporte  />
+      </DashboardLayout>,
+  },
+  {
+    type: "collapse",
+    name: "Campeonatos",
+    key: "tablasCampeonatos",
+    icon: <Cube size="12px" />,
+    route: "/campeonatos",
+
+    component:
+      <DashboardLayout>
+        <TablaCampeonatos  />
+      </DashboardLayout>,
+  },
+  {
+    type: "collapse",
+    name: "Eventos",
+    key: "tablasEventos",
+    icon: <Cube size="12px" />,
+    route: "/eventos",
+
+    component:
+      <DashboardLayout>
+        <TablaEventos  />
       </DashboardLayout>,
   },
   { type: "title", title: "Manejo de cuenta", key: "account-pages" },
@@ -203,6 +214,42 @@ const routes = [
       route: "/editDeporte/:itemId",
       icon: <SpaceShip size="12px" />,
       component: <EditDeporte />,
+      noCollapse: true,
+    },
+    {
+      type: "collapse",
+      name: "Create campeonato",
+      key: "createCampeonato",
+      route: "/createCampeonato",
+      icon: <SpaceShip size="12px" />,
+      component: <CreateCampeonato />,
+      noCollapse: true,
+    },
+    {
+      type: "collapse",
+      name: "Edit campeonato",
+      key: "editCampeonato",
+      route: "/editCampeonato/:itemId",
+      icon: <SpaceShip size="12px" />,
+      component: <EditCampeonato />,
+      noCollapse: true,
+    },
+    {
+      type: "collapse",
+      name: "Create evento",
+      key: "createEvento",
+      route: "/createEvento",
+      icon: <SpaceShip size="12px" />,
+      component: <CreateEvento />,
+      noCollapse: true,
+    },
+    {
+      type: "collapse",
+      name: "Edit evento",
+      key: "editEvento",
+      route: "/editEvento/:itemId",
+      icon: <SpaceShip size="12px" />,
+      component: <EditEvento />,
       noCollapse: true,
     },
   ]

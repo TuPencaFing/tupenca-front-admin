@@ -35,16 +35,19 @@ import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
 
 // API requests
-import createTeamApi from "../../api/createTeam";
-import { useNavigate } from "react-router-dom";
+import getCampeonatoAPI from "../../api/getCampeonato";
+import editCampeonatoApi from "../../api/editCampeonato";
+import { useNavigate, useParams} from "react-router-dom";
 import curved0 from "assets/images/logo4.png";
 
-function CreateTeam() {
+function EditCampeonato() {
 
+  const { itemId } = useParams();
   const [jsonResponseMessage, setJsonResponseMessage] = useState('');
   const [isSuccess, setIsSuccess] = useState('');
   const [showMsg, setShowMsg] = useState(false);
   const [nombre, setNombre] = useState('');
+  const [id, setId] = useState('');
   const navigate = useNavigate();
 
 
@@ -62,22 +65,37 @@ function CreateTeam() {
 
   const jsonSuccess = () => (
     <SoftTypography variant="body2" color="white">
-      El equipo se ha dado de alta con éxito.
+      El deporte se ha editado con éxito.
     </SoftTypography>
   );
 
-  const submitEquipo = async () => {
+  const submitCampeonato = async () => {
     const data = {
       nombre: nombre
    }
-   createTeamApi(data).then(response => {
+   editCampeonatoApi(itemId,data).then(response => {
       setIsSuccess(response.ok);
       setShowMsg(true);
       response.json().then(msg => {
-        setJsonResponseMessage("No se pudo dar de alta el equipo.");
+        setJsonResponseMessage("No se pudo editar el campeonato.");
       })
    });
   }
+
+  useEffect(function effectFunction() {
+
+    async function fetchCampeonato() {
+        await getCampeonatoAPI(itemId).then(res => {
+          res.json().then(response => {
+            setId(itemId);
+            setNombre(response.nombre);
+          })
+        });
+    }
+
+    fetchCampeonato();
+
+}, []);
 
   return (
     <DashboardLayout>
@@ -115,7 +133,7 @@ function CreateTeam() {
         <Grid item>
             <SoftBox height="100%" mt={0.5} lineHeight={1}>
               <SoftTypography variant="h5" fontWeight="medium">
-                Equipos
+                Campeonatos
               </SoftTypography>
             </SoftBox>
           </Grid>
@@ -126,7 +144,7 @@ function CreateTeam() {
           <Grid item xs={12} lg={8}>
             <Card>
               <SoftBox p={2}>
-                <SoftTypography variant="h5">Fromulario de ingreso para un equipo</SoftTypography>
+                <SoftTypography variant="h5">Fromulario de ingreso para un deporte</SoftTypography>
                 <SoftTypography variant="subtitle1">Claramente, el nombre es obligatorio</SoftTypography>
               </SoftBox>
               <SoftBox pt={2} px={2}>
@@ -136,8 +154,8 @@ function CreateTeam() {
               </SoftBox>
               <form>
                 <SoftBox p={2}>
-                  <SoftTypography variant="h5">Nombre del equipo *</SoftTypography>
-                  <TextField id="standard-basic" variant="standard" onChange={(e) => setNombre(e.target.value)}/>
+                  <SoftTypography variant="h5">Nombre del deporte *</SoftTypography>
+                  <TextField id="standard-basic" variant="standard" value={nombre} onChange={(e) => setNombre(e.target.value)}/>
                 </SoftBox>
               </form>
               {showMsg &&!isSuccess && <SoftBox pt={2} px={2}>
@@ -151,10 +169,10 @@ function CreateTeam() {
                 </SoftAlert>
               </SoftBox>}
               <SoftBox p={2}>
-                <SoftButton variant="outlined" color="info" size="small"  style={{ marginRight: "auto" }} onClick={submitEquipo}>
-                    Añadir equipo
+                <SoftButton variant="outlined" color="info" size="small"  style={{ marginRight: "auto" }} onClick={submitCampeonato}>
+                    Editar deporte
                 </SoftButton>
-                <SoftButton variant="outlined" color="error" size="small"  style={{ marginRight: "auto" }} onClick={() => navigate(-1)}>
+                <SoftButton variant="outlined" color="error" size="small"  style={{ marginRight: "auto" }} onClick={() => navigate(-2)}>
                     Volver
                 </SoftButton>
               </SoftBox>
@@ -167,4 +185,4 @@ function CreateTeam() {
   );
 }
 
-export default CreateTeam;
+export default EditCampeonato;

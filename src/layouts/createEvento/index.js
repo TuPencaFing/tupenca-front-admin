@@ -18,7 +18,12 @@ import { useState, useEffect} from "react";
 // @mui material components
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
-import TextField from '@mui/material/TextField';
+import DateTimePicker from 'react-datetime-picker'
+
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
 
 
 // Material Dashboard 2 React components
@@ -35,16 +40,21 @@ import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
 
 // API requests
-import createTeamApi from "../../api/createTeam";
+import createEventoApi from "../../api/createEvento";
 import { useNavigate } from "react-router-dom";
 import curved0 from "assets/images/logo4.png";
+import getEquiposAPI from "../../api/getEquipos";
 
-function CreateTeam() {
+function CreateEvento() {
 
   const [jsonResponseMessage, setJsonResponseMessage] = useState('');
   const [isSuccess, setIsSuccess] = useState('');
   const [showMsg, setShowMsg] = useState(false);
-  const [nombre, setNombre] = useState('');
+  const [rows, setRows] = useState([]);
+  const [loadingRows, setLoadingRows] = useState(false);
+  const [fechaInicial, setFechaInicial] = useState('');
+  const [equipoLocalId, setEquipoLocalId] = useState('');
+  const [equipoVisitanteId, setEquipoVisitanteId] = useState('');
   const navigate = useNavigate();
 
 
@@ -62,22 +72,49 @@ function CreateTeam() {
 
   const jsonSuccess = () => (
     <SoftTypography variant="body2" color="white">
-      El equipo se ha dado de alta con éxito.
+      El evento se ha dado de alta con éxito.
     </SoftTypography>
   );
 
-  const submitEquipo = async () => {
+  const submitEvento = async () => {
     const data = {
-      nombre: nombre
+      fechaInicial: fechaInicial,
+      equipoLocalId: equipoLocalId,
+      equipoVisitanteId: equipoVisitanteId
    }
-   createTeamApi(data).then(response => {
+   createEventoApi(data).then(response => {
       setIsSuccess(response.ok);
       setShowMsg(true);
       response.json().then(msg => {
-        setJsonResponseMessage("No se pudo dar de alta el equipo.");
+        setJsonResponseMessage("No se pudo dar de alta el evento.");
       })
    });
   }
+
+  const fetchEquipos = async () => {
+    setLoadingRows(true);
+    getEquiposAPI().then((response) => {
+      if (response.ok) {
+        response.json().then((r) => {
+          setRows(r);
+        });
+
+      } else {
+        return Promise.reject(response);
+      }
+    })
+      .catch((e) => {
+        console.log('error', e);
+      })
+      .finally(() => {
+        setLoadingRows(false);
+      });
+  }
+
+
+  useEffect(() => {
+    fetchEquipos();
+  }, []);
 
   return (
     <DashboardLayout>
@@ -126,8 +163,8 @@ function CreateTeam() {
           <Grid item xs={12} lg={8}>
             <Card>
               <SoftBox p={2}>
-                <SoftTypography variant="h5">Fromulario de ingreso para un equipo</SoftTypography>
-                <SoftTypography variant="subtitle1">Claramente, el nombre es obligatorio</SoftTypography>
+                <SoftTypography variant="h5">Fromulario de ingreso para un evento</SoftTypography>
+                <SoftTypography variant="subtitle1">Todos los campos son obligatorios</SoftTypography>
               </SoftBox>
               <SoftBox pt={2} px={2}>
                 <SoftAlert color="info">
@@ -135,10 +172,31 @@ function CreateTeam() {
                 </SoftAlert>
               </SoftBox>
               <form>
-                <SoftBox p={2}>
-                  <SoftTypography variant="h5">Nombre del equipo *</SoftTypography>
-                  <TextField id="standard-basic" variant="standard" onChange={(e) => setNombre(e.target.value)}/>
-                </SoftBox>
+              <SoftBox p={3}>
+                    <SoftTypography variant="h5">Fecha del evento *</SoftTypography>
+                    <SoftBox p={1}></SoftBox>
+                    <DateTimePicker onChange={setFechaInicial} value={fechaInicial} />
+              </SoftBox>
+               <SoftBox p={3}>
+                  <SoftTypography variant="h5">Equipo local *</SoftTypography>
+                  <SoftBox p={1}></SoftBox>
+                  <select onChange={(e) => setEquipoLocalId(e.target.value)}>
+                    <option> Seleccione equipo local</option>
+                      {
+                      rows.map((row)=>(<option value={row.id}>{row.nombre}</option>))
+                      }
+                  </select>
+               </SoftBox>
+               <SoftBox p={3}>
+                  <SoftTypography variant="h5">Equipo visitante*</SoftTypography>
+                  <SoftBox p={1}></SoftBox>
+                  <select onChange={(e) => setEquipoVisitanteId(e.target.value)}>
+                    <option> Seleccione equipo visitante</option>
+                      {
+                      rows.map((row)=>(<option value={row.id}>{row.nombre}</option>))
+                      }
+                  </select>
+               </SoftBox>
               </form>
               {showMsg &&!isSuccess && <SoftBox pt={2} px={2}>
                 <SoftAlert color="error">
@@ -151,8 +209,8 @@ function CreateTeam() {
                 </SoftAlert>
               </SoftBox>}
               <SoftBox p={2}>
-                <SoftButton variant="outlined" color="info" size="small"  style={{ marginRight: "auto" }} onClick={submitEquipo}>
-                    Añadir equipo
+                <SoftButton variant="outlined" color="info" size="small"  style={{ marginRight: "auto" }} onClick={submitEvento}>
+                    Añadir evento
                 </SoftButton>
                 <SoftButton variant="outlined" color="error" size="small"  style={{ marginRight: "auto" }} onClick={() => navigate(-1)}>
                     Volver
@@ -167,4 +225,4 @@ function CreateTeam() {
   );
 }
 
-export default CreateTeam;
+export default CreateEvento;
