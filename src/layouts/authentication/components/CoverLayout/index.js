@@ -86,6 +86,7 @@ function CoverLayout({ color, header, title, description, image, top, children }
             <SoftBox
               ml={-8}
               height="100%"
+              width="100%"
               sx={{
                 backgroundImage: `url(${image})`,
                 backgroundSize: "cover",

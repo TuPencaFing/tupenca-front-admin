@@ -29,7 +29,7 @@ function OrdersOverview() {
     <Card className="h-100">
       <SoftBox pt={3} px={3}>
         <SoftTypography variant="h6" fontWeight="medium">
-          Orders overview
+          Actividad reciente (menos de 24 horas)
         </SoftTypography>
         <SoftBox mt={1} mb={2}>
           <SoftTypography variant="button" color="text" fontWeight="regular">
@@ -42,7 +42,6 @@ function OrdersOverview() {
             <SoftTypography variant="button" color="text" fontWeight="medium">
               24%
             </SoftTypography>{" "}
-            this month
           </SoftTypography>
         </SoftBox>
       </SoftBox>
@@ -50,34 +49,38 @@ function OrdersOverview() {
         <TimelineItem
           color="success"
           icon="notifications"
-          title="$2400, Design changes"
-          dateTime="22 DEC 7:20 PM"
+          title="2 pozos compartidos reclamados"
+          dateTime="22 Octubre 7:20 PM"
         />
         <TimelineItem
           color="error"
           icon="inventory_2"
-          title="New order #1832412"
-          dateTime="21 DEC 11 PM"
+          title="7 suscripciones finalizadas"
+          dateTime="22 Octubre 7:20 PM"
         />
         <TimelineItem
-          color="info"
+          color="success"
           icon="shopping_cart"
-          title="Server payments for April"
-          dateTime="21 DEC 9:34 PM"
+          title="4 nuevas suscripciones"
+          dateTime="22 Octubre 7:20 PM"
         />
         <TimelineItem
           color="warning"
           icon="payment"
-          title="New card added for order #4395133"
-          dateTime="20 DEC 2:20 AM"
+          title="Pago rechazado para pedido #4395133"
+          dateTime="22 Octubre 7:20 PM"
         />
         <TimelineItem
-          color="primary"
-          icon="vpn_key"
-          title="New card added for order #4395133"
-          dateTime="18 DEC 4:54 AM"
+          color="error"
+          icon="flag"
+          title="27 comentarios reportados en foros"
+          dateTime="22 Octubre 7:20 PM"
         />
-        <TimelineItem color="dark" icon="paid" title="New order #9583120" dateTime="17 DEC" />
+        <TimelineItem 
+          color="dark" 
+          icon="vpn_key" 
+          title="642 usuarios utilizaron la aplicación" 
+          dateTime="22 Octubre 7:20 PM" />
       </SoftBox>
     </Card>
   );

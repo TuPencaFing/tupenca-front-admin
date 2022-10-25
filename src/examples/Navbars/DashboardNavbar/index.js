@@ -149,7 +149,7 @@ function DashboardNavbar({ absolute, light, isMini }) {
           <SoftBox sx={(theme) => navbarRow(theme, { isMini })}>
             <SoftBox pr={1}>
               <SoftInput
-                placeholder="Type here..."
+                placeholder="Escriba su búsqueda aquí"
                 icon={{ component: "search", direction: "left" }}
               />
             </SoftBox>
