@@ -68,8 +68,13 @@ function SignIn() {
    signinApi(email, password).then(response => {
     if (response.ok) {
       response.json().then(r => {
-        localStorage.setItem("token", r.token)
-          navigate("/dashboard");
+        localStorage.setItem("token", r.token);
+        const decodedToken = jwt_decode(r.token);
+        const givenName = decodedToken['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname'];
+        localStorage.setItem("givenName", givenName);
+        console.log(localStorage.getItem("givenName"));
+        console.log(localStorage.getItem("token"));
+        navigate("/dashboard");
       })
     } else {
       setIsSuccess(response.ok);

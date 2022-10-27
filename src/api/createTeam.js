@@ -4,6 +4,7 @@ function createTeam(data) {
 	return fetch(`https://tupenca-back-test.azurewebsites.net/api/equipos`, {
 		method: "POST",
 		headers: {
+			"Authorization": `Bearer ${localStorage.getItem("token")}`,
 			"Content-type": "application/json"
 		},
         body: JSON.stringify(data)

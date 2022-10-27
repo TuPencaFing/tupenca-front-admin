@@ -19,11 +19,8 @@ import { useState, useEffect} from "react";
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
 import DateTimePicker from 'react-datetime-picker'
-
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
+import TextField from '@mui/material/TextField';
+import Autocomplete from '@mui/material/Autocomplete';
 
 
 // Material Dashboard 2 React components
@@ -53,6 +50,7 @@ function CreateEvento() {
   const [rows, setRows] = useState([]);
   const [loadingRows, setLoadingRows] = useState(false);
   const [fechaInicial, setFechaInicial] = useState('');
+  const [teams, setTeams] = useState([]);
   const [equipoLocalId, setEquipoLocalId] = useState('');
   const [equipoVisitanteId, setEquipoVisitanteId] = useState('');
   const navigate = useNavigate();
@@ -96,7 +94,7 @@ function CreateEvento() {
     getEquiposAPI().then((response) => {
       if (response.ok) {
         response.json().then((r) => {
-          setRows(r);
+          r.map((row)=> teams.push({ label: row.nombre, team: row.id }));
         });
 
       } else {
@@ -152,7 +150,7 @@ function CreateEvento() {
         <Grid item>
             <SoftBox height="100%" mt={0.5} lineHeight={1}>
               <SoftTypography variant="h5" fontWeight="medium">
-                Equipos
+                Eventos
               </SoftTypography>
             </SoftBox>
           </Grid>
@@ -180,22 +178,26 @@ function CreateEvento() {
                <SoftBox p={3}>
                   <SoftTypography variant="h5">Equipo local *</SoftTypography>
                   <SoftBox p={1}></SoftBox>
-                  <select onChange={(e) => setEquipoLocalId(e.target.value)}>
-                    <option> Seleccione equipo local</option>
-                      {
-                      rows.map((row)=>(<option value={row.id}>{row.nombre}</option>))
-                      }
-                  </select>
+                    <Autocomplete
+                      disablePortal
+                      id="combo-box-demo1"
+                      options={teams}
+                      sx={{ width: 300 }}
+                      onChange={(event, value) => setEquipoLocalId(value.team)}
+                      renderInput={(params) => <TextField {...params} label="" />}
+                    />
                </SoftBox>
                <SoftBox p={3}>
                   <SoftTypography variant="h5">Equipo visitante*</SoftTypography>
                   <SoftBox p={1}></SoftBox>
-                  <select onChange={(e) => setEquipoVisitanteId(e.target.value)}>
-                    <option> Seleccione equipo visitante</option>
-                      {
-                      rows.map((row)=>(<option value={row.id}>{row.nombre}</option>))
-                      }
-                  </select>
+                  <Autocomplete
+                      disablePortal
+                      id="combo-box-demo2"
+                      options={teams}
+                      sx={{ width: 300 }}
+                      onChange={(event, value) => setEquipoVisitanteId(value.team)}
+                      renderInput={(params) => <TextField {...params} label="" />}
+                    />
                </SoftBox>
               </form>
               {showMsg &&!isSuccess && <SoftBox pt={2} px={2}>
