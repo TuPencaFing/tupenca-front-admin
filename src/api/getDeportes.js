@@ -4,6 +4,7 @@ function getDeportes() {
 	return fetch(`https://tupenca-back-test.azurewebsites.net/api/deportes`, {
 		method: "GET",
 		headers: {
+			"Authorization": `Bearer ${localStorage.getItem("token")}`,
 			"Content-type": "application/json"
 		},
 	});

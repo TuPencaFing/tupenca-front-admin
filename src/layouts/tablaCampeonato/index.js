@@ -104,26 +104,6 @@ function Tablas(props) {
             overflow: "hidden",
           }}
         />
-        <Card
-        sx={{
-          backdropFilter: `saturate(200%) blur(30px)`,
-          backgroundColor: ({ functions: { rgba }, palette: { white } }) => rgba(white.main, 0.8),
-          boxShadow: ({ boxShadows: { navbarBoxShadow } }) => navbarBoxShadow,
-          position: "relative",
-          mt: -8,
-          mx: 3,
-          py: 2,
-          px: 2,
-        }}
-      >
-        <Grid item>
-            <SoftBox height="100%" mt={0.5} lineHeight={1}>
-              <SoftTypography variant="h5" fontWeight="medium">
-                Campeonato
-              </SoftTypography>
-            </SoftBox>
-          </Grid>
-      </Card>
       </SoftBox>
       <SoftBox pt={6} pb={3}>
         <Grid container spacing={1}>

@@ -154,7 +154,7 @@ function DashboardNavbar({ absolute, light, isMini }) {
               />
             </SoftBox>
             <SoftBox color={light ? "white" : "inherit"}>
-              <Link to="/authentication/sign-in">
+              {!localStorage.getItem("givenName") && <Link to="/authentication/sign-in">
                 <IconButton sx={navbarIconButton} size="small">
                   <Icon
                     sx={({ palette: { dark, white } }) => ({
@@ -171,7 +171,25 @@ function DashboardNavbar({ absolute, light, isMini }) {
                     Sign in
                   </SoftTypography>
                 </IconButton>
-              </Link>
+              </Link>}
+              {localStorage.getItem("givenName") && <Link to="/dashboard">
+                <IconButton sx={navbarIconButton} size="small">
+                  <Icon
+                    sx={({ palette: { dark, white } }) => ({
+                      color: light ? white.main : dark.main,
+                    })}
+                  >
+                    account_circle
+                  </Icon>
+                  <SoftTypography
+                    variant="button"
+                    fontWeight="medium"
+                    color={light ? "white" : "dark"}
+                  >
+                    {localStorage.getItem("givenName")}
+                  </SoftTypography>
+                </IconButton>
+              </Link>}
               <IconButton
                 size="small"
                 color="inherit"

@@ -23,21 +23,12 @@ import Autocomplete from '@mui/material/Autocomplete';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import AppBar from "@mui/material/AppBar";
-import Tabs from "@mui/material/Tabs";
-import Tab from "@mui/material/Tab";
-import Campeonatos from "layouts/dashboard/components/Campeonatos";
 
 // Material Dashboard 2 React components
 import SoftBox from "components/SoftBox";
 import SoftTypography from "components/SoftTypography";
 import SoftAlert from "components/SoftAlert";
 import SoftButton from "components/SoftButton";
-
-// Soft UI Dashboard React icons
-import Cube from "examples/Icons/Cube";
-import Document from "examples/Icons/Document";
-import Settings from "examples/Icons/Settings";
 
 
 // Material Dashboard 2 React example components
@@ -46,8 +37,7 @@ import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
 import DateTimePicker from 'react-datetime-picker'
 import createCampeonatoApi from "../../api/createCampeonato";
-// Soft UI Dashboard React base styles
-import breakpoints from "assets/theme/base/breakpoints";
+import getDeportesAPI from "../../api/getDeportes";
 
 // API requests
 import { useNavigate } from "react-router-dom";
@@ -57,6 +47,7 @@ function CreateCampeonato() {
   
   const [publicarPenca, setPublicarPenca] = useState('1')
   const [deporte, setDeporte] = useState('');
+  const [loadingRows, setLoadingRows] = useState(false);
   const [fechaInicio, setFechaInicio] = useState(new Date('2022-10-18T21:11:54'));
   const [fechaFin, setFechaFin] = useState(new Date('2022-12-18T21:11:54'));
   const [fechaPublicacionPenca, setFechaPublicacionPenca] = useState('');
@@ -64,6 +55,7 @@ function CreateCampeonato() {
   const [isSuccess, setIsSuccess] = useState('');
   const [showMsg, setShowMsg] = useState(false);
   const [nombreCampeonato, setNombreCampeonato] = useState('');
+  const [sports, setSports] = useState([]);
   const navigate = useNavigate();
 
   const alertContent = () => (
@@ -100,11 +92,29 @@ function CreateCampeonato() {
    });
   }
 
-  const sports = [];
+  const fetchDeportes = async () => {
+    setLoadingRows(true);
+    getDeportesAPI().then((response) => {
+      if (response.ok) {
+        response.json().then((r) => {
+          r.map((row)=> sports.push({ label: row.nombre, sport: row.id }));
+        });
+
+      } else {
+        return Promise.reject(response);
+      }
+    })
+      .catch((e) => {
+        console.log('error', e);
+      })
+      .finally(() => {
+        setLoadingRows(false);
+      });
+  }
 
   useEffect(() => {
-
-    })
+    fetchDeportes();
+  }, []);
 
 
   return (
@@ -143,7 +153,7 @@ function CreateCampeonato() {
         <Grid item>
             <SoftBox height="100%" mt={0.5} lineHeight={1}>
               <SoftTypography variant="h5" fontWeight="medium">
-                Campeonato
+                Campeonatos
               </SoftTypography>
             </SoftBox>
           </Grid>

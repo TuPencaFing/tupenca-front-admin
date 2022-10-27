@@ -4,6 +4,7 @@ function getEquipos() {
 	return fetch(`https://tupenca-back-test.azurewebsites.net/api/equipos`, {
 		method: "GET",
 		headers: {
+			"Authorization": `Bearer ${localStorage.getItem("token")}`,
 			"Content-type": "application/json"
 		},
 	});
