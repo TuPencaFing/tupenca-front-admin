@@ -19,41 +19,49 @@ import { useState, useEffect} from "react";
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
 import TextField from '@mui/material/TextField';
-
+import Autocomplete from '@mui/material/Autocomplete';
 
 // Material Dashboard 2 React components
 import SoftBox from "components/SoftBox";
 import SoftTypography from "components/SoftTypography";
 import SoftAlert from "components/SoftAlert";
 import SoftButton from "components/SoftButton";
-
+import { Select, MenuItem, FormHelperText, InputLabel, Chip } from '@material-ui/core';
 
 
 // Material Dashboard 2 React example components
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
+import DateTimePicker from 'react-datetime-picker'
+import editCampeonatoApi from "../../api/editCampeonato";
+import getDeportesAPI from "../../api/getDeportes";
+import getEventosAPI from "../../api/getEventos";
+import getCampeonatoAPI from "../../api/getCampeonato";
 
 // API requests
-import getCampeonatoAPI from "../../api/getCampeonato";
-import editCampeonatoApi from "../../api/editCampeonato";
-import { useNavigate, useParams} from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import curved0 from "assets/images/logo4.png";
 
 function EditCampeonato() {
-
+  
   const { itemId } = useParams();
+  const [deporte, setDeporte] = useState('');
+  const [loadingRows, setLoadingRows] = useState(false);
+  const [fechaInicio, setFechaInicio] = useState(new Date());
+  const [fechaFin, setFechaFin] = useState(new Date());
   const [jsonResponseMessage, setJsonResponseMessage] = useState('');
   const [isSuccess, setIsSuccess] = useState('');
   const [showMsg, setShowMsg] = useState(false);
-  const [nombre, setNombre] = useState('');
-  const [id, setId] = useState('');
+  const [nombreCampeonato, setNombreCampeonato] = useState('');
+  const [sports, setSports] = useState([]);
+  const [events, setEvents] = useState([]);
+  const [eventos, setEventos] = useState([]);
   const navigate = useNavigate();
-
 
   const alertContent = () => (
     <SoftTypography variant="body2" color="white">
-      Solo se controlará la unicidad del nombre por exactitud.
+      El campeonato debe estar en progreso o a comenzar próximamente.
     </SoftTypography>
   );
 
@@ -65,41 +73,98 @@ function EditCampeonato() {
 
   const jsonSuccess = () => (
     <SoftTypography variant="body2" color="white">
-      El deporte se ha editado con éxito.
+      El campeonato se ha editado con éxito.
     </SoftTypography>
   );
 
   const submitCampeonato = async () => {
     const data = {
-      nombre: nombre
-   }
+      id: 0,
+      name: nombreCampeonato,
+      startDate: fechaInicio,
+      finishDate: fechaFin,
+      deporte: {
+        id: deporte
+      },
+      eventos: eventos
+    };
+    console.log(data);
    editCampeonatoApi(itemId,data).then(response => {
       setIsSuccess(response.ok);
       setShowMsg(true);
       response.json().then(msg => {
-        setJsonResponseMessage("No se pudo editar el campeonato.");
+        setJsonResponseMessage("No se pudo dar de alta el campeonato.");
       })
    });
   }
 
-  useEffect(function effectFunction() {
-
-    async function fetchCampeonato() {
-        await getCampeonatoAPI(itemId).then(res => {
-          res.json().then(response => {
-            setId(itemId);
-            setNombre(response.nombre);
-          })
+  const fetchDeportes = async () => {
+    setLoadingRows(true);
+    getDeportesAPI().then((response) => {
+      if (response.ok) {
+        response.json().then((r) => {
+          r.map((row)=> sports.push({ label: row.nombre, sport: row.id }));
         });
-    }
 
+      } else {
+        return Promise.reject(response);
+      }
+    })
+      .catch((e) => {
+        console.log('error', e);
+      })
+      .finally(() => {
+        setLoadingRows(false);
+      });
+  }
+
+  function selectionChangeHandler(id,label) {
+    eventos.push({ label: label, id: id });
+  };
+
+
+  const fetchCampeonato = async () => {
+    await getCampeonatoAPI(itemId).then(res => {
+      res.json().then(response => {
+        setNombreCampeonato(response.name);
+        setFechaInicio(new Date(response.startDate));
+        setFechaFin(new Date(response.finishDate));
+        setDeporte(response.deporte.id);
+        response.eventos.map((row)=> eventos.push({ label: row.equipoLocalNombre + " vs " + row.equipoVisitanteNombre, id: row.id }));
+      })
+    });
+  }
+
+  const fetchEventos = async () => {
+    setLoadingRows(true);
+    getEventosAPI().then((response) => {
+      if (response.ok) {
+        response.json().then((r) => {
+          r.map((row)=> events.push({ label: row.equipoLocal.nombre + " vs " + row.equipoVisitante.nombre, id: row.id }));
+        });
+
+      } else {
+        return Promise.reject(response);
+      }
+    })
+      .catch((e) => {
+        console.log('error', e);
+      })
+      .finally(() => {
+        setLoadingRows(false);
+      });
+  }
+
+  useEffect(() => {
+    fetchDeportes();
+    fetchEventos();
     fetchCampeonato();
+  }, []);
 
-}, []);
 
   return (
     <DashboardLayout>
-      <SoftBox position="relative">
+          <SoftBox position="relative">
       <DashboardNavbar absolute light />
       <SoftBox
         display="flex"
@@ -144,8 +209,8 @@ function EditCampeonato() {
           <Grid item xs={12} lg={8}>
             <Card>
               <SoftBox p={2}>
-                <SoftTypography variant="h5">Fromulario de ingreso para un deporte</SoftTypography>
-                <SoftTypography variant="subtitle1">Claramente, el nombre es obligatorio</SoftTypography>
+                <SoftTypography variant="h5">Fromulario de ingreso para un campeonato</SoftTypography>
+                <SoftTypography variant="subtitle1">Los campos marcados con * son obligatorios</SoftTypography>
               </SoftBox>
               <SoftBox pt={2} px={2}>
                 <SoftAlert color="info">
@@ -154,9 +219,75 @@ function EditCampeonato() {
               </SoftBox>
               <form>
                 <SoftBox p={2}>
-                  <SoftTypography variant="h5">Nombre del deporte *</SoftTypography>
-                  <TextField id="standard-basic" variant="standard" value={nombre} onChange={(e) => setNombre(e.target.value)}/>
+                  <SoftTypography variant="h5">Nombre del campeonato *</SoftTypography>
+                  <TextField id="standard-basic" variant="standard" value={nombreCampeonato} onChange={(e) => setNombreCampeonato(e.target.value)}/>
                 </SoftBox>
+                <SoftBox p={2}>
+                    <SoftTypography variant="h5">Deporte *</SoftTypography>
+                    <SoftBox p={1}></SoftBox>
+                    <Autocomplete
+                      disablePortal
+                      id="combo-box-demo"
+                      options={sports}
+                      sx={{ width: 300 }}
+                      onChange={(event, value) => setDeporte(value.sport)}
+                      renderInput={(params) => <TextField {...params} label="" />}
+                    />
+                </SoftBox>
+                <SoftBox p={2}>
+                    <SoftTypography variant="h5">Fecha de inicio *</SoftTypography>
+                    <SoftBox p={1}></SoftBox>
+                    <DateTimePicker onChange={setFechaInicio} value={fechaInicio} />
+                </SoftBox>
+                <SoftBox p={2}>
+                    <SoftTypography variant="h5">Fecha de finalización *</SoftTypography>
+                    <SoftBox p={1}></SoftBox>
+                    <DateTimePicker onChange={setFechaFin} value={fechaFin} />
+                </SoftBox>
+                <SoftBox p={2}>
+                    <SoftTypography variant="h5">Eventos *</SoftTypography>
+                    <SoftBox p={1}></SoftBox>
+                    <InputLabel></InputLabel>
+                    <Select
+                      multiple
+                      value={eventos}
+                      renderValue={(eventos) => (
+                        <div>
+                          {eventos.map((ev) => (
+                            <Chip key={ev.id} label={ev.label} />
+                          ))}
+                        </div>
+                      )}
+                    >
+                      {events.map(ev =>  <MenuItem onClick={() => selectionChangeHandler(ev.id,ev.label)} value={ev.id} label={ev.label}>{ev.label}</MenuItem>)}
+                    </Select>
+                    <FormHelperText>Seleccione los eventos del campeonato</FormHelperText>
+                </SoftBox>
+               {/* <SoftBox p={2}>
+                    <SoftTypography variant="h5">Publicar campeonato en la lista para nuevas pencas?</SoftTypography>
+                    <SoftBox p={1}></SoftBox>
+                    <RadioGroup
+                      aria-labelledby="demo-radio-buttons-group-label"
+                      defaultValue="1"
+                      name="radio-buttons-group"
+                      onChange={(e) => setPublicarPenca(e.target.value)}
+                    >
+                      <FormControlLabel value="1" control={<Radio />} label="Publicar" />
+                      <FormControlLabel value="2" control={<Radio />} label="Mantener privado" />
+                    </RadioGroup>
+                </SoftBox>
+                 <SoftBox p={2}>
+                <SoftTypography variant="h9">Cuándo publicar el campeonato?</SoftTypography>
+                <SoftBox p={1}></SoftBox>
+                    <TextField id="standard-basic"
+                        type="date"
+                        defaultValue="2022-10-11"
+                        sx={{ width: 220 }}
+                        InputLabelProps={{
+                        shrink: true,
+                        }}
+                        onChange={(e) => setFechaPublicacionPenca(e.target.value)} disabled={publicarPenca != 2}/>
+              </SoftBox>*/}
               </form>
               {showMsg &&!isSuccess && <SoftBox pt={2} px={2}>
                 <SoftAlert color="error">
@@ -170,7 +301,7 @@ function EditCampeonato() {
               </SoftBox>}
               <SoftBox p={2}>
                 <SoftButton variant="outlined" color="info" size="small"  style={{ marginRight: "auto" }} onClick={submitCampeonato}>
-                    Editar deporte
+                    Editar campeonato
                 </SoftButton>
                 <SoftButton variant="outlined" color="error" size="small"  style={{ marginRight: "auto" }} onClick={() => navigate(-2)}>
                     Volver

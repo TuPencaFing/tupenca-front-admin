@@ -1,6 +1,6 @@
 const API_URL = process.env.API_URL;
 
-function getCampeonatos() {
+function getEventos() {
 	return fetch(`https://tupenca-back-test.azurewebsites.net/api/eventos`, {
 		method: "GET",
 		headers: {
@@ -10,4 +10,4 @@ function getCampeonatos() {
 	});
 }
 
-module.exports = getCampeonatos;
+module.exports = getEventos;
