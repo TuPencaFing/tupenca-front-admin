@@ -21,6 +21,7 @@ import TablaDeporte from "layouts/tablaDeporte";
 import TablaCampeonatos from "layouts/tablaCampeonato";
 import TablaEventos from "layouts/tablaEvento";
 import TablaPlanes from "layouts/tablaPlanes";
+import TablaResultados from "layouts/tablaResultados";
 import Billing from "layouts/billing";
 import Profile from "layouts/profile";
 import SignIn from "layouts/authentication/sign-in";
@@ -45,6 +46,8 @@ import CreateEvento from "layouts/createEvento"
 import EditEvento from "layouts/editEvento"
 import CreatePlan from "layouts/createPlan"
 import EditPlan from "layouts/editPlan"
+import CreateResultado from "layouts/createResultado"
+import EditResultado from "layouts/editResultado"
 
 const routes = [
   {
@@ -142,6 +145,18 @@ const routes = [
     component:
       <DashboardLayout>
         <TablaPlanes  />
+      </DashboardLayout>,
+  },
+  {
+    type: "collapse",
+    name: "Resultados",
+    key: "tablasResultados",
+    icon: <Cube size="12px" />,
+    route: "/resultados",
+
+    component:
+      <DashboardLayout>
+        <TablaResultados  />
       </DashboardLayout>,
   },
   { type: "title", title: "Manejo de cuenta", key: "account-pages" },
@@ -261,6 +276,24 @@ const routes = [
       route: "/editPlan/:itemId",
       icon: <SpaceShip size="12px" />,
       component: <EditPlan />,
+      noCollapse: true,
+    },
+    {
+      type: "collapse",
+      name: "Create resultado",
+      key: "createResultado",
+      route: "/createResultado/:itemId",
+      icon: <SpaceShip size="12px" />,
+      component: <CreateResultado />,
+      noCollapse: true,
+    },
+    {
+      type: "collapse",
+      name: "Edit resultado",
+      key: "editResultado",
+      route: "/editResultado/:itemId",
+      icon: <SpaceShip size="12px" />,
+      component: <EditResultado />,
       noCollapse: true,
     },
   ]
