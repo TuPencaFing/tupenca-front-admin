@@ -13,28 +13,6 @@ Coded by www.creative-tim.com
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 */
 
-/** 
-  All of the routes for the Soft UI Dashboard React are added here,
-  You can add a new route, customize the routes and delete the routes here.
-
-  Once you add a new route on this file it will be visible automatically on
-  the Sidenav.
-
-  For adding a new route you can follow the existing routes in the routes array.
-  1. The `type` key with the `collapse` value is used for a route.
-  2. The `type` key with the `title` value is used for a title inside the Sidenav. 
-  3. The `type` key with the `divider` value is used for a divider between Sidenav items.
-  4. The `name` key is used for the name of the route on the Sidenav.
-  5. The `key` key is used for the key of the route (It will help you with the key prop inside a loop).
-  6. The `icon` key is used for the icon of the route on the Sidenav, you have to add a node.
-  7. The `collapse` key is used for making a collapsible item on the Sidenav that has other routes
-  inside (nested routes), you need to pass the nested routes inside an array as a value for the `collapse` key.
-  8. The `route` key is used to store the route location which is used for the react router.
-  9. The `href` key is used to store the external links location.
-  10. The `title` key is only for the item with the type of `title` and its used for the title text on the Sidenav.
-  10. The `component` key is used to store the component of its route.
-*/
-
 // Soft UI Dashboard React layouts
 import Dashboard from "layouts/dashboard";
 import Tables from "layouts/tables";
@@ -42,6 +20,8 @@ import Tablas from "layouts/tablas";
 import TablaDeporte from "layouts/tablaDeporte";
 import TablaCampeonatos from "layouts/tablaCampeonato";
 import TablaEventos from "layouts/tablaEvento";
+import TablaPlanes from "layouts/tablaPlanes";
+import TablaResultados from "layouts/tablaResultados";
 import Billing from "layouts/billing";
 import Profile from "layouts/profile";
 import SignIn from "layouts/authentication/sign-in";
@@ -64,6 +44,10 @@ import CreateCampeonato from "layouts/createCampeonato"
 import EditCampeonato from "layouts/editCampeonato"
 import CreateEvento from "layouts/createEvento"
 import EditEvento from "layouts/editEvento"
+import CreatePlan from "layouts/createPlan"
+import EditPlan from "layouts/editPlan"
+import CreateResultado from "layouts/createResultado"
+import EditResultado from "layouts/editResultado"
 
 const routes = [
   {
@@ -149,6 +133,30 @@ const routes = [
     component:
       <DashboardLayout>
         <TablaEventos  />
+      </DashboardLayout>,
+  },
+  {
+    type: "collapse",
+    name: "Planes",
+    key: "tablasPlanes",
+    icon: <Cube size="12px" />,
+    route: "/planes",
+
+    component:
+      <DashboardLayout>
+        <TablaPlanes  />
+      </DashboardLayout>,
+  },
+  {
+    type: "collapse",
+    name: "Resultados",
+    key: "tablasResultados",
+    icon: <Cube size="12px" />,
+    route: "/resultados",
+
+    component:
+      <DashboardLayout>
+        <TablaResultados  />
       </DashboardLayout>,
   },
   { type: "title", title: "Manejo de cuenta", key: "account-pages" },
@@ -250,6 +258,42 @@ const routes = [
       route: "/editEvento/:itemId",
       icon: <SpaceShip size="12px" />,
       component: <EditEvento />,
+      noCollapse: true,
+    },
+    {
+      type: "collapse",
+      name: "Create plan",
+      key: "createPlan",
+      route: "/createPlan",
+      icon: <SpaceShip size="12px" />,
+      component: <CreatePlan />,
+      noCollapse: true,
+    },
+    {
+      type: "collapse",
+      name: "Edit plan",
+      key: "editPlan",
+      route: "/editPlan/:itemId",
+      icon: <SpaceShip size="12px" />,
+      component: <EditPlan />,
+      noCollapse: true,
+    },
+    {
+      type: "collapse",
+      name: "Create resultado",
+      key: "createResultado",
+      route: "/createResultado/:itemId",
+      icon: <SpaceShip size="12px" />,
+      component: <CreateResultado />,
+      noCollapse: true,
+    },
+    {
+      type: "collapse",
+      name: "Edit resultado",
+      key: "editResultado",
+      route: "/editResultado/:itemId",
+      icon: <SpaceShip size="12px" />,
+      component: <EditResultado />,
       noCollapse: true,
     },
   ]

@@ -1,8 +1,8 @@
 const API_URL = process.env.API_URL;
 
-function editCampeonato(id,data) {
+function editPlan(id,data) {
 
-    return fetch(`https://tupenca-back-test.azurewebsites.net/api/campeonatos/${id}`, {
+    return fetch(`https://tupenca-back-test.azurewebsites.net/api/planes/${id}`, {
     method: 'PUT',
     headers: {
       "Authorization": `Bearer ${localStorage.getItem("token")}`,
@@ -12,5 +12,5 @@ function editCampeonato(id,data) {
    })
 }
 
-module.exports = editCampeonato;
+module.exports = editPlan;
 

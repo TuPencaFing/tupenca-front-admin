@@ -22,10 +22,10 @@ import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import AddIcon from '@mui/icons-material/Add';
 import { IconButton, Tooltip } from '@mui/material';
 
 // Button, Navigation
-import SoftButton from "components/SoftButton";
 import {useNavigate} from 'react-router-dom';
 import deleteEventoApi from "../../api/deleteEvento";
 import Moment from 'moment';
@@ -33,7 +33,7 @@ import Moment from 'moment';
 
 function Tablas(props) {
   
-  const title = "Eventos";
+  const title = "Resultados para eventos";
   const navigate = useNavigate();
 
   const [rows, setRows] = useState([]);
@@ -68,11 +68,11 @@ function Tablas(props) {
   }, []);
 
 
-  const navigateToCreateNewEvento = () => {
-    navigate('/createEvento/');
+  function navigateToCreateNewResultado(id) {
+    navigate('/createResultado/'+id);
   };
 
-  function handleDeleteEvento(id) {
+  function handleDeleteResultado(id) {
    deleteEventoApi(id).then(response => {
       setIsSuccess(response.ok);
       setShowMsg(true);
@@ -123,9 +123,6 @@ function Tablas(props) {
                 <SoftTypography variant="h6" color="white">
                   {title}
                 </SoftTypography>
-                <SoftButton variant="outlined" color="white" size="small"  style={{ marginLeft: "auto" }} onClick={navigateToCreateNewEvento}>
-                  +
-                </SoftButton>
               </SoftBox>
               <SoftBox pt={3}>
               <TableContainer component={Paper}>
@@ -158,14 +155,21 @@ function Tablas(props) {
                           {row.equipoVisitante.nombre}
                         </TableCell>
                         <TableCell align="center">
-                        <SoftTypography component="a" href="#" variant="caption" color="text" fontWeight="medium" onClick={() => navigate("/editEvento/" + row.id )}>
-                          <Tooltip title="Editar">
+                        <SoftTypography component="a" href="#" variant="caption" color="text" fontWeight="medium" onClick={() => { navigateToCreateNewResultado(row.id)}}>
+                          <Tooltip title="Crear resultado">
+                            <IconButton>
+                              <AddIcon/>
+                            </IconButton>
+                          </Tooltip>
+                        </SoftTypography> 
+                        <SoftTypography component="a" href="#" variant="caption" color="text" fontWeight="medium" onClick={() => navigate("/editResultado/" + row.id )}>
+                          <Tooltip title="Editar resultado">
                             <IconButton>
                               <EditIcon/>
                             </IconButton>
                           </Tooltip>
                         </SoftTypography> 
-                        <SoftTypography component="a" href="#" variant="caption" color="text" fontWeight="medium" onClick={() => { if (window.confirm('Confirma eliminar el deporte?')) handleDeleteEvento(row.id) } }>
+                        <SoftTypography component="a" href="#" variant="caption" color="text" fontWeight="medium" onClick={() => { if (window.confirm('Confirma eliminar el resultado?')) handleDeleteResultado(row.id) } }>
                           <Tooltip title="Eliminar">
                             <IconButton>
                               <DeleteIcon/>

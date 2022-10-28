@@ -1,7 +1,7 @@
 const API_URL = process.env.API_URL;
 
-function getCampeonato(id) {
-	return fetch(`https://tupenca-back-test.azurewebsites.net/api/campeonatos/${id}`, {
+function getResultado(id) {
+	return fetch(`https://tupenca-back-test.azurewebsites.net/api/resultados/evento/${id}`, {
 		method: "GET",
 		headers: {
 			"Authorization": `Bearer ${localStorage.getItem("token")}`,
@@ -10,4 +10,4 @@ function getCampeonato(id) {
 	});
 }
 
-module.exports = getCampeonato;
+module.exports = getResultado;
