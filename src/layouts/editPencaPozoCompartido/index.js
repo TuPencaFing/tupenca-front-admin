@@ -26,43 +26,43 @@ import SoftBox from "components/SoftBox";
 import SoftTypography from "components/SoftTypography";
 import SoftAlert from "components/SoftAlert";
 import SoftButton from "components/SoftButton";
-import { Select, MenuItem, FormHelperText, InputLabel, Chip } from '@material-ui/core';
+import { Select, MenuItem, FormHelperText, FormControl, InputLabel, Chip } from '@material-ui/core';
 
 
 // Material Dashboard 2 React example components
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
-import DateTimePicker from 'react-datetime-picker'
-import editCampeonatoApi from "../../api/editCampeonato";
-import getDeportesAPI from "../../api/getDeportes";
-import getEventosAPI from "../../api/getEventos";
-import getCampeonatoAPI from "../../api/getCampeonato";
+import editPencaPCApi from "../../api/editPencaPC";
+import getPencaPCApi from "../../api/getPencaPC";
+import getCampeonatosAPI from "../../api/getCampeonatos";
+import getPremiosAPI from "../../api/getPremios";
 
 // API requests
 import { useNavigate, useParams } from "react-router-dom";
 import curved0 from "assets/images/logo4.png";
 
-function EditCampeonato() {
+function EditPencaPC() {
   
   const { itemId } = useParams();
-  const [deporte, setDeporte] = useState('');
+  const [title, setTitle] = useState('');
   const [loadingRows, setLoadingRows] = useState(false);
-  const [fechaInicio, setFechaInicio] = useState(new Date());
-  const [fechaFin, setFechaFin] = useState(new Date());
+  const [description, setDescription] = useState('');
+  const [campeonato, setCampeonato] = useState('');
+  const [campeonatos, setCampeonatos] = useState([]);
+  const [nombreCampeonato, setNombreCampeonato] = useState('');
   const [jsonResponseMessage, setJsonResponseMessage] = useState('');
   const [isSuccess, setIsSuccess] = useState('');
   const [showMsg, setShowMsg] = useState(false);
-  const [nombreCampeonato, setNombreCampeonato] = useState('');
-  const [nombreDeporte, setNombreDeporte] = useState('');
-  const [sports, setSports] = useState([]);
-  const [events, setEvents] = useState([]);
-  const [eventos, setEventos] = useState([]);
+  const [premios, setPremios] = useState([]);
+  const [prizes, setPrizes] = useState([]);
+  const [costoEntrada, setCostoEntrada] = useState([]);
+  const [comision, setComision] = useState([]);
   const navigate = useNavigate();
 
   const alertContent = () => (
     <SoftTypography variant="body2" color="white">
-      El campeonato debe estar en progreso o a comenzar próximamente.
+      La penca debe tener al menos un premio asocialdo
     </SoftTypography>
   );
 
@@ -74,37 +74,22 @@ function EditCampeonato() {
 
   const jsonSuccess = () => (
     <SoftTypography variant="body2" color="white">
-      El campeonato se ha editado con éxito.
+      La penca se ha editado con éxito.
     </SoftTypography>
   );
 
-  const submitCampeonato = async () => {
-    const data = {
-      id: 0,
-      name: nombreCampeonato,
-      startDate: fechaInicio,
-      finishDate: fechaFin,
-      deporte: {
-        id: deporte
-      },
-      eventos: eventos
-    };
-    console.log(data);
-   editCampeonatoApi(itemId,data).then(response => {
-      setIsSuccess(response.ok);
-      setShowMsg(true);
-      response.json().then(msg => {
-        setJsonResponseMessage("No se pudo dar de alta el campeonato.");
-      })
-   });
-  }
+  function selectionChangeHandler(id,label) {
+    premios.push({ label: label, id: id });
+  };
 
-  const fetchDeportes = async () => {
+
+
+  const fetchPremios = async () => {
     setLoadingRows(true);
-    getDeportesAPI().then((response) => {
+    getPremiosAPI().then((response) => {
       if (response.ok) {
         response.json().then((r) => {
-          r.map((row)=> sports.push({ label: row.nombre, sport: row.id }));
+          r.map((row)=> prizes.push({ label: row.position + ": " + row.percentage + "%", id: row.id }));
         });
 
       } else {
@@ -119,48 +104,65 @@ function EditCampeonato() {
       });
   }
 
-  function selectionChangeHandler(id,label) {
-    eventos.push({ label: label, id: id });
+  const submitPenca = async () => {
+    const data = {
+      id: itemId,
+      title: title,
+      description: description,
+      campeonato: {
+        id: campeonato
+      },
+      premios: premios,
+      costEntry: costoEntrada,
+      commission: comision
+    };
+   editPencaPCApi(itemId,data).then(response => {
+      setIsSuccess(response.ok);
+      setShowMsg(true);
+      response.json().then(msg => {
+        setJsonResponseMessage("No se pudo editar la penca.");
+      })
+   });
   };
 
+  const fetchCampeonatos = async () => {
+    setLoadingRows(true);
+    getCampeonatosAPI().then((response) => {
+      if (response.ok) {
+        response.json().then((r) => {
+          r.map((row)=> campeonatos.push({ label: row.name, id: row.id }));
+        });
 
-  const fetchCampeonato = async () => {
-    await getCampeonatoAPI(itemId).then(res => {
+      } else {
+        return Promise.reject(response);
+      }
+    })
+      .catch((e) => {
+        console.log('error', e);
+      })
+      .finally(() => {
+        setLoadingRows(false);
+      });
+  };
+
+  const fetchPencaPC = async () => {
+    await getPencaPCApi(itemId).then(res => {
       res.json().then(response => {
-        setNombreCampeonato(response.name);
-        setFechaInicio(new Date(response.startDate));
-        setFechaFin(new Date(response.finishDate));
-        setDeporte(response.deporte.id);
-        setNombreDeporte(response.deporte.nombre);
-        response.eventos.map((row)=> eventos.push({ label: row.equipoLocalNombre + " vs " + row.equipoVisitanteNombre, id: row.id }));
+        setTitle(response.title);
+        setDescription(response.description);
+        setCampeonato(response.campeonato.id);
+        setNombreCampeonato(response.campeonato.nombre);
+        setCostoEntrada(response.costEntry);
+        setComision(response.comission);
+        response.premios.map((row)=> premios.push({ label: row.position + ": " + row.percentage + "%", id: row.id }));
       })
     });
   }
 
-  const fetchEventos = async () => {
-    setLoadingRows(true);
-    getEventosAPI().then((response) => {
-      if (response.ok) {
-        response.json().then((r) => {
-          r.map((row)=> events.push({ label: row.equipoLocal.nombre + " vs " + row.equipoVisitante.nombre, id: row.id }));
-        });
-
-      } else {
-        return Promise.reject(response);
-      }
-    })
-      .catch((e) => {
-        console.log('error', e);
-      })
-      .finally(() => {
-        setLoadingRows(false);
-      });
-  }
-
   useEffect(() => {
-    fetchDeportes();
-    fetchEventos();
-    fetchCampeonato();
+    fetchPremios();
+    fetchCampeonatos();
+    fetchPencaPC();
   }, []);
 
 
@@ -200,7 +202,7 @@ function EditCampeonato() {
         <Grid item>
             <SoftBox height="100%" mt={0.5} lineHeight={1}>
               <SoftTypography variant="h5" fontWeight="medium">
-                Campeonatos
+                Pencas pozo compartido
               </SoftTypography>
             </SoftBox>
           </Grid>
@@ -211,7 +213,7 @@ function EditCampeonato() {
           <Grid item xs={12} lg={8}>
             <Card>
               <SoftBox p={2}>
-                <SoftTypography variant="h5">Fromulario de ingreso para un campeonato</SoftTypography>
+                <SoftTypography variant="h5">Editar penca de pozo compartido</SoftTypography>
                 <SoftTypography variant="subtitle1">Los campos marcados con * son obligatorios</SoftTypography>
               </SoftBox>
               <SoftBox pt={2} px={2}>
@@ -221,50 +223,76 @@ function EditCampeonato() {
               </SoftBox>
               <form>
                 <SoftBox p={2}>
-                  <SoftTypography variant="h5">Nombre del campeonato *</SoftTypography>
-                  <TextField id="standard-basic" variant="standard" value={nombreCampeonato} onChange={(e) => setNombreCampeonato(e.target.value)}/>
+                  <SoftTypography variant="h5">Título *</SoftTypography>
+                  <TextField id="standard-basic" variant="standard" value={title} onChange={(e) => setTitle(e.target.value)}/>
                 </SoftBox>
                 <SoftBox p={2}>
-                    <SoftTypography variant="h5">Deporte *</SoftTypography>
+                  <SoftTypography variant="h5">Descripción</SoftTypography>
+                  <TextField id="standard-basic" variant="standard" value={description} onChange={(e) => setDescription(e.target.value)}/>
+                </SoftBox>
+                <SoftBox p={2}>
+                    <SoftTypography variant="h5">Campeonato *</SoftTypography>
                     <SoftBox p={1}></SoftBox>
                     <Autocomplete
                       disablePortal
                       id="combo-box-demo"
-                      options={sports}
-                      value={nombreDeporte}
+                      options={campeonatos}
+                      value={campeonato}
                       sx={{ width: 300 }}
-                      onChange={(event, value) => setDeporte(value.sport)}
+                      onChange={(event, value) => setCampeonato(value.id)}
                       renderInput={(params) => <TextField {...params} label="" />}
                     />
                 </SoftBox>
                 <SoftBox p={2}>
-                    <SoftTypography variant="h5">Fecha de inicio *</SoftTypography>
+                    <SoftTypography variant="h5">Costo de entrada *</SoftTypography>
                     <SoftBox p={1}></SoftBox>
-                    <DateTimePicker onChange={setFechaInicio} value={fechaInicio} />
-                </SoftBox>
-                <SoftBox p={2}>
-                    <SoftTypography variant="h5">Fecha de finalización *</SoftTypography>
+                    <TextField
+                        id="outlined-number1"
+                        label="$"
+                        type="number"
+                        variant="standard"
+                        value={costoEntrada}
+                        InputLabelProps={{
+                            shrink: true,
+                        }}
+                        InputProps={{ inputProps: { min: 0 } }}
+                        onChange={(e) => setCostoEntrada(e.target.value)}
+                        /> 
+              </SoftBox>
+              <SoftBox p={2}>
+                    <SoftTypography variant="h5">Comisión *</SoftTypography>
                     <SoftBox p={1}></SoftBox>
-                    <DateTimePicker onChange={setFechaFin} value={fechaFin} />
-                </SoftBox>
+                    <TextField
+                        id="outlined-number2"
+                        label="%"
+                        type="number"
+                        variant="standard"
+                        value={comision}
+                        InputLabelProps={{
+                            shrink: true,
+                        }}
+                        InputProps={{ inputProps: { min: 0, max: 100 } }}
+                        onChange={(e) => setComision(e.target.value)}
+                        /> 
+              </SoftBox>
                 <SoftBox p={2}>
-                    <SoftTypography variant="h5">Eventos *</SoftTypography>
+                    <SoftTypography variant="h5">Premios *</SoftTypography>
                     <SoftBox p={1}></SoftBox>
                     <InputLabel></InputLabel>
                     <Select
                       multiple
-                      value={eventos}
-                      renderValue={(eventos) => (
+                      value={premios}
+                      renderValue={(premios) => (
                         <div>
-                          {eventos.map((ev) => (
+                          {premios.map((ev) => (
                             <Chip key={ev.id} label={ev.label} />
                           ))}
                         </div>
                       )}
                     >
-                      {events.map(ev =>  <MenuItem onClick={() => selectionChangeHandler(ev.id,ev.label)} value={ev.id} label={ev.label}>{ev.label}</MenuItem>)}
+                      {prizes.map(ev =>  <MenuItem onClick={() => selectionChangeHandler(ev.id,ev.label)} value={ev.id} label={ev.label}>{ev.label}</MenuItem>)}
                     </Select>
-                    <FormHelperText>Seleccione los eventos del campeonato</FormHelperText>
+                    <FormHelperText>Seleccione los premios de la penca</FormHelperText>
                 </SoftBox>
                {/* <SoftBox p={2}>
                     <SoftTypography variant="h5">Publicar campeonato en la lista para nuevas pencas?</SoftTypography>
@@ -303,10 +331,10 @@ function EditCampeonato() {
                 </SoftAlert>
               </SoftBox>}
               <SoftBox p={2}>
-                <SoftButton variant="outlined" color="info" size="small"  style={{ marginRight: "auto" }} onClick={submitCampeonato}>
-                    Editar campeonato
+                <SoftButton variant="outlined" color="info" size="small"  style={{ marginRight: "auto" }} onClick={submitPenca}>
+                    Editar penca
                 </SoftButton>
-                <SoftButton variant="outlined" color="error" size="small"  style={{ marginRight: "auto" }} onClick={() => navigate(-2)}>
+                <SoftButton variant="outlined" color="error" size="small"  style={{ marginRight: "auto" }} onClick={() => navigate(-1)}>
                     Volver
                 </SoftButton>
               </SoftBox>
@@ -319,4 +347,4 @@ function EditCampeonato() {
   );
 }
 
-export default EditCampeonato;
+export default EditPencaPC;
