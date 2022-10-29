@@ -22,6 +22,8 @@ import TablaCampeonatos from "layouts/tablaCampeonato";
 import TablaEventos from "layouts/tablaEvento";
 import TablaPlanes from "layouts/tablaPlanes";
 import TablaResultados from "layouts/tablaResultados";
+import TablaPencasPozoCompartido from "layouts/tablaPencasPozoCompartido";
+import TablaPremios from "layouts/tablaPremios";
 import Billing from "layouts/billing";
 import Profile from "layouts/profile";
 import SignIn from "layouts/authentication/sign-in";
@@ -48,6 +50,10 @@ import CreatePlan from "layouts/createPlan"
 import EditPlan from "layouts/editPlan"
 import CreateResultado from "layouts/createResultado"
 import EditResultado from "layouts/editResultado"
+import CreatePencaPozoCompartido from "layouts/createPencaPozoCompartido"
+import EditPencaPozoCompartido from "layouts/editPencaPozoCompartido"
+import CreatePremio from "layouts/createPremio"
+import EditPremio from "layouts/editPremio"
 
 const routes = [
   {
@@ -78,15 +84,6 @@ const routes = [
     noCollapse: true,
   },
   { type: "title", title: "Entrada de datos", key: "data-entry" },
-  {
-    type: "collapse",
-    name: "Pencas",
-    key: "penca",
-    route: "/penca",
-    icon: <Cube size="12px" />,
-    component: <SignUp />,
-    noCollapse: true,
-  },
   {
     type: "collapse",
     name: "Equipos",
@@ -157,6 +154,30 @@ const routes = [
     component:
       <DashboardLayout>
         <TablaResultados  />
+      </DashboardLayout>,
+  },
+  {
+    type: "collapse",
+    name: "Pencas pozo compartido",
+    key: "tablasPencaPozoCompartido",
+    icon: <Cube size="12px" />,
+    route: "/pencaPozoCompartido",
+
+    component:
+      <DashboardLayout>
+        <TablaPencasPozoCompartido  />
+      </DashboardLayout>,
+  },
+  {
+    type: "collapse",
+    name: "Premios",
+    key: "tablasPremios",
+    icon: <Cube size="12px" />,
+    route: "/premios",
+
+    component:
+      <DashboardLayout>
+        <TablaPremios  />
       </DashboardLayout>,
   },
   { type: "title", title: "Manejo de cuenta", key: "account-pages" },
@@ -294,6 +315,42 @@ const routes = [
       route: "/editResultado/:itemId",
       icon: <SpaceShip size="12px" />,
       component: <EditResultado />,
+      noCollapse: true,
+    },
+    {
+      type: "collapse",
+      name: "Create penca de pozo compartido",
+      key: "createPencaPozoCompartido",
+      route: "/createPencaPozoCompartido",
+      icon: <SpaceShip size="12px" />,
+      component: <CreatePencaPozoCompartido />,
+      noCollapse: true,
+    },
+    {
+      type: "collapse",
+      name: "Edit penca de pozo compartido",
+      key: "editPencaPozoCompartido",
+      route: "/editPencaPozoCompartido/:itemId",
+      icon: <SpaceShip size="12px" />,
+      component: <EditPencaPozoCompartido />,
+      noCollapse: true,
+    },
+    {
+      type: "collapse",
+      name: "Create premio",
+      key: "createPremio",
+      route: "/createPremio",
+      icon: <SpaceShip size="12px" />,
+      component: <CreatePremio />,
+      noCollapse: true,
+    },
+    {
+      type: "collapse",
+      name: "Edit premio",
+      key: "editPremio",
+      route: "/editPremio/:itemId",
+      icon: <SpaceShip size="12px" />,
+      component: <EditPremio />,
       noCollapse: true,
     },
   ]
