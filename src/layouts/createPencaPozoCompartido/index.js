@@ -106,6 +106,7 @@ function CreatePencaPC() {
       id: 0,
       title: title,
       description: description,
+      image: "string",
       campeonato: {
         id: campeonato
       },
