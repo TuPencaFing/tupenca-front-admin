@@ -150,16 +150,16 @@ function Tablas(props) {
                         key={row.id}
                         sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                       >
-                        <TableCell component="th" scope="row" align="center" style={{width: 1}}>
+                        <TableCell align="center">
                           {row.title}
                         </TableCell>
-                        <TableCell component="th" scope="row" align="center" style={{width: 1}}>
+                        <TableCell align="center" >
                         {extractContent(row.description).slice(0,25) + "..."}
                         </TableCell>
-                        <TableCell component="th" scope="row" align="center" style={{width: 1}}>
+                        <TableCell align="center">
                           {row.campeonato.name}
                         </TableCell>
-                        <TableCell component="th" scope="row" align="center" style={{width: 1}}>
+                        <TableCell align="center">
                           {row.costEntry}
                         </TableCell>
                         <TableCell align="center">
