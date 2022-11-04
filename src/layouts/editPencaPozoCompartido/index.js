@@ -110,7 +110,7 @@ function EditPencaPC() {
       title: title,
       description: description,
       campeonato: {
-        id: campeonato
+        id: campeonato.id
       },
       premios: premios,
       costEntry: costoEntrada,
@@ -150,11 +150,11 @@ function EditPencaPC() {
       res.json().then(response => {
         setTitle(response.title);
         setDescription(response.description);
+        setCostoEntrada(response.costEntry);
+        setComision(response.commission);
+        response.premios.map((row)=> premios.push({ label: row.position + ": " + row.percentage + "%", id: row.id }));
         setCampeonato(response.campeonato.id);
         setNombreCampeonato(response.campeonato.nombre);
-        setCostoEntrada(response.costEntry);
-        setComision(response.comission);
-        response.premios.map((row)=> premios.push({ label: row.position + ": " + row.percentage + "%", id: row.id }));
       })
     });
   }
@@ -237,9 +237,9 @@ function EditPencaPC() {
                       disablePortal
                       id="combo-box-demo"
                       options={campeonatos}
-                      value={campeonato}
+                      value={campeonato.label}
                       sx={{ width: 300 }}
-                      onChange={(event, value) => setCampeonato(value.id)}
+                      onChange={(event, value) => setCampeonato(value)}
                       renderInput={(params) => <TextField {...params} label="" />}
                     />
                 </SoftBox>

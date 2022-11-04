@@ -16,7 +16,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Footer from "examples/Footer";
-import getEventosAPI from "../../api/getEventos";
+import getEmpresasAPI from "../../api/getEmpresas";
 import curved0 from "assets/images/logo4.png";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
@@ -27,14 +27,13 @@ import TablePagination from '@mui/material/TablePagination';
 
 // Button, Navigation
 import SoftButton from "components/SoftButton";
-import {useNavigate} from 'react-router-dom';
-import deleteEventoApi from "../../api/deleteEvento";
-import Moment from 'moment';
+import {Routes, Route, useNavigate} from 'react-router-dom';
+import deleteEmpresaApi from "../../api/deleteEmpresa";
 
 
 function Tablas(props) {
   
-  const title = "Eventos";
+  const title = "Empresas";
   const navigate = useNavigate();
 
   const [rows, setRows] = useState([]);
@@ -45,9 +44,9 @@ function Tablas(props) {
   const [isSuccess, setIsSuccess] = useState('');
   const [showMsg, setShowMsg] = useState(false);
 
-  const fetchEventos = async () => {
+  const fetchEmpresas = async () => {
     setLoadingRows(true);
-    getEventosAPI().then((response) => {
+    getEmpresasAPI().then((response) => {
       if (response.ok) {
         response.json().then((r) => {
           setRows(r);
@@ -67,12 +66,12 @@ function Tablas(props) {
 
 
   useEffect(() => {
-    fetchEventos();
+    fetchEmpresas();
   }, []);
 
 
-  const navigateToCreateNewEvento = () => {
-    navigate('/createEvento/');
+  const navigateToCreateNewEmpresa = () => {
+    navigate('/createEmpresa/');
   };
 
   const handleChangePage = (event, newPage) => {
@@ -84,8 +83,9 @@ function Tablas(props) {
     setPage(0);
   };
 
-  function handleDeleteEvento(id) {
-   deleteEventoApi(id).then(response => {
+
+  function handleDeleteEmpresa(id) {
+   deleteEmpresaApi(id).then(response => {
       setIsSuccess(response.ok);
       setShowMsg(true);
       response.json().then(msg => {
@@ -135,7 +135,7 @@ function Tablas(props) {
                 <SoftTypography variant="h6" color="white">
                   {title}
                 </SoftTypography>
-                <SoftButton variant="outlined" color="white" size="small"  style={{ marginLeft: "auto" }} onClick={navigateToCreateNewEvento}>
+                <SoftButton variant="outlined" color="white" size="small"  style={{ marginLeft: "auto" }} onClick={navigateToCreateNewEmpresa}>
                   +
                 </SoftButton>
               </SoftBox>
@@ -145,10 +145,8 @@ function Tablas(props) {
                 <TableHead sx={{ display: "table-header-group" }}>
                     <TableRow>
                       <TableCell align="center">Identificador</TableCell>
-                      <TableCell align="center">Fecha del evento</TableCell>
-                      <TableCell align="center">Equipo local</TableCell>
-                      <TableCell align="center">Equipo visitante</TableCell>
-                      <TableCell align="center">Acciones</TableCell>
+                      <TableCell align="center">Razón social</TableCell>
+                      <TableCell align="center">RUT</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -163,24 +161,17 @@ function Tablas(props) {
                         <TableCell component="th" scope="row" align="center" style={{width: 1}}>
                           {row.id}
                         </TableCell>
+                        <TableCell align="center">{row.razonsocial}</TableCell>
+                        <TableCell align="center">{row.rut}</TableCell>
                         <TableCell align="center">
-                          {Moment(new Date(row.fechaInicial)).format('DD-MM-YYYY HH:mm')}
-                        </TableCell>
-                        <TableCell align="center">
-                          {row.equipoLocal.nombre}
-                        </TableCell>
-                        <TableCell align="center">
-                          {row.equipoVisitante.nombre}
-                        </TableCell>
-                        <TableCell align="center">
-                        <SoftTypography component="a" href="#" variant="caption" color="text" fontWeight="medium" onClick={() => navigate("/editEvento/" + row.id )}>
+                        <SoftTypography component="a" href="#" variant="caption" color="text" fontWeight="medium" onClick={() => navigate("/editEmpresa/" + row.id )}>
                           <Tooltip title="Editar">
                             <IconButton>
                               <EditIcon/>
                             </IconButton>
                           </Tooltip>
                         </SoftTypography> 
-                        <SoftTypography component="a" href="#" variant="caption" color="text" fontWeight="medium" onClick={() => { if (window.confirm('Confirma eliminar el deporte?')) handleDeleteEvento(row.id) } }>
+                        <SoftTypography component="a" href="#" variant="caption" color="text" fontWeight="medium" onClick={() => { if (window.confirm('Confirma eliminar el Empresa?')) handleDeleteEmpresa(row.id) } }>
                           <Tooltip title="Eliminar">
                             <IconButton>
                               <DeleteIcon/>

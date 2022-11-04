@@ -24,6 +24,7 @@ import TablaPlanes from "layouts/tablaPlanes";
 import TablaResultados from "layouts/tablaResultados";
 import TablaPencasPozoCompartido from "layouts/tablaPencasPozoCompartido";
 import TablaPremios from "layouts/tablaPremios";
+import TablaEmpresas from "layouts/tablaEmpresa";
 import Billing from "layouts/billing";
 import Profile from "layouts/profile";
 import SignIn from "layouts/authentication/sign-in";
@@ -32,7 +33,6 @@ import SignUp from "layouts/authentication/sign-up";
 // Soft UI Dashboard React icons
 import Shop from "examples/Icons/Shop";
 import Office from "examples/Icons/Office";
-import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import Document from "examples/Icons/Document";
 import SpaceShip from "examples/Icons/SpaceShip";
 import CustomerSupport from "examples/Icons/CustomerSupport";
@@ -54,6 +54,8 @@ import CreatePencaPozoCompartido from "layouts/createPencaPozoCompartido"
 import EditPencaPozoCompartido from "layouts/editPencaPozoCompartido"
 import CreatePremio from "layouts/createPremio"
 import EditPremio from "layouts/editPremio"
+import CreateEmpresa from "layouts/createEmpresa"
+import EditEmpresa from "layouts/editEmpresa"
 
 const routes = [
   {
@@ -92,9 +94,9 @@ const routes = [
     route: "/equipos",
 
     component:
-      <DashboardLayout>
+      
         <Tablas  />
-      </DashboardLayout>,
+      ,
   },
   {
     type: "collapse",
@@ -104,9 +106,9 @@ const routes = [
     route: "/deportes",
 
     component:
-      <DashboardLayout>
+      
         <TablaDeporte  />
-      </DashboardLayout>,
+      ,
   },
   {
     type: "collapse",
@@ -116,9 +118,9 @@ const routes = [
     route: "/campeonatos",
 
     component:
-      <DashboardLayout>
+      
         <TablaCampeonatos  />
-      </DashboardLayout>,
+      ,
   },
   {
     type: "collapse",
@@ -128,9 +130,9 @@ const routes = [
     route: "/eventos",
 
     component:
-      <DashboardLayout>
+      
         <TablaEventos  />
-      </DashboardLayout>,
+      ,
   },
   {
     type: "collapse",
@@ -140,9 +142,9 @@ const routes = [
     route: "/planes",
 
     component:
-      <DashboardLayout>
+      
         <TablaPlanes  />
-      </DashboardLayout>,
+      ,
   },
   {
     type: "collapse",
@@ -152,9 +154,9 @@ const routes = [
     route: "/resultados",
 
     component:
-      <DashboardLayout>
+      
         <TablaResultados  />
-      </DashboardLayout>,
+      ,
   },
   {
     type: "collapse",
@@ -164,9 +166,9 @@ const routes = [
     route: "/pencaPozoCompartido",
 
     component:
-      <DashboardLayout>
+      
         <TablaPencasPozoCompartido  />
-      </DashboardLayout>,
+      ,
   },
   {
     type: "collapse",
@@ -176,9 +178,21 @@ const routes = [
     route: "/premios",
 
     component:
-      <DashboardLayout>
+      
         <TablaPremios  />
-      </DashboardLayout>,
+      ,
+  },
+  {
+    type: "collapse",
+    name: "Empresas",
+    key: "tablasEmpresa",
+    icon: <Cube size="12px" />,
+    route: "/empresas",
+
+    component:
+      
+        <TablaEmpresas  />
+      ,
   },
   { type: "title", title: "Manejo de cuenta", key: "account-pages" },
   {
@@ -351,6 +365,24 @@ const routes = [
       route: "/editPremio/:itemId",
       icon: <SpaceShip size="12px" />,
       component: <EditPremio />,
+      noCollapse: true,
+    },
+    {
+      type: "collapse",
+      name: "Create empresa",
+      key: "createEmpresa",
+      route: "/createEmpresa",
+      icon: <SpaceShip size="12px" />,
+      component: <CreateEmpresa />,
+      noCollapse: true,
+    },
+    {
+      type: "collapse",
+      name: "Edit empresa",
+      key: "editEmpresa",
+      route: "/editEmpresa/:itemId",
+      icon: <SpaceShip size="12px" />,
+      component: <EditEmpresa />,
       noCollapse: true,
     },
   ]
