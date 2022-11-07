@@ -19,7 +19,7 @@
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main_webapps_fail" ]
   workflow_dispatch:
 
 env:
