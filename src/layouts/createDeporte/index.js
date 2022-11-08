@@ -77,7 +77,19 @@ function CreateDeporte() {
         setJsonResponseMessage("No se pudo dar de alta el deporte.");
       })
    });
-  }
+  };
+
+function handleImageChange(e) {
+    e.preventDefault();
+    let form = new FormData();
+    for (var index = 0; index < e.target.files.length; index++) {
+        var element = e.target.files[index];
+        form.append('image', element);
+    }
+    form.append('fileName', "Img");
+    this.setState({ file: form });
+};    
+
 
   return (
     <DashboardLayout>

@@ -50,6 +50,7 @@ function EditEmpresa() {
   const [rut, setRut] = useState('');
   const [id, setId] = useState('');
   const navigate = useNavigate();
+  const [fileSelected, setFileSelected] = useState();
 
 
   const alertContent = () => (
@@ -92,6 +93,7 @@ function EditEmpresa() {
             setId(itemId);
             setRazonsocial(response.razonsocial);
             setRut(response.rut);
+            setFileSelected(response.image);
           })
         });
     }
@@ -99,6 +101,26 @@ function EditEmpresa() {
     fetchEmpresa();
 
 }, []);
+
+const saveFileSelected= (e) => {
+  setFileSelected(e.target.files[0]);
+};
+
+const importFile= async (e) => {
+  const file = new FormData();
+  file.append("file", fileSelected);
+  try {
+    fetch(`https://tupenca-back-test.azurewebsites.net/api/empresas/${itemId}/image`, {
+    method: 'PATCH',
+    headers: {
+      "Authorization": `Bearer ${localStorage.getItem("token")}`
+    },
+    body: file
+   })
+  } catch (ex) {
+    console.log(ex);
+  }
+};
 
   return (
     <DashboardLayout>
@@ -164,6 +186,11 @@ function EditEmpresa() {
                   <SoftTypography variant="h5">RUT *</SoftTypography>
                   <TextField id="standard-basic" variant="standard" value={rut} onChange={(e) => setRut(e.target.value)}/>
                 </SoftBox>
+                <input type="file" onChange={saveFileSelected} />
+                <input type="button" value="upload" onClick={importFile} />
+                <div>
+                  <img style={{width: 400, height: 400}} src={`${fileSelected}`}/>
+                </div>
               </form>
               {showMsg &&!isSuccess && <SoftBox pt={2} px={2}>
                 <SoftAlert color="error">
