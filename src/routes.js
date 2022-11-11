@@ -25,6 +25,7 @@ import TablaResultados from "layouts/tablaResultados";
 import TablaPencasPozoCompartido from "layouts/tablaPencasPozoCompartido";
 import TablaPremios from "layouts/tablaPremios";
 import TablaEmpresas from "layouts/tablaEmpresa";
+import TablaPencasEmpresa from "layouts/tablaPencasEmpresa";
 import Billing from "layouts/billing";
 import Profile from "layouts/profile";
 import SignIn from "layouts/authentication/sign-in";
@@ -56,6 +57,8 @@ import CreatePremio from "layouts/createPremio"
 import EditPremio from "layouts/editPremio"
 import CreateEmpresa from "layouts/createEmpresa"
 import EditEmpresa from "layouts/editEmpresa"
+import CreatePencaEmpresa from "layouts/createPencaEmpresa"
+import EditPencaEmpresa from "layouts/editPencaEmpresa"
 
 const routes = [
   {
@@ -97,6 +100,7 @@ const routes = [
       
         <Tablas  />
       ,
+      
   },
   {
     type: "collapse",
@@ -168,6 +172,18 @@ const routes = [
     component:
       
         <TablaPencasPozoCompartido  />
+      ,
+  },
+  {
+    type: "collapse",
+    name: "Pencas empresa",
+    key: "tablasPencaEmpresa",
+    icon: <Cube size="12px" />,
+    route: "/pencasEmpresa",
+
+    component:
+      
+        <TablaPencasEmpresa  />
       ,
   },
   {
@@ -383,6 +399,24 @@ const routes = [
       route: "/editEmpresa/:itemId",
       icon: <SpaceShip size="12px" />,
       component: <EditEmpresa />,
+      noCollapse: true,
+    },
+    {
+      type: "collapse",
+      name: "Create penca empresa",
+      key: "createPencaEmpresa",
+      route: "/createPencaEmpresa",
+      icon: <SpaceShip size="12px" />,
+      component: <CreatePencaEmpresa />,
+      noCollapse: true,
+    },
+    {
+      type: "collapse",
+      name: "Edit penca empresa",
+      key: "editPencaEmpresa",
+      route: "/editPencaEmpresa/:itemId",
+      icon: <SpaceShip size="12px" />,
+      component: <EditPencaEmpresa />,
       noCollapse: true,
     },
   ]

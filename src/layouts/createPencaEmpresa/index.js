@@ -33,15 +33,16 @@ import { Select, MenuItem, FormHelperText, FormControl, InputLabel, Chip } from 
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
-import createPencaPCApi from "../../api/createPencaPC";
+import createPencaEmpresaApi from "../../api/createPencaEmpresa";
 import getCampeonatosAPI from "../../api/getCampeonatos";
 import getPremiosAPI from "../../api/getPremios";
+import getEmpresasAPI from "../../api/getEmpresas";
 
 // API requests
 import { useNavigate } from "react-router-dom";
 import curved0 from "assets/images/logo4.png";
 
-function CreatePencaPC() {
+function CreatePencaEmpresa() {
   
   const [title, setTitle] = useState('');
   const [loadingRows, setLoadingRows] = useState(false);
@@ -53,8 +54,9 @@ function CreatePencaPC() {
   const [showMsg, setShowMsg] = useState(false);
   const [premios, setPremios] = useState([]);
   const [prizes, setPrizes] = useState([]);
-  const [costoEntrada, setCostoEntrada] = useState([]);
-  const [comision, setComision] = useState([]);
+  const [empresa, setEmpresa] = useState([]);
+  const [empresas, setEmpresas] = useState([]);
+  const [planId, setPlanId] = useState([]);
   const navigate = useNavigate();
 
   const alertContent = () => (
@@ -117,10 +119,12 @@ function CreatePencaPC() {
         resultadoExacto: 0
       },
       premios: premios,
-      costEntry: costoEntrada,
-      commission: comision
+      empresa: {
+         id: empresa,
+         planId: planId
+      }
     };
-   createPencaPCApi(data).then(response => {
+   createPencaEmpresaApi(data).then(response => {
       setIsSuccess(response.ok);
       setShowMsg(true);
       response.json().then(msg => {
@@ -148,12 +152,37 @@ function CreatePencaPC() {
         setLoadingRows(false);
       });
   };
+  
+  const fetchEmpesas = async () => {
+    setLoadingRows(true);
+    getEmpresasAPI().then((response) => {
+      if (response.ok) {
+        response.json().then((r) => {
+          r.map((row)=> empresas.push({ label: row.razonsocial, planId: row.planId, id: row.id }));
+        });
+
+      } else {
+        return Promise.reject(response);
+      }
+    })
+      .catch((e) => {
+        console.log('error', e);
+      })
+      .finally(() => {
+        setLoadingRows(false);
+      });
+  };
 
   useEffect(() => {
     fetchPremios();
+    fetchEmpesas();
     fetchCampeonatos();
   }, []);
 
+  function handleEmpresaChange(id, plan){
+    setEmpresa(id);
+    setPlanId(plan);
+  }
 
   return (
     <DashboardLayout>
@@ -191,7 +220,7 @@ function CreatePencaPC() {
         <Grid item>
             <SoftBox height="100%" mt={0.5} lineHeight={1}>
               <SoftTypography variant="h5" fontWeight="medium">
-                Pencas pozo compartido
+                Pencas empresa
               </SoftTypography>
             </SoftBox>
           </Grid>
@@ -202,7 +231,7 @@ function CreatePencaPC() {
           <Grid item xs={12} lg={8}>
             <Card>
               <SoftBox p={2}>
-                <SoftTypography variant="h5">Fromulario de ingreso para una penca de pozo compartido</SoftTypography>
+                <SoftTypography variant="h5">Fromulario de ingreso para una penca empresa</SoftTypography>
                 <SoftTypography variant="subtitle1">Los campos marcados con * son obligatorios</SoftTypography>
               </SoftBox>
               <SoftBox pt={2} px={2}>
@@ -232,38 +261,6 @@ function CreatePencaPC() {
                     />
                 </SoftBox>
                 <SoftBox p={2}>
-                    <SoftTypography variant="h5">Costo de entrada *</SoftTypography>
-                    <SoftBox p={1}></SoftBox>
-                    <TextField
-                        id="outlined-number1"
-                        label="$"
-                        type="number"
-                        variant="standard"
-                        value={costoEntrada}
-                        InputLabelProps={{
-                            shrink: true,
-                        }}
-                        InputProps={{ inputProps: { min: 0 } }}
-                        onChange={(e) => setCostoEntrada(e.target.value)}
-                        /> 
-              </SoftBox>
-              <SoftBox p={2}>
-                    <SoftTypography variant="h5">Comisión *</SoftTypography>
-                    <SoftBox p={1}></SoftBox>
-                    <TextField
-                        id="outlined-number2"
-                        label="%"
-                        type="number"
-                        variant="standard"
-                        value={comision}
-                        InputLabelProps={{
-                            shrink: true,
-                        }}
-                        InputProps={{ inputProps: { min: 0, max: 100 } }}
-                        onChange={(e) => setComision(e.target.value)}
-                        /> 
-              </SoftBox>
-                <SoftBox p={2}>
                     <SoftTypography variant="h5">Premios *</SoftTypography>
                     <SoftBox p={1}></SoftBox>
                     <InputLabel></InputLabel>
@@ -281,6 +278,17 @@ function CreatePencaPC() {
                       {prizes.map(ev =>  <MenuItem onClick={() => selectionChangeHandler(ev.id,ev.label)} value={ev.id} label={ev.label}>{ev.label}</MenuItem>)}
                     </Select>
                     <FormHelperText>Seleccione los premios de la penca</FormHelperText>
+                </SoftBox>
+                <SoftBox p={2}>
+                <SoftTypography variant="h5">Empresa *</SoftTypography>
+                <Autocomplete
+                      disablePortal
+                      id="combo-box-demo"
+                      options={empresas}
+                      sx={{ width: 300 }}
+                      onChange={(event, value) => handleEmpresaChange(value.id, value.planId)}
+                      renderInput={(params) => <TextField {...params} label="" />}
+                    />
                 </SoftBox>
                {/* <SoftBox p={2}>
                     <SoftTypography variant="h5">Publicar campeonato en la lista para nuevas pencas?</SoftTypography>
@@ -322,7 +330,7 @@ function CreatePencaPC() {
                 <SoftButton variant="outlined" color="info" size="small"  style={{ marginRight: "auto" }} onClick={submitPenca}>
                     Añadir penca
                 </SoftButton>
-                <SoftButton variant="outlined" color="error" size="small"  style={{ marginRight: "auto" }} onClick={() => navigate(-1)}>
+                <SoftButton variant="outlined" color="error" size="small"  style={{ marginRight: "auto" }} onClick={() => navigate(-2)}>
                     Volver
                 </SoftButton>
               </SoftBox>
@@ -335,4 +343,4 @@ function CreatePencaPC() {
   );
 }
 
-export default CreatePencaPC;
+export default CreatePencaEmpresa;

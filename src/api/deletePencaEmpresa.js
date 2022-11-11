@@ -1,8 +1,8 @@
 const API_URL = process.env.API_URL;
 
-function deletePlan(id) {
+function deletePencaEmpresa(id) {
 
-    return fetch(`https://tupenca-back20221107193837.azurewebsites.net/api/planes/${id}`, {
+    return fetch(`https://tupenca-back20221107193837.azurewebsites.net/api/pencas-empresas/${id}`, {
     method: 'DELETE',
     headers: {
       "Authorization": `Bearer ${localStorage.getItem("token")}`,
@@ -11,5 +11,5 @@ function deletePlan(id) {
    })
 }
 
-module.exports = deletePlan;
+module.exports = deletePencaEmpresa;
 

@@ -33,11 +33,13 @@ import SoftButton from "components/SoftButton";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
+import Autocomplete from '@mui/material/Autocomplete';
 
 // API requests
 import createEmpresaApi from "../../api/createEmpresa";
 import { useNavigate } from "react-router-dom";
 import curved0 from "assets/images/logo4.png";
+import getPlanesAPI from "../../api/getPlanes";
 
 function CreateEmpresa() {
 
@@ -46,6 +48,9 @@ function CreateEmpresa() {
   const [showMsg, setShowMsg] = useState(false);
   const [razonsocial, setRazonsocial] = useState('');
   const [rut, setRut] = useState('');
+  const [planes, setPlanes] = useState([]);
+  const [plan, setPlan] = useState('');
+  const [loadingRows, setLoadingRows] = useState(false);
   const navigate = useNavigate();
 
 
@@ -67,10 +72,31 @@ function CreateEmpresa() {
     </SoftTypography>
   );
 
+  const fetchPlanes = async () => {
+    setLoadingRows(true);
+    getPlanesAPI().then((response) => {
+      if (response.ok) {
+        response.json().then((r) => {
+          r.map((row)=> planes.push({ label: "usuarios: " + row.cantUser + " , costo: " + row.percentageCost, id: row.id }));
+        });
+
+      } else {
+        return Promise.reject(response);
+      }
+    })
+      .catch((e) => {
+        console.log('error', e);
+      })
+      .finally(() => {
+        setLoadingRows(false);
+      });
+  }
+
   const submitEmpresa = async () => {
     const data = {
       razonsocial: razonsocial,
-      rut: rut
+      rut: rut,
+      planId: plan
    }
    createEmpresaApi(data).then(response => {
       setIsSuccess(response.ok);
@@ -79,7 +105,11 @@ function CreateEmpresa() {
         setJsonResponseMessage("No se pudo dar de alta el empresa.");
       })
    });
-  }
+  };
+
+  useEffect(() => {
+    fetchPlanes();
+  }, []);
 
   return (
     <DashboardLayout>
@@ -140,6 +170,17 @@ function CreateEmpresa() {
                 <SoftBox p={2}>
                   <SoftTypography variant="h5">Razón social *</SoftTypography>
                   <TextField id="standard-basic" variant="standard" onChange={(e) => setRazonsocial(e.target.value)}/>
+                </SoftBox>
+                <SoftBox p={2}>
+                <SoftTypography variant="h5">Plan *</SoftTypography>
+                <Autocomplete
+                      disablePortal
+                      id="combo-box-demo"
+                      options={planes}
+                      sx={{ width: 300 }}
+                      onChange={(event, value) => setPlan(value.id)}
+                      renderInput={(params) => <TextField {...params} label="" />}
+                    />
                 </SoftBox>
                 <SoftBox p={2}>
                   <SoftTypography variant="h5">RUT *</SoftTypography>

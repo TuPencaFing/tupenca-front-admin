@@ -58,6 +58,8 @@ function EditCampeonato() {
   const [sports, setSports] = useState([]);
   const [events, setEvents] = useState([]);
   const [eventos, setEventos] = useState([]);
+  const [mostrarImagen, setMostrarImagen] = useState(true);
+  const [fileSelected, setFileSelected] = useState();
   const navigate = useNavigate();
 
   const alertContent = () => (
@@ -77,6 +79,27 @@ function EditCampeonato() {
       El campeonato se ha editado con éxito.
     </SoftTypography>
   );
+
+  const saveFileSelected= (e) => {
+    setFileSelected(e.target.files[0]);
+    setMostrarImagen(false);
+  };
+  
+  const importFile= async (e) => {
+    const file = new FormData();
+    file.append("file", fileSelected);
+    try {
+      fetch(`https://tupenca-back20221107193837.azurewebsites.net/api/campeonatos/${itemId}/image`, {
+      method: 'PATCH',
+      headers: {
+        "Authorization": `Bearer ${localStorage.getItem("token")}`
+      },
+      body: file
+     })
+    } catch (ex) {
+      console.log(ex);
+    }
+  };
 
   const submitCampeonato = async () => {
     const data = {
@@ -132,6 +155,7 @@ function EditCampeonato() {
         setFechaFin(new Date(response.finishDate));
         setDeporte(response.deporte.id);
         setNombreDeporte(response.deporte.nombre);
+        setFileSelected(response.image);
         response.eventos.map((row)=> eventos.push({ label: row.equipoLocalNombre + " vs " + row.equipoVisitanteNombre, id: row.id }));
       })
     });
@@ -291,6 +315,13 @@ function EditCampeonato() {
                         }}
                         onChange={(e) => setFechaPublicacionPenca(e.target.value)} disabled={publicarPenca != 2}/>
               </SoftBox>*/}
+              <SoftBox p={2}> 
+                <input type="file" onChange={saveFileSelected} />
+                <input type="button" value="Subir imágen" onClick={importFile} />
+                {fileSelected && mostrarImagen && <div>
+                  <img style={{width: 400, height: 400}} src={`${fileSelected}`}/>
+                </div>}
+                </SoftBox>
               </form>
               {showMsg &&!isSuccess && <SoftBox pt={2} px={2}>
                 <SoftAlert color="error">

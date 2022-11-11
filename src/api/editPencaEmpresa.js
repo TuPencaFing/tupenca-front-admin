@@ -1,8 +1,8 @@
 const API_URL = process.env.API_URL;
 
-function editResultado(id,data) {
+function editPencaEmpresa(id,data) {
 
-    return fetch(`https://tupenca-back20221107193837.azurewebsites.net/api/resultados/${id}`, {
+    return fetch(`https://tupenca-back20221107193837.azurewebsites.net/api/pencas-empresas/${id}`, {
     method: 'PUT',
     headers: {
       "Authorization": `Bearer ${localStorage.getItem("token")}`,
@@ -12,5 +12,5 @@ function editResultado(id,data) {
    })
 }
 
-module.exports = editResultado;
+module.exports = editPencaEmpresa;
 

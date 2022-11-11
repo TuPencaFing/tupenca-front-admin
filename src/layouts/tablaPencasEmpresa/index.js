@@ -16,7 +16,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Footer from "examples/Footer";
-import getPlanesAPI from "../../api/getPlanes";
+import getPencasEmpresaAPI from "../../api/getPencasEmpresa";
 import curved0 from "assets/images/logo4.png";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
@@ -27,25 +27,26 @@ import TablePagination from '@mui/material/TablePagination';
 
 // Button, Navigation
 import SoftButton from "components/SoftButton";
-import {useNavigate} from 'react-router-dom';
-import deletePlanApi from "../../api/deletePlan";
+import { useNavigate} from 'react-router-dom';
+import deletePencaEmpresaApi from "../../api/deletePencaEmpresa";
 
 
 function Tablas(props) {
   
-  const title = "Planes";
+  const title = "Pencas de pozo compartido";
   const navigate = useNavigate();
 
   const [rows, setRows] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [loadingRows, setLoadingRows] = useState(false);
+  const [jsonResponseMessage, setJsonResponseMessage] = useState('');
   const [isSuccess, setIsSuccess] = useState('');
   const [showMsg, setShowMsg] = useState(false);
 
-  const fetchPlanes = async () => {
+  const fetchPencasEmpresa = async () => {
     setLoadingRows(true);
-    getPlanesAPI().then((response) => {
+    getPencasEmpresaAPI().then((response) => {
       if (response.ok) {
         response.json().then((r) => {
           setRows(r);
@@ -64,15 +65,6 @@ function Tablas(props) {
   }
 
 
-  useEffect(() => {
-    fetchPlanes();
-  }, []);
-
-
-  const navigateToCreateNewPlan = () => {
-    navigate('/createPlan/');
-  };
-
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -82,9 +74,23 @@ function Tablas(props) {
     setPage(0);
   };
 
+  useEffect(() => {
+    fetchPencasEmpresa();
+  }, []);
 
-  function handleDeletePlan(id) {
-   deletePlanApi(id).then(response => {
+
+  const navigateToCreateNewPencaEmpresa = () => {
+    navigate('/createPencaEmpresa/');
+  };
+
+  function extractContent(s) {
+    var span = document.createElement('span');
+    span.innerHTML = s;
+    return span.textContent || span.innerText;
+  };
+
+  function handleDeletePencaEmpresa(id) {
+   deletePencaEmpresaApi(id).then(response => {
       setIsSuccess(response.ok);
       setShowMsg(true);
       response.json().then(msg => {
@@ -116,7 +122,7 @@ function Tablas(props) {
           }}
         />
       </SoftBox>
-      <SoftBox pt={12} pb={6}>
+      <SoftBox pt={6} pb={3}>
         <Grid container spacing={1}>
           <Grid item xs={200}>
             <Card>
@@ -134,7 +140,7 @@ function Tablas(props) {
                 <SoftTypography variant="h6" color="white">
                   {title}
                 </SoftTypography>
-                <SoftButton variant="outlined" color="white" size="small"  style={{ marginLeft: "auto" }} onClick={navigateToCreateNewPlan}>
+                <SoftButton variant="outlined" color="white" size="small"  style={{ marginLeft: "auto" }} onClick={navigateToCreateNewPencaEmpresa}>
                   +
                 </SoftButton>
               </SoftBox>
@@ -143,9 +149,11 @@ function Tablas(props) {
                 <Table  aria-label="simple table">
                 <TableHead sx={{ display: "table-header-group" }}>
                     <TableRow>
-                      <TableCell align="center">Identificador</TableCell>
-                      <TableCell align="center">Cantidad de usuarios</TableCell>
-                      <TableCell align="center">Porcentaje de ganancia</TableCell>
+                      <TableCell align="center">Titulo</TableCell>
+                      <TableCell align="center">Descripción</TableCell>
+                      <TableCell align="center">Campeonato</TableCell>
+                      <TableCell align="center">Empresa</TableCell>
+                      <TableCell align="center">Acciones</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -157,24 +165,27 @@ function Tablas(props) {
                         key={row.id}
                         sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                       >
-                        <TableCell component="th" scope="row" align="center" style={{width: 1}}>
-                          {row.id}
+                        <TableCell align="center">
+                          {row.title}
+                        </TableCell>
+                        <TableCell align="center" >
+                        {extractContent(row.description).slice(0,25) + "..."}
                         </TableCell>
                         <TableCell align="center">
-                          {row.cantUser}
+                          {row.campeonato.name}
                         </TableCell>
                         <TableCell align="center">
-                          {row.percentageCost}
+                          {row.empresa.razonsocial}
                         </TableCell>
                         <TableCell align="center">
-                        <SoftTypography component="a" href="#" variant="caption" color="text" fontWeight="medium" onClick={() => navigate("/editPlan/" + row.id )}>
+                        <SoftTypography component="a" href="#" variant="caption" color="text" fontWeight="medium" onClick={() => navigate("/editPencaEmpresa/" + row.id )}>
                           <Tooltip title="Editar">
                             <IconButton>
                               <EditIcon/>
                             </IconButton>
                           </Tooltip>
                         </SoftTypography> 
-                        <SoftTypography component="a" href="#" variant="caption" color="text" fontWeight="medium" onClick={() => { if (window.confirm('Confirma eliminar el deporte?')) handleDeletePlan(row.id) } }>
+                        <SoftTypography component="a" href="#" variant="caption" color="text" fontWeight="medium" onClick={() => { if (window.confirm('Confirma eliminar la penca?')) handleDeletePencaEmpresa(row.id) } }>
                           <Tooltip title="Eliminar">
                             <IconButton>
                               <DeleteIcon/>

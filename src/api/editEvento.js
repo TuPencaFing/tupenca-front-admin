@@ -2,7 +2,7 @@ const API_URL = process.env.API_URL;
 
 function editEvento(id,data) {
 
-    return fetch(`https://tupenca-back-test.azurewebsites.net/api/eventos/${id}`, {
+    return fetch(`https://tupenca-back20221107193837.azurewebsites.net/api/eventos/${id}`, {
     method: 'PUT',
     headers: {
       "Authorization": `Bearer ${localStorage.getItem("token")}`,

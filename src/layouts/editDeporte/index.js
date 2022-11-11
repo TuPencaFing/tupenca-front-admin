@@ -106,7 +106,7 @@ const importFile= async (e) => {
   const file = new FormData();
   file.append("file", fileSelected);
   try {
-    fetch(`https://tupenca-back-test.azurewebsites.net/api/deportes/${itemId}/image`, {
+    fetch(`https://tupenca-back20221107193837.azurewebsites.net/api/deportes/${itemId}/image`, {
     method: 'PATCH',
     headers: {
       "Authorization": `Bearer ${localStorage.getItem("token")}`

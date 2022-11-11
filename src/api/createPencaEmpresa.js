@@ -1,7 +1,7 @@
 const API_URL = process.env.API_URL;
 
-function createPremio(data) {
-	return fetch(`https://tupenca-back20221107193837.azurewebsites.net/api/premios`, {
+function createPencaEmpresa(data) {
+	return fetch(`https://tupenca-back20221107193837.azurewebsites.net/api/pencas-empresas`, {
 		method: "POST",
 		headers: {
 			"Authorization": `Bearer ${localStorage.getItem("token")}`,
@@ -11,4 +11,4 @@ function createPremio(data) {
 	});
 }
 
-module.exports = createPremio;
+module.exports = createPencaEmpresa;

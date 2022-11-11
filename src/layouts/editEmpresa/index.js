@@ -26,7 +26,7 @@ import SoftBox from "components/SoftBox";
 import SoftTypography from "components/SoftTypography";
 import SoftAlert from "components/SoftAlert";
 import SoftButton from "components/SoftButton";
-
+import Autocomplete from '@mui/material/Autocomplete';
 
 
 // Material Dashboard 2 React example components
@@ -39,6 +39,7 @@ import getEmpresaAPI from "../../api/getEmpresa";
 import editEmpresaApi from "../../api/editEmpresa";
 import { useNavigate, useParams} from "react-router-dom";
 import curved0 from "assets/images/logo4.png";
+import getPlanesAPI from "../../api/getPlanes";
 
 function EditEmpresa() {
 
@@ -49,6 +50,11 @@ function EditEmpresa() {
   const [razonsocial, setRazonsocial] = useState('');
   const [rut, setRut] = useState('');
   const [id, setId] = useState('');
+  const [mostrarImagen, setMostrarImagen] = useState(true);
+  const [planes, setPlanes] = useState([]);
+  const [plan, setPlan] = useState('');
+  const [loadingRows, setLoadingRows] = useState(false);
+  const [planRow, setPlanRow] = useState('');
   const navigate = useNavigate();
   const [fileSelected, setFileSelected] = useState();
 
@@ -74,7 +80,8 @@ function EditEmpresa() {
   const submitEmpresa = async () => {
     const data = {
         razonsocial: razonsocial,
-        rut: rut
+        rut: rut,
+        planId: plan
    }
    editEmpresaApi(itemId,data).then(response => {
       setIsSuccess(response.ok);
@@ -83,6 +90,26 @@ function EditEmpresa() {
         setJsonResponseMessage("No se pudo eitar la empresa.");
       })
    });
+  };
+
+  const fetchPlanes = async () => {
+    setLoadingRows(true);
+    getPlanesAPI().then((response) => {
+      if (response.ok) {
+        response.json().then((r) => {
+          r.map((row)=> planes.push({ label: "usuarios: " + row.cantUser + " , costo: " + row.percentageCost, id: row.id }));
+        });
+
+      } else {
+        return Promise.reject(response);
+      }
+    })
+      .catch((e) => {
+        console.log('error', e);
+      })
+      .finally(() => {
+        setLoadingRows(false);
+      });
   }
 
   useEffect(function effectFunction() {
@@ -94,23 +121,26 @@ function EditEmpresa() {
             setRazonsocial(response.razonsocial);
             setRut(response.rut);
             setFileSelected(response.image);
+            setPlan(response.planId);
+            setPlanRow("usuarios: " + response.plan.cantUser + " , costo: " + response.plan.percentageCost);
           })
         });
     }
-
+    fetchPlanes();
     fetchEmpresa();
 
 }, []);
 
 const saveFileSelected= (e) => {
   setFileSelected(e.target.files[0]);
+  setMostrarImagen(false);
 };
 
 const importFile= async (e) => {
   const file = new FormData();
   file.append("file", fileSelected);
   try {
-    fetch(`https://tupenca-back-test.azurewebsites.net/api/empresas/${itemId}/image`, {
+    fetch(`https://tupenca-back20221107193837.azurewebsites.net/api/empresas/${itemId}/image`, {
     method: 'PATCH',
     headers: {
       "Authorization": `Bearer ${localStorage.getItem("token")}`
@@ -183,14 +213,28 @@ const importFile= async (e) => {
                   <TextField id="standard-basic" variant="standard" value={razonsocial} onChange={(e) => setRazonsocial(e.target.value)}/>
                 </SoftBox>
                 <SoftBox p={2}>
+                <SoftTypography variant="h5">Plan *</SoftTypography>
+                <Autocomplete
+                      disablePortal
+                      id="combo-box-demo"
+                      options={planes}
+                      value={planRow}
+                      sx={{ width: 300 }}
+                      onChange={(event, value) => setPlan(value.id)}
+                      renderInput={(params) => <TextField {...params} label="" />}
+                    />
+                </SoftBox>
+                <SoftBox p={2}>
                   <SoftTypography variant="h5">RUT *</SoftTypography>
                   <TextField id="standard-basic" variant="standard" value={rut} onChange={(e) => setRut(e.target.value)}/>
                 </SoftBox>
+                <SoftBox p={2}> 
                 <input type="file" onChange={saveFileSelected} />
-                <input type="button" value="upload" onClick={importFile} />
-                <div>
+                <input type="button" value="Subir imágen" onClick={importFile} />
+                {fileSelected && mostrarImagen && <div>
                   <img style={{width: 400, height: 400}} src={`${fileSelected}`}/>
-                </div>
+                </div>}
+                </SoftBox>
               </form>
               {showMsg &&!isSuccess && <SoftBox pt={2} px={2}>
                 <SoftAlert color="error">
@@ -204,9 +248,9 @@ const importFile= async (e) => {
               </SoftBox>}
               <SoftBox p={2}>
                 <SoftButton variant="outlined" color="info" size="small"  style={{ marginRight: "auto" }} onClick={submitEmpresa}>
-                    Añadir empresa
+                    Editar empresa
                 </SoftButton>
-                <SoftButton variant="outlined" color="error" size="small"  style={{ marginRight: "auto" }} onClick={() => navigate(-1)}>
+                <SoftButton variant="outlined" color="error" size="small"  style={{ marginRight: "auto" }} onClick={() => navigate(-2)}>
                     Volver
                 </SoftButton>
               </SoftBox>

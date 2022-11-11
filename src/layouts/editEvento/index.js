@@ -49,6 +49,8 @@ function EditEvento() {
   const [id, setId] = useState([]);
   const [loadingRows, setLoadingRows] = useState(false);
   const [fechaInicial, setFechaInicial] = useState('');
+  const [mostrarImagen, setMostrarImagen] = useState(true);
+  const [fileSelected, setFileSelected] = useState();
   const navigate = useNavigate();
 
 
@@ -81,7 +83,29 @@ function EditEvento() {
         setJsonResponseMessage("No se pudo editar el evento.");
       })
    });
-  }
+  };
+
+  const saveFileSelected= (e) => {
+    setFileSelected(e.target.files[0]);
+    setMostrarImagen(false);
+  };
+  
+  const importFile= async (e) => {
+    const file = new FormData();
+    file.append("file", fileSelected);
+    try {
+      fetch(`https://tupenca-back20221107193837.azurewebsites.net/api/eventos/${itemId}/image`, {
+      method: 'PATCH',
+      headers: {
+        "Authorization": `Bearer ${localStorage.getItem("token")}`
+      },
+      body: file
+     })
+    } catch (ex) {
+      console.log(ex);
+    }
+  };
+
 
 
   useEffect(function effectFunction() {
@@ -91,6 +115,7 @@ function EditEvento() {
           res.json().then(response => {
             setId(itemId);
             setFechaInicial(new Date(response.fechaInicial));
+            setFileSelected(response.image);
           })
         });
     }
@@ -159,6 +184,13 @@ function EditEvento() {
                     <SoftBox p={1}></SoftBox>
                     <DateTimePicker onChange={setFechaInicial} value={fechaInicial} />
               </SoftBox>
+              <SoftBox p={2}> 
+                <input type="file" onChange={saveFileSelected} />
+                <input type="button" value="Subir imágen" onClick={importFile} />
+                {fileSelected && mostrarImagen && <div>
+                  <img style={{width: 400, height: 400}} src={`${fileSelected}`}/>
+                </div>}
+                </SoftBox>
               </form>
               {showMsg &&!isSuccess && <SoftBox pt={2} px={2}>
                 <SoftAlert color="error">
