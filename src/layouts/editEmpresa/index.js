@@ -61,7 +61,7 @@ function EditEmpresa() {
 
   const alertContent = () => (
     <SoftTypography variant="body2" color="white">
-      El RUT debe ser único dentro del sistema.
+      Se recomienda solo upgradear el plan de la empresa.
     </SoftTypography>
   );
 
@@ -79,15 +79,13 @@ function EditEmpresa() {
 
   const submitEmpresa = async () => {
     const data = {
-        razonsocial: razonsocial,
-        rut: rut,
-        planId: plan
-   }
+      id: plan
+    }
    editEmpresaApi(itemId,data).then(response => {
       setIsSuccess(response.ok);
       setShowMsg(true);
       response.json().then(msg => {
-        setJsonResponseMessage("No se pudo eitar la empresa.");
+        setJsonResponseMessage("No se pudo editar la empresa.");
       })
    });
   };
@@ -200,7 +198,6 @@ const importFile= async (e) => {
             <Card>
               <SoftBox p={2}>
                 <SoftTypography variant="h5">Fromulario para editar una empresa</SoftTypography>
-                <SoftTypography variant="subtitle1">Los campos marcados con * son obligatorios</SoftTypography>
               </SoftBox>
               <SoftBox pt={2} px={2}>
                 <SoftAlert color="info">
@@ -208,10 +205,6 @@ const importFile= async (e) => {
                 </SoftAlert>
               </SoftBox>
               <form>
-                <SoftBox p={2}>
-                  <SoftTypography variant="h5">Razón social *</SoftTypography>
-                  <TextField id="standard-basic" variant="standard" value={razonsocial} onChange={(e) => setRazonsocial(e.target.value)}/>
-                </SoftBox>
                 <SoftBox p={2}>
                 <SoftTypography variant="h5">Plan *</SoftTypography>
                 <Autocomplete
@@ -223,10 +216,6 @@ const importFile= async (e) => {
                       onChange={(event, value) => setPlan(value.id)}
                       renderInput={(params) => <TextField {...params} label="" />}
                     />
-                </SoftBox>
-                <SoftBox p={2}>
-                  <SoftTypography variant="h5">RUT *</SoftTypography>
-                  <TextField id="standard-basic" variant="standard" value={rut} onChange={(e) => setRut(e.target.value)}/>
                 </SoftBox>
                 <SoftBox p={2}> 
                 <input type="file" onChange={saveFileSelected} />

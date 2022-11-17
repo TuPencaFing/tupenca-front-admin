@@ -15,7 +15,7 @@ Coded by www.creative-tim.com
 
 // Soft UI Dashboard React layouts
 import Dashboard from "layouts/dashboard";
-import Tables from "layouts/tables";
+import Tables from "layouts/tablaFuncionarios";
 import Tablas from "layouts/tablas";
 import TablaDeporte from "layouts/tablaDeporte";
 import TablaCampeonatos from "layouts/tablaCampeonato";
@@ -27,7 +27,6 @@ import TablaPremios from "layouts/tablaPremios";
 import TablaEmpresas from "layouts/tablaEmpresa";
 import TablaPencasEmpresa from "layouts/tablaPencasEmpresa";
 import Billing from "layouts/billing";
-import Profile from "layouts/profile";
 import SignIn from "layouts/authentication/sign-in";
 import SignUp from "layouts/authentication/sign-up";
 
@@ -36,7 +35,6 @@ import Shop from "examples/Icons/Shop";
 import Office from "examples/Icons/Office";
 import Document from "examples/Icons/Document";
 import SpaceShip from "examples/Icons/SpaceShip";
-import CustomerSupport from "examples/Icons/CustomerSupport";
 import CreditCard from "examples/Icons/CreditCard";
 import Cube from "examples/Icons/Cube";
 import CreateTeam from "layouts/createTeam"
@@ -72,7 +70,7 @@ const routes = [
   },
   {
     type: "collapse",
-    name: "Suscripciones activas",
+    name: "Contacto empresas",
     key: "tables",
     route: "/tables",
     icon: <Office size="12px" />,
@@ -164,7 +162,7 @@ const routes = [
   },
   {
     type: "collapse",
-    name: "Pencas pozo compartido",
+    name: "Pencas pozo comp.",
     key: "tablasPencaPozoCompartido",
     icon: <Cube size="12px" />,
     route: "/pencaPozoCompartido",
@@ -209,16 +207,6 @@ const routes = [
       
         <TablaEmpresas  />
       ,
-  },
-  { type: "title", title: "Manejo de cuenta", key: "account-pages" },
-  {
-    type: "collapse",
-    name: "Perfil",
-    key: "profile",
-    route: "/profile",
-    icon: <CustomerSupport size="12px" />,
-    component: <Profile />,
-    noCollapse: true,
   },
   { collapse: [
     {

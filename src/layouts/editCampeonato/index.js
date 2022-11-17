@@ -117,7 +117,7 @@ function EditCampeonato() {
       setIsSuccess(response.ok);
       setShowMsg(true);
       response.json().then(msg => {
-        setJsonResponseMessage("No se pudo dar de alta el campeonato.");
+        setJsonResponseMessage("No se pudo editar el campeonato.");
       })
    });
   }
@@ -156,7 +156,7 @@ function EditCampeonato() {
         setDeporte(response.deporte.id);
         setNombreDeporte(response.deporte.nombre);
         setFileSelected(response.image);
-        response.eventos.map((row)=> eventos.push({ label: row.equipoLocalNombre + " vs " + row.equipoVisitanteNombre, id: row.id }));
+        response.eventos.map((row)=> eventos.push({ label: row.equipoLocal.nombre + " vs " + row.equipoVisitante.nombre, id: row.id, equipoLocal: {id: 0,nombre:""}, equipoVisitante: {id: 0, nombre:"" } }));
       })
     });
   }

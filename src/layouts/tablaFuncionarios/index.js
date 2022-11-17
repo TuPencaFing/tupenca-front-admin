@@ -1,46 +1,44 @@
-/**
-=========================================================
-* Soft UI Dashboard React - v4.0.0
-=========================================================
 
-* Product Page: https://www.creative-tim.com/product/soft-ui-dashboard-react
-* Copyright 2022 Creative Tim (https://www.creative-tim.com)
-
-Coded by www.creative-tim.com
-
- =========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
-
-// @mui material components
+import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
 import { useState, useEffect } from "react";
 
-// Soft UI Dashboard React components
+// Material Dashboard 2 React components
 import SoftBox from "components/SoftBox";
 import SoftTypography from "components/SoftTypography";
 
-// Soft UI Dashboard React examples
-import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
-import DashboardNavbar from "examples/Navbars/DashboardNavbar";
-import Footer from "examples/Footer";
-import Table from "examples/Tables/Table";
-import getFuncionariosAPI from "../../api/getFuncionarios";
-import Paper from '@mui/material/Paper';
+// Material Dashboard 2 React example components
+import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
+import Footer from "examples/Footer";
+import getFuncionariosAPI from "../../api/getFuncionarios";
+import curved0 from "assets/images/logo4.png";
+import DashboardNavbar from "examples/Navbars/DashboardNavbar";
+import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
+import SoftAvatar from "components/SoftAvatar";
 import TablePagination from '@mui/material/TablePagination';
+import getEmpresasAPI from "../../api/getEmpresas";
 
-function Tables() {
+// Button, Navigation
+import {Routes, Route, useNavigate} from 'react-router-dom';
+
+
+function Tablas(props) {
+  
+  const title = "Funcionarios";
+  const navigate = useNavigate();
 
   const [rows, setRows] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [loadingRows, setLoadingRows] = useState(false);
+  const [jsonResponseMessage, setJsonResponseMessage] = useState('');
+  const [empresas, setEmpresas] = useState([]);
 
   const fetchFuncionarios = async () => {
     setLoadingRows(true);
@@ -62,6 +60,43 @@ function Tables() {
       });
   }
 
+  const fetchEmpresas = async () => {
+    setLoadingRows(true);
+    getEmpresasAPI().then((response) => {
+      if (response.ok) {
+        response.json().then((r) => {
+            r.map((row) => empresas.push({ label: row.razonsocial, id: row.id }));
+        });
+
+      } else {
+        return Promise.reject(response);
+      }
+    })
+      .catch((e) => {
+        console.log('error', e);
+      })
+      .finally(() => {
+        setLoadingRows(false);
+      });
+  }
+
+  function getEmpresaName(id){
+    var nombreEmp = ""
+    empresas.map((emp) => {
+        if(emp.id == id){
+            nombreEmp = emp.label
+        }
+    });
+    return nombreEmp;
+  }
+
+
+
+  useEffect(() => {
+    fetchEmpresas();
+    fetchFuncionarios();
+  }, []);
+
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -71,15 +106,13 @@ function Tables() {
     setPage(0);
   };
 
-  useEffect(() => {
-    fetchFuncionarios();
-  }, []);
 
   return (
-    <DashboardLayout>
-      <DashboardNavbar /> 
-      <SoftBox py={3}>
-        <SoftBox mb={3}>
+      <DashboardLayout>
+        <DashboardNavbar />
+      <SoftBox pt={12} pb={12}>
+        <Grid container spacing={1}>
+          <Grid item xs={200}>
           <Card>
             <SoftBox display="flex" justifyContent="space-between" alignItems="center" p={3}>
               <SoftTypography variant="h6">Contacto con las empresas</SoftTypography>
@@ -89,9 +122,10 @@ function Tables() {
                 <Table  aria-label="simple table">
                 <TableHead sx={{ display: "table-header-group" }}>
                     <TableRow>
-                      <TableCell align="center">Avatar (si existe)</TableCell>
-                      <TableCell align="center">Nombre de usuario</TableCell>
+                      <TableCell align="center">Avatar</TableCell>
+                      <TableCell align="center">Nombre o alias</TableCell>
                       <TableCell align="center">Dirección de contacto</TableCell>
+                      <TableCell align="center">Empresa</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -104,10 +138,11 @@ function Tables() {
                         sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                       >
                         <TableCell component="th" scope="row" align="center" style={{width: 1}}>
-                          {row.id}
+                            <SoftAvatar variant="rounded" src={row.image} alt={row.userName} shadow="md" />
                         </TableCell>
                         <TableCell align="center">{row.userName}</TableCell>
                         <TableCell align="center">{row.email}</TableCell>
+                        <TableCell align="center">{getEmpresaName(row.empresaId)}</TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
@@ -123,11 +158,13 @@ function Tables() {
               />
             </SoftBox>
           </Card>
-        </SoftBox>
+          </Grid>
+        </Grid>
       </SoftBox>
       <Footer />
-    </DashboardLayout>
+      </DashboardLayout>
+    
   );
 }
 
-export default Tables;
+export default Tablas;

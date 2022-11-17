@@ -78,7 +78,7 @@ function EditDeporte() {
       setIsSuccess(response.ok);
       setShowMsg(true);
       response.json().then(msg => {
-        setJsonResponseMessage("No se pudo eitar el deporte.");
+        setJsonResponseMessage("No se pudo editar el deporte.");
       })
    });
   }
@@ -180,7 +180,7 @@ const importFile= async (e) => {
                   <TextField id="standard-basic" variant="standard" value={nombre} onChange={(e) => setNombre(e.target.value)}/>
                 </SoftBox>
                 <input type="file" onChange={saveFileSelected} />
-                <input type="button" value="upload" onClick={importFile} />
+                <input type="button" value="Subir imágen" onClick={importFile} />
               </form>
               {showMsg &&!isSuccess && <SoftBox pt={2} px={2}>
                 <SoftAlert color="error">

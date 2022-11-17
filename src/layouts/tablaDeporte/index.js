@@ -16,7 +16,6 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Footer from "examples/Footer";
-import DataTable from "examples/Tables/Table";
 import getDeportesAPI from "../../api/getDeportes";
 import curved0 from "assets/images/logo4.png";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
