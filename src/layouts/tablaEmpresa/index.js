@@ -24,7 +24,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { IconButton, Tooltip } from '@mui/material';
 import TablePagination from '@mui/material/TablePagination';
-
+import SoftAvatar from "components/SoftAvatar";
 // Button, Navigation
 import SoftButton from "components/SoftButton";
 import {Routes, Route, useNavigate} from 'react-router-dom';
@@ -144,7 +144,7 @@ function Tablas(props) {
                 <Table  aria-label="simple table">
                 <TableHead sx={{ display: "table-header-group" }}>
                     <TableRow>
-                      <TableCell align="center">Identificador</TableCell>
+                      <TableCell align="center">Imágen</TableCell>
                       <TableCell align="center">Razón social</TableCell>
                       <TableCell align="center">RUT</TableCell>
                     </TableRow>
@@ -158,8 +158,8 @@ function Tablas(props) {
                         key={row.id}
                         sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                       >
-                        <TableCell component="th" scope="row" align="center" style={{width: 1}}>
-                          {row.id}
+                         <TableCell component="th" scope="row" align="center" style={{width: 1}}>
+                            <SoftAvatar variant="rounded" src={row.image} shadow="md" />
                         </TableCell>
                         <TableCell align="center">{row.razonsocial}</TableCell>
                         <TableCell align="center">{row.rut}</TableCell>

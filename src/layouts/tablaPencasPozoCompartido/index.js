@@ -24,6 +24,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { IconButton, Tooltip } from '@mui/material';
 import TablePagination from '@mui/material/TablePagination';
+import SoftAvatar from "components/SoftAvatar";
 
 // Button, Navigation
 import SoftButton from "components/SoftButton";
@@ -149,6 +150,7 @@ function Tablas(props) {
                 <Table  aria-label="simple table">
                 <TableHead sx={{ display: "table-header-group" }}>
                     <TableRow>
+                    <TableCell align="center"></TableCell>
                       <TableCell align="center">Titulo</TableCell>
                       <TableCell align="center">Descripción</TableCell>
                       <TableCell align="center">Campeonato</TableCell>
@@ -165,11 +167,14 @@ function Tablas(props) {
                         key={row.id}
                         sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                       >
+                        <TableCell component="th" scope="row" align="center" style={{width: 1}}>
+                            <SoftAvatar variant="rounded" src={row.image} shadow="md" />
+                        </TableCell>
                         <TableCell align="center">
                           {row.title}
                         </TableCell>
                         <TableCell align="center" >
-                        {extractContent(row.description).slice(0,25) + "..."}
+                        {extractContent(row.description).slice(0,100) + "..."}
                         </TableCell>
                         <TableCell align="center">
                           {row.campeonato.name}
