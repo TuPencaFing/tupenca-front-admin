@@ -48,6 +48,7 @@ function EditDeporte() {
   const [showMsg, setShowMsg] = useState(false);
   const [nombre, setNombre] = useState('');
   const [id, setId] = useState('');
+  const [fileSelected, setFileSelected] = useState();
   const navigate = useNavigate();
 
 
@@ -77,7 +78,7 @@ function EditDeporte() {
       setIsSuccess(response.ok);
       setShowMsg(true);
       response.json().then(msg => {
-        setJsonResponseMessage("No se pudo eitar el deporte.");
+        setJsonResponseMessage("No se pudo editar el deporte.");
       })
    });
   }
@@ -96,6 +97,27 @@ function EditDeporte() {
     fetchDeporte();
 
 }, []);
+
+const saveFileSelected= (e) => {
+  setFileSelected(e.target.files[0]);
+};
+
+const importFile= async (e) => {
+  const file = new FormData();
+  file.append("file", fileSelected);
+  try {
+    fetch(`https://tupenca-back20221107193837.azurewebsites.net/api/deportes/${itemId}/image`, {
+    method: 'PATCH',
+    headers: {
+      "Authorization": `Bearer ${localStorage.getItem("token")}`
+    },
+    body: file
+   })
+  } catch (ex) {
+    console.log(ex);
+  }
+};
+
 
   return (
     <DashboardLayout>
@@ -144,7 +166,7 @@ function EditDeporte() {
           <Grid item xs={12} lg={8}>
             <Card>
               <SoftBox p={2}>
-                <SoftTypography variant="h5">Fromulario de ingreso para un deporte</SoftTypography>
+                <SoftTypography variant="h5">Fromulario de edición para un deporte</SoftTypography>
                 <SoftTypography variant="subtitle1">Claramente, el nombre es obligatorio</SoftTypography>
               </SoftBox>
               <SoftBox pt={2} px={2}>
@@ -157,6 +179,8 @@ function EditDeporte() {
                   <SoftTypography variant="h5">Nombre del deporte *</SoftTypography>
                   <TextField id="standard-basic" variant="standard" value={nombre} onChange={(e) => setNombre(e.target.value)}/>
                 </SoftBox>
+                <input type="file" onChange={saveFileSelected} />
+                <input type="button" value="Subir imágen" onClick={importFile} />
               </form>
               {showMsg &&!isSuccess && <SoftBox pt={2} px={2}>
                 <SoftAlert color="error">

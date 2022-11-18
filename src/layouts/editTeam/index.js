@@ -48,6 +48,8 @@ function EditTeam() {
   const [showMsg, setShowMsg] = useState(false);
   const [nombre, setNombre] = useState('');
   const [id, setId] = useState('');
+  const [mostrarImagen, setMostrarImagen] = useState(true);
+  const [fileSelected, setFileSelected] = useState();
   const navigate = useNavigate();
 
 
@@ -80,7 +82,28 @@ function EditTeam() {
         setJsonResponseMessage("No se pudo eitar el equipo.");
       })
    });
-  }
+  };
+
+  const saveFileSelected= (e) => {
+    setFileSelected(e.target.files[0]);
+    setMostrarImagen(false);
+  };
+  
+  const importFile= async (e) => {
+    const file = new FormData();
+    file.append("file", fileSelected);
+    try {
+      fetch(`https://tupenca-back20221107193837.azurewebsites.net/api/equipos/${itemId}/image`, {
+      method: 'PATCH',
+      headers: {
+        "Authorization": `Bearer ${localStorage.getItem("token")}`
+      },
+      body: file
+     })
+    } catch (ex) {
+      console.log(ex);
+    }
+  };
 
   useEffect(function effectFunction() {
 
@@ -89,6 +112,7 @@ function EditTeam() {
           res.json().then(response => {
             setId(itemId);
             setNombre(response.nombre);
+            setFileSelected(response.image);
           })
         });
     }
@@ -156,6 +180,13 @@ function EditTeam() {
                 <SoftBox p={2}>
                   <SoftTypography variant="h5">Nombre del equipo *</SoftTypography>
                   <TextField id="standard-basic" variant="standard" value={nombre} onChange={(e) => setNombre(e.target.value)}/>
+                </SoftBox>
+                <SoftBox p={2}> 
+                <input type="file" onChange={saveFileSelected} />
+                <input type="button" value="Subir imágen" onClick={importFile} />
+                {fileSelected && mostrarImagen && <div>
+                  <img style={{width: 400, height: 400}} src={`${fileSelected}`}/>
+                </div>}
                 </SoftBox>
               </form>
               {showMsg &&!isSuccess && <SoftBox pt={2} px={2}>

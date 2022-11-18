@@ -117,8 +117,7 @@ function CreateCampeonato() {
   }
 
   function selectionChangeHandler(id,label) {
-    eventos.push({ label: label, id: id });
-    console.log(eventos);
+    eventos.push({ label: label, id: id, equipoLocal: {id: 0,nombre:""}, equipoVisitante: {id: 0, nombre:"" } });
   };
 
 

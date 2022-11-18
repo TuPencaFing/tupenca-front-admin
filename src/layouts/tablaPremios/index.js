@@ -23,6 +23,7 @@ import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { IconButton, Tooltip } from '@mui/material';
+import TablePagination from '@mui/material/TablePagination';
 
 // Button, Navigation
 import SoftButton from "components/SoftButton";
@@ -36,6 +37,8 @@ function Tablas(props) {
   const navigate = useNavigate();
 
   const [rows, setRows] = useState([]);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
   const [loadingRows, setLoadingRows] = useState(false);
   const [jsonResponseMessage, setJsonResponseMessage] = useState('');
   const [isSuccess, setIsSuccess] = useState('');
@@ -81,6 +84,15 @@ function Tablas(props) {
       setRows(rows.filter(row => row.id !== id));
    });
   }
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
 
   return (
       <DashboardLayout>
@@ -128,16 +140,19 @@ function Tablas(props) {
               </SoftBox>
               <SoftBox pt={3}>
               <TableContainer component={Paper}>
-                <Table  aria-label="simple table">
+                <Table  aria-label="simple table" >
                 <TableHead sx={{ display: "table-header-group" }}>
                     <TableRow>
                       <TableCell align="center">Posición</TableCell>
-                      <TableCell align="center">Porcentaje</TableCell>
+                      <TableCell align="center">Porcentaje</TableCell> 
                       <TableCell align="center">Acciones</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {rows.map((row) => (
+                    {(rowsPerPage > 0
+                      ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                      : rows
+                    ).map((row) => (
                       <TableRow
                         key={row.id}
                         sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
@@ -165,6 +180,14 @@ function Tablas(props) {
                   </TableBody>
                 </Table>
               </TableContainer>
+              <TablePagination
+                rowsPerPageOptions={[5, 10, 20]}
+                count={rows.length}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                onPageChange={handleChangePage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+              />
               </SoftBox>
             </Card>
           </Grid>

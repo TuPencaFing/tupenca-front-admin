@@ -16,7 +16,7 @@ Coded by www.creative-tim.com
 import { useState, useEffect } from "react";
 
 // react-router components
-import { useLocation, Link } from "react-router-dom";
+import { useLocation, Link, Navigate, useNavigate } from "react-router-dom";
 
 // prop-types is a library for typechecking of props.
 import PropTypes from "prop-types";
@@ -63,7 +63,14 @@ function DashboardNavbar({ absolute, light, isMini }) {
   const [controller, dispatch] = useSoftUIController();
   const { miniSidenav, transparentNavbar, fixedNavbar, openConfigurator } = controller;
   const [openMenu, setOpenMenu] = useState(false);
+  const [openMenuSignOut, setOpenMenuSignOut] = useState(false);
   const route = useLocation().pathname.split("/").slice(1);
+  const navigate = useNavigate();
+
+  function signOut() {
+    localStorage.removeItem("token");
+    navigate("/authentication/sign-in");
+   };
 
   useEffect(() => {
     // Setting the navbar type
@@ -94,7 +101,9 @@ function DashboardNavbar({ absolute, light, isMini }) {
   const handleMiniSidenav = () => setMiniSidenav(dispatch, !miniSidenav);
   const handleConfiguratorOpen = () => setOpenConfigurator(dispatch, !openConfigurator);
   const handleOpenMenu = (event) => setOpenMenu(event.currentTarget);
+  const handleOpenMenuSignOut = (event) => setOpenMenuSignOut(event.currentTarget);
   const handleCloseMenu = () => setOpenMenu(false);
+  const handleCloseMenuSignOut = () => setOpenMenuSignOut(false);
 
   // Render the notifications menu
   const renderMenu = () => (
@@ -135,6 +144,33 @@ function DashboardNavbar({ absolute, light, isMini }) {
     </Menu>
   );
 
+  const renderMenuSignOut = () => (
+    <Menu
+      anchorEl={openMenuSignOut}
+      anchorReference={null}
+      anchorOrigin={{
+        vertical: "bottom",
+        horizontal: "left",
+      }}
+      open={Boolean(openMenuSignOut)}
+      onClose={handleCloseMenuSignOut}
+      sx={{ mt: 2 }}
+    >
+      <NotificationItem
+        color="error"
+        image={
+          <Icon fontSize="small" sx={{ color: ({ palette: { white } }) => white.main }}>
+            logout
+          </Icon>
+        }
+        date="activa"
+        title={["", "Cerrar sesión"]}
+        onClick={signOut}
+      />
+    </Menu>
+  );
+  
+
   return (
     <AppBar
       position={absolute ? "absolute" : navbarType}
@@ -154,7 +190,7 @@ function DashboardNavbar({ absolute, light, isMini }) {
               />
             </SoftBox>
             <SoftBox color={light ? "white" : "inherit"}>
-              {!localStorage.getItem("givenName") && <Link to="/authentication/sign-in">
+              {!localStorage.getItem("token") && <Link to="/authentication/sign-in">
                 <IconButton sx={navbarIconButton} size="small">
                   <Icon
                     sx={({ palette: { dark, white } }) => ({
@@ -172,7 +208,7 @@ function DashboardNavbar({ absolute, light, isMini }) {
                   </SoftTypography>
                 </IconButton>
               </Link>}
-              {localStorage.getItem("givenName") && <Link to="/dashboard">
+              {localStorage.getItem("token") && 
                 <IconButton sx={navbarIconButton} size="small">
                   <Icon
                     sx={({ palette: { dark, white } }) => ({
@@ -185,11 +221,13 @@ function DashboardNavbar({ absolute, light, isMini }) {
                     variant="button"
                     fontWeight="medium"
                     color={light ? "white" : "dark"}
-                  >
+                    component="a" href="#"
+                    onClick={handleOpenMenuSignOut} >
                     {localStorage.getItem("givenName")}
                   </SoftTypography>
                 </IconButton>
-              </Link>}
+              }
+              {renderMenuSignOut()}
               <IconButton
                 size="small"
                 color="inherit"

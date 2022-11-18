@@ -28,9 +28,6 @@ import SoftButton from "components/SoftButton";
 import { useNavigate } from "react-router-dom";
 import TextField from '@mui/material/TextField';
 
-// Soft UI Dashboard Materail-UI example components
-import Table from "examples/Tables/Table";
-
 // Data
 import data from "layouts/dashboard/components/Campeonatos/data";
 

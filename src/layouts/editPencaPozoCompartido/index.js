@@ -57,6 +57,8 @@ function EditPencaPC() {
   const [premios, setPremios] = useState([]);
   const [prizes, setPrizes] = useState([]);
   const [costoEntrada, setCostoEntrada] = useState([]);
+  const [mostrarImagen, setMostrarImagen] = useState(true);
+  const [fileSelected, setFileSelected] = useState();
   const [comision, setComision] = useState([]);
   const navigate = useNavigate();
 
@@ -110,7 +112,7 @@ function EditPencaPC() {
       title: title,
       description: description,
       campeonato: {
-        id: campeonato
+        
       },
       premios: premios,
       costEntry: costoEntrada,
@@ -145,16 +147,38 @@ function EditPencaPC() {
       });
   };
 
+  const saveFileSelected= (e) => {
+    setFileSelected(e.target.files[0]);
+    setMostrarImagen(false);
+  };
+  
+  const importFile= async (e) => {
+    const file = new FormData();
+    file.append("file", fileSelected);
+    try {
+      fetch(`https://tupenca-back20221107193837.azurewebsites.net/api/pencas-compartidas/${itemId}/image`, {
+      method: 'PATCH',
+      headers: {
+        "Authorization": `Bearer ${localStorage.getItem("token")}`
+      },
+      body: file
+     })
+    } catch (ex) {
+      console.log(ex);
+    }
+  };
+
   const fetchPencaPC = async () => {
     await getPencaPCApi(itemId).then(res => {
       res.json().then(response => {
         setTitle(response.title);
         setDescription(response.description);
-        setCampeonato(response.campeonato.id);
-        setNombreCampeonato(response.campeonato.nombre);
         setCostoEntrada(response.costEntry);
-        setComision(response.comission);
+        setFileSelected(response.image);
+        setNombreCampeonato(response.campeonato.name);
+        setComision(response.commission);
         response.premios.map((row)=> premios.push({ label: row.position + ": " + row.percentage + "%", id: row.id }));
+        setCampeonato(response.campeonato.id);
       })
     });
   }
@@ -230,19 +254,19 @@ function EditPencaPC() {
                   <SoftTypography variant="h5">Descripción</SoftTypography>
                   <TextField id="standard-basic" variant="standard" value={description} onChange={(e) => setDescription(e.target.value)}/>
                 </SoftBox>
-                <SoftBox p={2}>
+                {/*<SoftBox p={2}>
                     <SoftTypography variant="h5">Campeonato *</SoftTypography>
                     <SoftBox p={1}></SoftBox>
                     <Autocomplete
                       disablePortal
                       id="combo-box-demo"
                       options={campeonatos}
-                      value={campeonato}
+                      value={nombreCampeonato}
                       sx={{ width: 300 }}
-                      onChange={(event, value) => setCampeonato(value.id)}
+                      onChange={(event, value) => setCampeonato(value)}
                       renderInput={(params) => <TextField {...params} label="" />}
                     />
-                </SoftBox>
+                </SoftBox>*/}
                 <SoftBox p={2}>
                     <SoftTypography variant="h5">Costo de entrada *</SoftTypography>
                     <SoftBox p={1}></SoftBox>
@@ -294,6 +318,13 @@ function EditPencaPC() {
                     </Select>
                     <FormHelperText>Seleccione los premios de la penca</FormHelperText>
                 </SoftBox>
+                <SoftBox p={2}> 
+                <input type="file" onChange={saveFileSelected} />
+                <input type="button" value="Subir imágen" onClick={importFile} />
+                {fileSelected && mostrarImagen && <div>
+                  <img style={{width: 400, height: 400}} src={`${fileSelected}`}/>
+                </div>}
+                </SoftBox>
                {/* <SoftBox p={2}>
                     <SoftTypography variant="h5">Publicar campeonato en la lista para nuevas pencas?</SoftTypography>
                     <SoftBox p={1}></SoftBox>
@@ -334,7 +365,7 @@ function EditPencaPC() {
                 <SoftButton variant="outlined" color="info" size="small"  style={{ marginRight: "auto" }} onClick={submitPenca}>
                     Editar penca
                 </SoftButton>
-                <SoftButton variant="outlined" color="error" size="small"  style={{ marginRight: "auto" }} onClick={() => navigate(-1)}>
+                <SoftButton variant="outlined" color="error" size="small"  style={{ marginRight: "auto" }} onClick={() => navigate(-2)}>
                     Volver
                 </SoftButton>
               </SoftBox>

@@ -77,7 +77,7 @@ function ReportsBarChart({ color, title, description, chart, items }) {
               {description}
             </SoftTypography>
           </SoftBox>
-          <SoftBox py={1} px={0.5}>
+          <SoftBox py={1} px={1}>
             <Grid container spacing={2}>
               {renderItems}
             </Grid>

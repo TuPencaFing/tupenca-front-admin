@@ -24,6 +24,8 @@ import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { IconButton, Tooltip } from '@mui/material';
+import TablePagination from '@mui/material/TablePagination';
+import SoftAvatar from "components/SoftAvatar";
 
 // Button, Navigation
 import SoftButton from "components/SoftButton";
@@ -37,6 +39,8 @@ function Tablas(props) {
   const navigate = useNavigate();
 
   const [rows, setRows] = useState([]);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
   const [loadingRows, setLoadingRows] = useState(false);
   const [jsonResponseMessage, setJsonResponseMessage] = useState('');
   const [isSuccess, setIsSuccess] = useState('');
@@ -70,6 +74,15 @@ function Tablas(props) {
 
   const navigateToCreateNewTeam = () => {
     navigate('/createTeam/');
+  };
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
   };
 
   function handleDeleteTeam(id) {
@@ -132,19 +145,22 @@ function Tablas(props) {
                 <Table  aria-label="simple table">
                 <TableHead sx={{ display: "table-header-group" }}>
                     <TableRow>
-                      <TableCell align="center">Identificador</TableCell>
+                      <TableCell align="center">Avatar</TableCell>
                       <TableCell align="center">Nombre</TableCell>
                       <TableCell align="center">Acciones</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {rows.map((row) => (
+                    {(rowsPerPage > 0
+                      ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                      : rows
+                    ).map((row) => (
                       <TableRow
                         key={row.id}
                         sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                       >
-                        <TableCell component="th" scope="row" align="center" style={{width: 1}}>
-                          {row.id}
+                       <TableCell component="th" scope="row" align="center" style={{width: 1}}>
+                            <SoftAvatar variant="rounded" src={row.image} shadow="md" />
                         </TableCell>
                         <TableCell align="center">{row.nombre}</TableCell>
                         <TableCell align="center">
@@ -168,6 +184,14 @@ function Tablas(props) {
                   </TableBody>
                 </Table>
               </TableContainer>
+              <TablePagination
+                rowsPerPageOptions={[5, 10, 20]}
+                count={rows.length}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                onPageChange={handleChangePage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+              />
               </SoftBox>
             </Card>
           </Grid>

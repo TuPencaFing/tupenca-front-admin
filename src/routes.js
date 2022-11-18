@@ -15,7 +15,7 @@ Coded by www.creative-tim.com
 
 // Soft UI Dashboard React layouts
 import Dashboard from "layouts/dashboard";
-import Tables from "layouts/tables";
+import Tables from "layouts/tablaFuncionarios";
 import Tablas from "layouts/tablas";
 import TablaDeporte from "layouts/tablaDeporte";
 import TablaCampeonatos from "layouts/tablaCampeonato";
@@ -24,18 +24,17 @@ import TablaPlanes from "layouts/tablaPlanes";
 import TablaResultados from "layouts/tablaResultados";
 import TablaPencasPozoCompartido from "layouts/tablaPencasPozoCompartido";
 import TablaPremios from "layouts/tablaPremios";
+import TablaEmpresas from "layouts/tablaEmpresa";
+import TablaPencasEmpresa from "layouts/tablaPencasEmpresa";
 import Billing from "layouts/billing";
-import Profile from "layouts/profile";
 import SignIn from "layouts/authentication/sign-in";
 import SignUp from "layouts/authentication/sign-up";
 
 // Soft UI Dashboard React icons
 import Shop from "examples/Icons/Shop";
 import Office from "examples/Icons/Office";
-import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import Document from "examples/Icons/Document";
 import SpaceShip from "examples/Icons/SpaceShip";
-import CustomerSupport from "examples/Icons/CustomerSupport";
 import CreditCard from "examples/Icons/CreditCard";
 import Cube from "examples/Icons/Cube";
 import CreateTeam from "layouts/createTeam"
@@ -54,6 +53,10 @@ import CreatePencaPozoCompartido from "layouts/createPencaPozoCompartido"
 import EditPencaPozoCompartido from "layouts/editPencaPozoCompartido"
 import CreatePremio from "layouts/createPremio"
 import EditPremio from "layouts/editPremio"
+import CreateEmpresa from "layouts/createEmpresa"
+import EditEmpresa from "layouts/editEmpresa"
+import CreatePencaEmpresa from "layouts/createPencaEmpresa"
+import EditPencaEmpresa from "layouts/editPencaEmpresa"
 
 const routes = [
   {
@@ -67,7 +70,7 @@ const routes = [
   },
   {
     type: "collapse",
-    name: "Suscripciones activas",
+    name: "Contacto empresas",
     key: "tables",
     route: "/tables",
     icon: <Office size="12px" />,
@@ -92,9 +95,10 @@ const routes = [
     route: "/equipos",
 
     component:
-      <DashboardLayout>
+      
         <Tablas  />
-      </DashboardLayout>,
+      ,
+      
   },
   {
     type: "collapse",
@@ -104,9 +108,9 @@ const routes = [
     route: "/deportes",
 
     component:
-      <DashboardLayout>
+      
         <TablaDeporte  />
-      </DashboardLayout>,
+      ,
   },
   {
     type: "collapse",
@@ -116,9 +120,9 @@ const routes = [
     route: "/campeonatos",
 
     component:
-      <DashboardLayout>
+      
         <TablaCampeonatos  />
-      </DashboardLayout>,
+      ,
   },
   {
     type: "collapse",
@@ -128,9 +132,9 @@ const routes = [
     route: "/eventos",
 
     component:
-      <DashboardLayout>
+      
         <TablaEventos  />
-      </DashboardLayout>,
+      ,
   },
   {
     type: "collapse",
@@ -140,9 +144,9 @@ const routes = [
     route: "/planes",
 
     component:
-      <DashboardLayout>
+      
         <TablaPlanes  />
-      </DashboardLayout>,
+      ,
   },
   {
     type: "collapse",
@@ -152,21 +156,33 @@ const routes = [
     route: "/resultados",
 
     component:
-      <DashboardLayout>
+      
         <TablaResultados  />
-      </DashboardLayout>,
+      ,
   },
   {
     type: "collapse",
-    name: "Pencas pozo compartido",
+    name: "Pencas pozo comp.",
     key: "tablasPencaPozoCompartido",
     icon: <Cube size="12px" />,
     route: "/pencaPozoCompartido",
 
     component:
-      <DashboardLayout>
+      
         <TablaPencasPozoCompartido  />
-      </DashboardLayout>,
+      ,
+  },
+  {
+    type: "collapse",
+    name: "Pencas empresa",
+    key: "tablasPencaEmpresa",
+    icon: <Cube size="12px" />,
+    route: "/pencasEmpresa",
+
+    component:
+      
+        <TablaPencasEmpresa  />
+      ,
   },
   {
     type: "collapse",
@@ -176,19 +192,21 @@ const routes = [
     route: "/premios",
 
     component:
-      <DashboardLayout>
+      
         <TablaPremios  />
-      </DashboardLayout>,
+      ,
   },
-  { type: "title", title: "Manejo de cuenta", key: "account-pages" },
   {
     type: "collapse",
-    name: "Perfil",
-    key: "profile",
-    route: "/profile",
-    icon: <CustomerSupport size="12px" />,
-    component: <Profile />,
-    noCollapse: true,
+    name: "Empresas",
+    key: "tablasEmpresa",
+    icon: <Cube size="12px" />,
+    route: "/empresas",
+
+    component:
+      
+        <TablaEmpresas  />
+      ,
   },
   { collapse: [
     {
@@ -351,6 +369,42 @@ const routes = [
       route: "/editPremio/:itemId",
       icon: <SpaceShip size="12px" />,
       component: <EditPremio />,
+      noCollapse: true,
+    },
+    {
+      type: "collapse",
+      name: "Create empresa",
+      key: "createEmpresa",
+      route: "/createEmpresa",
+      icon: <SpaceShip size="12px" />,
+      component: <CreateEmpresa />,
+      noCollapse: true,
+    },
+    {
+      type: "collapse",
+      name: "Edit empresa",
+      key: "editEmpresa",
+      route: "/editEmpresa/:itemId",
+      icon: <SpaceShip size="12px" />,
+      component: <EditEmpresa />,
+      noCollapse: true,
+    },
+    {
+      type: "collapse",
+      name: "Create penca empresa",
+      key: "createPencaEmpresa",
+      route: "/createPencaEmpresa",
+      icon: <SpaceShip size="12px" />,
+      component: <CreatePencaEmpresa />,
+      noCollapse: true,
+    },
+    {
+      type: "collapse",
+      name: "Edit penca empresa",
+      key: "editPencaEmpresa",
+      route: "/editPencaEmpresa/:itemId",
+      icon: <SpaceShip size="12px" />,
+      component: <EditPencaEmpresa />,
       noCollapse: true,
     },
   ]

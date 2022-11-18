@@ -16,7 +16,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Footer from "examples/Footer";
-import getEventosAPI from "../../api/getEventos";
+import getEventosFinalizadosAPI from "../../api/getEventosFinalizados";
 import curved0 from "assets/images/logo4.png";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
@@ -24,6 +24,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import { IconButton, Tooltip } from '@mui/material';
+import TablePagination from '@mui/material/TablePagination';
 
 // Button, Navigation
 import {useNavigate} from 'react-router-dom';
@@ -37,14 +38,15 @@ function Tablas(props) {
   const navigate = useNavigate();
 
   const [rows, setRows] = useState([]);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
   const [loadingRows, setLoadingRows] = useState(false);
-  const [jsonResponseMessage, setJsonResponseMessage] = useState('');
   const [isSuccess, setIsSuccess] = useState('');
   const [showMsg, setShowMsg] = useState(false);
 
   const fetchEventos = async () => {
     setLoadingRows(true);
-    getEventosAPI().then((response) => {
+    getEventosFinalizadosAPI().then((response) => {
       if (response.ok) {
         response.json().then((r) => {
           setRows(r);
@@ -70,6 +72,15 @@ function Tablas(props) {
 
   function navigateToCreateNewResultado(id) {
     navigate('/createResultado/'+id);
+  };
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
   };
 
   function handleDeleteResultado(id) {
@@ -137,7 +148,10 @@ function Tablas(props) {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {rows.map((row) => (
+                    {(rowsPerPage > 0
+                      ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                      : rows
+                    ).map((row) => (
                       <TableRow
                         key={row.id}
                         sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
@@ -155,20 +169,20 @@ function Tablas(props) {
                           {row.equipoVisitante.nombre}
                         </TableCell>
                         <TableCell align="center">
-                        <SoftTypography component="a" href="#" variant="caption" color="text" fontWeight="medium" onClick={() => { navigateToCreateNewResultado(row.id)}}>
+                       {!row.tieneResultado &&  <SoftTypography component="a" href="#" variant="caption" color="text" fontWeight="medium" onClick={() => { navigateToCreateNewResultado(row.id)}}>
                           <Tooltip title="Crear resultado">
                             <IconButton>
                               <AddIcon/>
                             </IconButton>
                           </Tooltip>
-                        </SoftTypography> 
-                        <SoftTypography component="a" href="#" variant="caption" color="text" fontWeight="medium" onClick={() => navigate("/editResultado/" + row.id )}>
+                        </SoftTypography> }
+                       {row.tieneResultado &&  <SoftTypography component="a" href="#" variant="caption" color="text" fontWeight="medium" onClick={() => navigate("/editResultado/" + row.id )}>
                           <Tooltip title="Editar resultado">
                             <IconButton>
                               <EditIcon/>
                             </IconButton>
                           </Tooltip>
-                        </SoftTypography> 
+                        </SoftTypography> }
                         <SoftTypography component="a" href="#" variant="caption" color="text" fontWeight="medium" onClick={() => { if (window.confirm('Confirma eliminar el resultado?')) handleDeleteResultado(row.id) } }>
                           <Tooltip title="Eliminar">
                             <IconButton>
@@ -182,6 +196,14 @@ function Tablas(props) {
                   </TableBody>
                 </Table>
               </TableContainer>
+              <TablePagination
+                rowsPerPageOptions={[5, 10, 20]}
+                count={rows.length}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                onPageChange={handleChangePage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+              />
               </SoftBox>
             </Card>
           </Grid>
