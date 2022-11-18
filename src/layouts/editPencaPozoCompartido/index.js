@@ -112,7 +112,7 @@ function EditPencaPC() {
       title: title,
       description: description,
       campeonato: {
-        id: campeonato.id
+        
       },
       premios: premios,
       costEntry: costoEntrada,
@@ -254,7 +254,7 @@ function EditPencaPC() {
                   <SoftTypography variant="h5">Descripción</SoftTypography>
                   <TextField id="standard-basic" variant="standard" value={description} onChange={(e) => setDescription(e.target.value)}/>
                 </SoftBox>
-                <SoftBox p={2}>
+                {/*<SoftBox p={2}>
                     <SoftTypography variant="h5">Campeonato *</SoftTypography>
                     <SoftBox p={1}></SoftBox>
                     <Autocomplete
@@ -266,7 +266,7 @@ function EditPencaPC() {
                       onChange={(event, value) => setCampeonato(value)}
                       renderInput={(params) => <TextField {...params} label="" />}
                     />
-                </SoftBox>
+                </SoftBox>*/}
                 <SoftBox p={2}>
                     <SoftTypography variant="h5">Costo de entrada *</SoftTypography>
                     <SoftBox p={1}></SoftBox>

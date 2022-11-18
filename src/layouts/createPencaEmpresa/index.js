@@ -330,7 +330,7 @@ function CreatePencaEmpresa() {
                 <SoftButton variant="outlined" color="info" size="small"  style={{ marginRight: "auto" }} onClick={submitPenca}>
                     Añadir penca
                 </SoftButton>
-                <SoftButton variant="outlined" color="error" size="small"  style={{ marginRight: "auto" }} onClick={() => navigate(-2)}>
+                <SoftButton variant="outlined" color="error" size="small"  style={{ marginRight: "auto" }} onClick={() => navigate(-1)}>
                     Volver
                 </SoftButton>
               </SoftBox>

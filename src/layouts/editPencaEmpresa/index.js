@@ -114,7 +114,7 @@ function EditPencaEmpresa() {
         title: title,
         description: description,
         campeonato: {
-          id: campeonato
+          
         },
         puntajeId: 0,
         puntaje: {
@@ -188,12 +188,12 @@ function EditPencaEmpresa() {
       res.json().then(response => {
         setTitle(response.title);
         setDescription(response.description);
-        setEmpresa(response.empresa.id);
         setFileSelected(response.image);
-        response.premios.map((row)=> premios.push({ label: row.position + ": " + row.percentage + "%", id: row.id }));
+        setEmpresa(response.empresa.id);
         setCampeonato(response.campeonato.id);
-        setNombreCampeonato(response.campeonato.nombre);
+        setNombreCampeonato(response.campeonato.name);
         setRazonSocial(response.empresa.razonsocial);
+        response.premios.map((row)=> premios.push({ label: row.position + ": " + row.percentage + "%", id: row.id }));
       })
     });
   }
@@ -269,19 +269,19 @@ function EditPencaEmpresa() {
                   <SoftTypography variant="h5">Descripción</SoftTypography>
                   <TextField id="standard-basic" variant="standard" value={description} onChange={(e) => setDescription(e.target.value)}/>
                 </SoftBox>
-                <SoftBox p={2}>
+                {/*<SoftBox p={2}>
                     <SoftTypography variant="h5">Campeonato *</SoftTypography>
                     <SoftBox p={1}></SoftBox>
                     <Autocomplete
                       disablePortal
                       id="combo-box-demo"
                       options={campeonatos}
-                      value={campeonato.label}
+                      value={nombreCampeonato}
                       sx={{ width: 300 }}
                       onChange={(event, value) => setCampeonato(value)}
                       renderInput={(params) => <TextField {...params} label="" />}
                     />
-                </SoftBox>
+                </SoftBox>*/}
                 <SoftBox p={2}>
                     <SoftTypography variant="h5">Premios *</SoftTypography>
                     <SoftBox p={1}></SoftBox>

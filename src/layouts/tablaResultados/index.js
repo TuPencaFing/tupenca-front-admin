@@ -16,7 +16,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Footer from "examples/Footer";
-import getEventosAPI from "../../api/getEventos";
+import getEventosFinalizadosAPI from "../../api/getEventosFinalizados";
 import curved0 from "assets/images/logo4.png";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
@@ -41,13 +41,12 @@ function Tablas(props) {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [loadingRows, setLoadingRows] = useState(false);
-  const [jsonResponseMessage, setJsonResponseMessage] = useState('');
   const [isSuccess, setIsSuccess] = useState('');
   const [showMsg, setShowMsg] = useState(false);
 
   const fetchEventos = async () => {
     setLoadingRows(true);
-    getEventosAPI().then((response) => {
+    getEventosFinalizadosAPI().then((response) => {
       if (response.ok) {
         response.json().then((r) => {
           setRows(r);
@@ -170,20 +169,20 @@ function Tablas(props) {
                           {row.equipoVisitante.nombre}
                         </TableCell>
                         <TableCell align="center">
-                        <SoftTypography component="a" href="#" variant="caption" color="text" fontWeight="medium" onClick={() => { navigateToCreateNewResultado(row.id)}}>
+                       {!row.tieneResultado &&  <SoftTypography component="a" href="#" variant="caption" color="text" fontWeight="medium" onClick={() => { navigateToCreateNewResultado(row.id)}}>
                           <Tooltip title="Crear resultado">
                             <IconButton>
                               <AddIcon/>
                             </IconButton>
                           </Tooltip>
-                        </SoftTypography> 
-                        <SoftTypography component="a" href="#" variant="caption" color="text" fontWeight="medium" onClick={() => navigate("/editResultado/" + row.id )}>
+                        </SoftTypography> }
+                       {row.tieneResultado &&  <SoftTypography component="a" href="#" variant="caption" color="text" fontWeight="medium" onClick={() => navigate("/editResultado/" + row.id )}>
                           <Tooltip title="Editar resultado">
                             <IconButton>
                               <EditIcon/>
                             </IconButton>
                           </Tooltip>
-                        </SoftTypography> 
+                        </SoftTypography> }
                         <SoftTypography component="a" href="#" variant="caption" color="text" fontWeight="medium" onClick={() => { if (window.confirm('Confirma eliminar el resultado?')) handleDeleteResultado(row.id) } }>
                           <Tooltip title="Eliminar">
                             <IconButton>

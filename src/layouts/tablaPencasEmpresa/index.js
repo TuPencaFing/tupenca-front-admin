@@ -34,7 +34,7 @@ import deletePencaEmpresaApi from "../../api/deletePencaEmpresa";
 
 function Tablas(props) {
   
-  const title = "Pencas de pozo compartido";
+  const title = "Pencas de empresas";
   const navigate = useNavigate();
 
   const [rows, setRows] = useState([]);

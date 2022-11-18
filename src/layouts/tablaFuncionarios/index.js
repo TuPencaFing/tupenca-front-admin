@@ -29,15 +29,12 @@ import {Routes, Route, useNavigate} from 'react-router-dom';
 
 
 function Tablas(props) {
-  
-  const title = "Funcionarios";
   const navigate = useNavigate();
 
   const [rows, setRows] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [loadingRows, setLoadingRows] = useState(false);
-  const [jsonResponseMessage, setJsonResponseMessage] = useState('');
   const [empresas, setEmpresas] = useState([]);
 
   const fetchFuncionarios = async () => {

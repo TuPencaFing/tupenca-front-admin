@@ -190,10 +190,6 @@ function Configurator() {
             </SoftButton>
           </SoftBox>
         </SoftBox>
-        <SoftBox mt={3} mb={2} lineHeight={1}>
-          <SoftTypography variant="h6">Fijar la posición del menú</SoftTypography>
-          <Switch checked={fixedNavbar} onChange={handleFixedNavbar} />
-        </SoftBox>
         <Divider />
       </SoftBox>
     </ConfiguratorRoot>

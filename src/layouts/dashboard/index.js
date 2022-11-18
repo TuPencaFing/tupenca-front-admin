@@ -16,6 +16,7 @@ Coded by www.creative-tim.com
 // @mui material components
 import Grid from "@mui/material/Grid";
 import Icon from "@mui/material/Icon";
+import {useState, useEffect} from 'react';
 
 // Soft UI Dashboard React components
 import SoftBox from "components/SoftBox";
@@ -32,13 +33,152 @@ import typography from "assets/theme/base/typography";
 // Dashboard layout components
 import Projects from "layouts/dashboard/components/Projects";
 import OrderOverview from "layouts/dashboard/components/OrderOverview";
+import getMetricasAPI from "../../api/getMetricas";
+import ReportsBarChart from "examples/Charts/BarCharts/ReportsBarChart";
+import GradientLineChart from "examples/Charts/LineCharts/GradientLineChart";
+import SoftTypography from "components/SoftTypography";
+import gradientLineChartData from "layouts/dashboard/data/gradientLineChartData";
+import getPencasEmpresaAPI from "../../api/getPencasEmpresa";
+import getPencasPCAPI from "../../api/getPencasPC";
+import getFuncionariosAPI from "../../api/getFuncionarios";
+import getAdministradoresAPI from "../../api/getAdministradores";
+import getCampeonatosAPI from "../../api/getCampeonatos";
+import Moment from 'moment';
 
-// Data
-import reportsBarChartData from "layouts/dashboard/data/reportsBarChartData";
+function Dashboard() { 
 
-function Dashboard() {
-  const { size } = typography;
-  const { chart, items } = reportsBarChartData;
+  const [cantUsuariosRegistrados, setCantUsuariosRegistrados] = useState(0);
+  const [sumaPozos, setSumaPozos] = useState(0);
+  const [cantPencasActivas, setCantPencasActivas] = useState(0);
+  const [cantEmpresasRegistradas, setCantEmpresasRegistradas] = useState(0);
+  const [cantPencasEmpresa, setCantPencasEmpresa] = useState(0);
+  const [cantPencasPC, setCantPencasPC] = useState(0);
+  const [cantFuncionarios, setCantFuncionarios] = useState(0);
+  const [cantAdministradores, setCantAdministradores] = useState(0);
+  const [campeonatosEmpezados, setCampeonatosEmpezados] = useState([]);
+  const [campeonatosTerminados, setCampeonatosTerminados] = useState([]);
+  const [meses, setMeses] = useState([]);
+  
+
+  const fetchMetricas = async () => {
+    getMetricasAPI().then((response) => {
+      if (response.ok) {
+        response.json().then((r) => {
+          setCantUsuariosRegistrados(r.cantUsuariosRegistrados);
+          setCantEmpresasRegistradas(r.cantEmpresasRegistradas);
+          setCantPencasActivas(r.cantPencasActivas);
+          setSumaPozos(r.ganancias);
+        });
+      } else {
+        return Promise.reject(response);
+      }
+    })
+      .catch((e) => {
+        console.log('error', e);
+      });
+  };
+
+  const fetchPencasEmpresa = async () => {
+    getPencasEmpresaAPI().then((response) => {
+      if (response.ok) {
+        response.json().then((r) => {
+          setCantPencasEmpresa(r.length);
+        });
+      } else {
+        return Promise.reject(response);
+      }
+    })
+      .catch((e) => {
+        console.log('error', e);
+      });
+  };
+
+  const fetchPencasPC = async () => {
+    getPencasPCAPI().then((response) => {
+      if (response.ok) {
+        response.json().then((r) => {
+          setCantPencasPC(r.length);
+        });
+
+      } else {
+        return Promise.reject(response);
+      }
+    })
+      .catch((e) => {
+        console.log('error', e);
+      });
+  };
+
+  const fetchFuncionarios = async () => {
+    getFuncionariosAPI().then((response) => {
+      if (response.ok) {
+        response.json().then((r) => {
+          setCantFuncionarios(r.length)
+        });
+
+      } else {
+        return Promise.reject(response);
+      }
+    })
+      .catch((e) => {
+        console.log('error', e);
+      });
+  };
+
+  const fetchAdministradores = async () => {
+    getAdministradoresAPI().then((response) => {
+      if (response.ok) {
+        response.json().then((r) => {
+          setCantAdministradores(r.length)
+        });
+
+      } else {
+        return Promise.reject(response);
+      }
+    })
+      .catch((e) => {
+        console.log('error', e);
+      });
+  };
+
+  const fetchCampeonatos = async () => {
+    const months = ["Enero", "Febrero","Marzo","Abril", "Mayo", "Junio", "Julio", "Agosto", "Setiembre", "Octubre", "Noviembre", "Diciembre"];
+    setMeses(months);
+    getCampeonatosAPI().then((response) => {
+      if (response.ok) {
+        response.json().then((r) => {
+          var empezadas = [0,0,0,0,0,0,0,0,0,0,0,0];
+          var terminadas = [0,0,0,0,0,0,0,0,0,0,0,0];
+          r.map((row) => {
+            var añoInicio = new Date(row.startDate).getFullYear();
+            var añoFin = new Date(row.finishDate).getFullYear();
+            var fechaInicio = new Date(row.startDate).getMonth();
+            var fechaFin = new Date(row.finishDate).getMonth();
+            if(añoInicio == new Date().getFullYear()) empezadas[fechaInicio] = empezadas[fechaInicio] + 1;
+            if(añoFin == new Date().getFullYear()) terminadas[fechaFin] = terminadas[fechaFin] + 1;
+          });
+          setCampeonatosEmpezados(empezadas);
+          setCampeonatosTerminados(terminadas);
+        });
+
+      } else {
+        return Promise.reject(response);
+      }
+    })
+      .catch((e) => {
+        console.log('error', e);
+      });
+  }
+;
+
+  useEffect(() => {
+    fetchMetricas();
+    fetchPencasPC();
+    fetchPencasEmpresa();
+    fetchFuncionarios();
+    fetchAdministradores();
+    fetchCampeonatos();
+  }, []);
 
   return (
     <DashboardLayout>
@@ -49,45 +189,100 @@ function Dashboard() {
             <Grid item xs={12} sm={6} xl={3}>
               <MiniStatisticsCard
                 title={{ text: "Ganancias del mes" }}
-                count="$53,000"
-                percentage={{ color: "success", text: "+15%" }}
+                count={sumaPozos}
+                percentage={{ color: "success", text: "$" }}
                 icon={{ color: "success", component: "paid" }}
               />
             </Grid>
             <Grid item xs={12} sm={6} xl={3}>
               <MiniStatisticsCard
                 title={{ text: "Usuarios registrados" }}
-                count="2,100"
-                percentage={{ color: "success", text: "+3%" }}
-                icon={{ color: "success", component: "public" }}
+                count={cantUsuariosRegistrados}
+                icon={{ color: "info", component: "public" }}
               />
             </Grid>
             <Grid item xs={12} sm={6} xl={3}>
               <MiniStatisticsCard
                 title={{ text: "Empresas registradas" }}
-                count="17"
-                percentage={{ color: "error", text: "-2%" }}
-                icon={{ color: "error", component: "shopping_cart" }}
+                count={cantEmpresasRegistradas}
+                icon={{ color: "warning", component: "shopping_cart" }}
               />
             </Grid>
             <Grid item xs={12} sm={6} xl={3}>
               <MiniStatisticsCard
                 title={{ text: "Pencas activas" }}
-                count="1302"
-                percentage={{ color: "success", text: "+5%" }}
-                icon={{ color: "success", component: "emoji_events"}}
+                count={cantPencasActivas}
+                icon={{ color: "error", component: "emoji_events"}}
               />
             </Grid>
           </Grid>
         </SoftBox>
-        <Grid container spacing={3}>
+        <SoftBox mb={3}>
+          <Grid container spacing={3}>
+            <Grid item xs={12} lg={5}>
+              <ReportsBarChart
+                title="Usuarios registrados por tipo"
+                description={
+                  <>
+                    Estadísticas globales
+                  </>
+                }
+                chart={{
+                  labels: ["Administradores", "Funcionarios", "Usuarios"],
+                  datasets: { label: "Total", data: [cantAdministradores, cantFuncionarios, cantUsuariosRegistrados] },
+                }}
+                items={[
+                  {
+                    icon: { color: "primary", component: "library_books" },
+                    label: "Pencas Empresa",
+                    progress: { content: cantPencasEmpresa, percentage: (cantPencasEmpresa*100/cantPencasEmpresa+cantPencasPC) },
+                  },
+                  {
+                    icon: { color: "info", component: "touch_app" },
+                    label: "Pencas PC",
+                    progress: { content: cantPencasPC, percentage: (cantPencasPC*100/cantPencasEmpresa+cantPencasPC) },
+                  },
+                ]}
+              />
+            </Grid>
+            <Grid item xs={12} lg={7}>
+              <GradientLineChart
+                title="Campeonatos iniciados y finalizados"
+                description={
+                  <SoftBox display="flex" alignItems="center">
+                    <SoftTypography variant="button" color="text" fontWeight="regular">
+                      Estadísticas del año <strong>{new Date().getFullYear()}</strong> por mes
+                    </SoftTypography>
+                  </SoftBox> 
+                }
+                height="20.25rem"
+                chart={{
+                  labels: meses,
+                  datasets: [
+                    {
+                      label: "Iniciados",
+                      color: "info",
+                      data: campeonatosEmpezados,
+                    },
+                    {
+                      label: "Finalizados",
+                      color: "dark",
+                      data: campeonatosTerminados,
+                    },
+                  ],
+                }}
+              />
+            </Grid>
+          </Grid>
+        </SoftBox>
+        {/*<Grid container spacing={3}>
           <Grid item xs={12} md={6} lg={8}>
             <Projects />
           </Grid>
           <Grid item xs={12} md={6} lg={4}>
             <OrderOverview />
           </Grid>
-        </Grid>
+              </Grid>*/}
       </SoftBox>
       <Footer />
     </DashboardLayout>
