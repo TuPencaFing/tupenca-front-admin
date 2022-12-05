@@ -145,7 +145,8 @@ function Tablas(props) {
                     <TableRow>
                       <TableCell align="center">Identificador</TableCell>
                       <TableCell align="center">Cantidad de usuarios</TableCell>
-                      <TableCell align="center">Porcentaje de ganancia</TableCell>
+                      <TableCell align="center">Cantidad de pencas</TableCell>
+                      <TableCell align="center">Costo</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -162,6 +163,9 @@ function Tablas(props) {
                         </TableCell>
                         <TableCell align="center">
                           {row.cantUser}
+                        </TableCell>
+                        <TableCell align="center">
+                          {row.cantPencas}
                         </TableCell>
                         <TableCell align="center">
                           {row.percentageCost}

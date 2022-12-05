@@ -45,6 +45,7 @@ function CreatePlan() {
   const [isSuccess, setIsSuccess] = useState('');
   const [showMsg, setShowMsg] = useState(false);
   const [cantUsuarios, setCantUsuarios] = useState('');
+  const [cantPencas, setCantPencas] = useState('');
   const [porcentaje, setPorcentaje] = useState('');
   const [lookAndFeel, setLookAndFeel] = useState(0);
   const navigate = useNavigate();
@@ -72,7 +73,8 @@ function CreatePlan() {
     const data = {
         cantUser: cantUsuarios,
         percentageCost: porcentaje,
-        lookAndFeel: lookAndFeel
+        lookAndFeel: lookAndFeel,
+        cantPencas: cantPencas
    }
    createPlanApi(data).then(response => {
       setIsSuccess(response.ok);
@@ -155,19 +157,34 @@ function CreatePlan() {
                         />
                 </SoftBox>
                 <SoftBox p={2}>
-                  <SoftTypography variant="h5">Porcentaje de ganancia *</SoftTypography>
+                  <SoftTypography variant="h5">Cantidad de pencas *</SoftTypography>
+                  <SoftBox p={1}></SoftBox>
+                  <TextField
+                        id="outlined-number" 
+                        label="Pencas"
+                        type="number"
+                        value={cantPencas}
+                        InputLabelProps={{
+                            shrink: true,
+                        }}
+                        InputProps={{ inputProps: { min: 0 } }}
+                        onChange={(e) => setCantPencas(e.target.value)}
+                        />
+                </SoftBox>
+                <SoftBox p={2}>
+                  <SoftTypography variant="h5">Costo *</SoftTypography>
                   <SoftBox p={1}></SoftBox>
                   <TextField
                         id="outlined-number1"
-                        label="Porcentaje"
+                        label="Costo"
                         type="number"
                         value={porcentaje}
                         InputLabelProps={{
                             shrink: true,
                         }}
-                        InputProps={{ inputProps: { min: 0, max: 100 } }}
+                        InputProps={{ inputProps: { min: 0 } }}
                         onChange={(e) => setPorcentaje(e.target.value)}
-                        />  %
+                        />  $
                         
                 </SoftBox>
               </form>

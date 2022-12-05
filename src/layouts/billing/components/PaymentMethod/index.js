@@ -38,12 +38,8 @@ function PaymentMethod() {
     <Card id="delete-account">
       <SoftBox pt={2} px={2} display="flex" justifyContent="space-between" alignItems="center">
         <SoftTypography variant="h6" fontWeight="medium">
-          Payment Method
+          Tarjetas asociadas
         </SoftTypography>
-        <SoftButton variant="gradient" color="dark">
-          <Icon sx={{ fontWeight: "bold" }}>add</Icon>
-          &nbsp;add new card
-        </SoftButton>
       </SoftBox>
       <SoftBox p={2}>
         <Grid container spacing={3}>
@@ -60,13 +56,6 @@ function PaymentMethod() {
               <SoftTypography variant="h6" fontWeight="medium">
                 ****&nbsp;&nbsp;****&nbsp;&nbsp;****&nbsp;&nbsp;7852
               </SoftTypography>
-              <SoftBox ml="auto" lineHeight={0}>
-                <Tooltip title="Edit Card" placement="top">
-                  <Icon sx={{ cursor: "pointer" }} fontSize="small">
-                    edit
-                  </Icon>
-                </Tooltip>
-              </SoftBox>
             </SoftBox>
           </Grid>
           <Grid item xs={12} md={6}>
@@ -82,13 +71,6 @@ function PaymentMethod() {
               <SoftTypography variant="h6" fontWeight="medium">
                 ****&nbsp;&nbsp;****&nbsp;&nbsp;****&nbsp;&nbsp;5248
               </SoftTypography>
-              <SoftBox ml="auto" lineHeight={0}>
-                <Tooltip title="Edit Card" placement="top">
-                  <Icon sx={{ cursor: "pointer" }} fontSize="small">
-                    edit
-                  </Icon>
-                </Tooltip>
-              </SoftBox>
             </SoftBox>
           </Grid>
         </Grid>

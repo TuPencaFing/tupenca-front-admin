@@ -68,6 +68,7 @@ function Dashboard() {
           setCantEmpresasRegistradas(r.cantEmpresasRegistradas);
           setCantPencasActivas(r.cantPencasActivas);
           setSumaPozos(r.ganancias);
+          localStorage.setItem("ganancias", r.ganancias);
         });
       } else {
         return Promise.reject(response);
