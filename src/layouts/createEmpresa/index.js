@@ -96,7 +96,20 @@ function CreateEmpresa() {
     const data = {
       razonsocial: razonsocial,
       rut: rut,
-      planId: plan
+      planId: plan,
+      pago: {
+        token: "",
+        installments: 0,
+        payer: {
+          email: "",
+          identification:{
+            number: "",
+            type: ""
+          }
+        },
+        payment_method_id: "",
+        transaction_amount: 0
+      }
    }
    createEmpresaApi(data).then(response => {
       setIsSuccess(response.ok);

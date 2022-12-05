@@ -112,7 +112,6 @@ function EditCampeonato() {
       },
       eventos: eventos
     };
-    console.log(data);
    editCampeonatoApi(itemId,data).then(response => {
       setIsSuccess(response.ok);
       setShowMsg(true);
