@@ -25,10 +25,14 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { IconButton, Tooltip } from '@mui/material';
 import TablePagination from '@mui/material/TablePagination';
 import SoftAvatar from "components/SoftAvatar";
+import DoneIcon from '@mui/icons-material/Done';
+import DoneAllIcon from '@mui/icons-material/DoneAll';
 // Button, Navigation
 import SoftButton from "components/SoftButton";
 import {Routes, Route, useNavigate} from 'react-router-dom';
 import deleteEmpresaApi from "../../api/deleteEmpresa";
+import habilitarEmpresaApi from "../../api/habilitarEmpresa";
+import { Icon } from '@iconify/react';
 
 
 function Tablas(props) {
@@ -95,6 +99,13 @@ function Tablas(props) {
    });
   }
 
+  function handleHabilitarEmpresa(id) {
+    habilitarEmpresaApi(id).then(response => {
+      window.location.reload(false);
+    })
+    };
+ 
+
   return (
       <DashboardLayout>
       <SoftBox position="relative"> 
@@ -147,6 +158,8 @@ function Tablas(props) {
                       <TableCell align="center">Imágen</TableCell>
                       <TableCell align="center">Razón social</TableCell>
                       <TableCell align="center">RUT</TableCell>
+                      <TableCell align="center">Habilitar</TableCell>
+                      <TableCell align="center">Acciones</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -163,6 +176,33 @@ function Tablas(props) {
                         </TableCell>
                         <TableCell align="center">{row.razonsocial}</TableCell>
                         <TableCell align="center">{row.rut}</TableCell>
+                        
+                        {!row.habilitado && <TableCell align="center">
+                        <SoftTypography component="a" href="https://azure.microsoft.com/en-us/" target="_blank" variant="caption" color="text" fontWeight="medium">
+                          <Tooltip title="Azure">
+                            <IconButton>
+                            <Icon icon="mdi:microsoft-azure" />
+                            </IconButton>
+                          </Tooltip>
+                        </SoftTypography> 
+                        <SoftTypography component="a" href="#" variant="caption" color="text" fontWeight="medium" onClick={() => { if (window.confirm('Confirma la habilitación de la empresa?')) handleHabilitarEmpresa(row.id) } }>
+                          <Tooltip title="Habilitar">
+                            <IconButton>
+                              <DoneIcon/>
+                            </IconButton>
+                          </Tooltip>
+                        </SoftTypography> 
+                        </TableCell>}
+                        {row.habilitado && <TableCell align="center">
+                        <SoftTypography component="a" variant="caption" color="text" fontWeight="medium" >
+                          <Tooltip title="Habilitada">
+                            <IconButton>
+                              <DoneAllIcon/>
+                            </IconButton>
+                          </Tooltip>
+                        </SoftTypography> 
+                        </TableCell>}
+                        
                         <TableCell align="center">
                         <SoftTypography component="a" href="#" variant="caption" color="text" fontWeight="medium" onClick={() => navigate("/editEmpresa/" + row.id )}>
                           <Tooltip title="Editar">

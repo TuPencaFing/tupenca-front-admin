@@ -32,7 +32,7 @@ import Icon from "@mui/material/Icon";
 import SoftBox from "components/SoftBox";
 import SoftTypography from "components/SoftTypography";
 import SoftInput from "components/SoftInput";
-
+import getEmpresasAPI from "../../../api/getEmpresas";
 // Soft UI Dashboard React examples
 import Breadcrumbs from "examples/Breadcrumbs";
 import NotificationItem from "examples/Items/NotificationItem";
@@ -60,6 +60,7 @@ import logoSpotify from "assets/images/small-logos/logo-spotify.svg";
 
 function DashboardNavbar({ absolute, light, isMini }) {
   const [navbarType, setNavbarType] = useState();
+  const [rows, setRows] = useState([]);
   const [controller, dispatch] = useSoftUIController();
   const { miniSidenav, transparentNavbar, fixedNavbar, openConfigurator } = controller;
   const [openMenu, setOpenMenu] = useState(false);
@@ -73,6 +74,16 @@ function DashboardNavbar({ absolute, light, isMini }) {
    };
 
   useEffect(() => {
+    getEmpresasAPI().then((response) => {
+      if (response.ok) {
+        response.json().then((r) => {
+          setRows(r);
+        });
+
+      } else {
+        return Promise.reject(response);
+      }
+    })
     // Setting the navbar type
     if (fixedNavbar) {
       setNavbarType("sticky");
@@ -118,29 +129,15 @@ function DashboardNavbar({ absolute, light, isMini }) {
       onClose={handleCloseMenu}
       sx={{ mt: 2 }}
     >
-      <NotificationItem
-        image={<img src={team2} alt="person" />}
-        title={["New message", "from Laur"]}
-        date="13 minutes ago"
-        onClick={handleCloseMenu}
-      />
-      <NotificationItem
-        image={<img src={logoSpotify} alt="person" />}
-        title={["New album", "by Travis Scott"]}
-        date="1 day"
-        onClick={handleCloseMenu}
-      />
-      <NotificationItem
-        color="secondary"
-        image={
-          <Icon fontSize="small" sx={{ color: ({ palette: { white } }) => white.main }}>
-            payment
-          </Icon>
-        }
-        title={["", "Payment successfully completed"]}
-        date="2 days"
-        onClick={handleCloseMenu}
-      />
+      {rows.map((row) => ( !row.habilitado ?
+        <NotificationItem
+          image={<img src={row.image} alt="person" />}
+          title={[row.razonsocial, "pendiente"]}
+          date="13 minutes ago"
+          onClick={handleCloseMenu}
+      /> :
+      ""
+      ))}
     </Menu>
   );
 
