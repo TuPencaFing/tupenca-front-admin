@@ -133,7 +133,7 @@ function DashboardNavbar({ absolute, light, isMini }) {
         <NotificationItem
           image={<img src={row.image} alt="person" />}
           title={[row.razonsocial, "pendiente"]}
-          date="13 minutes ago"
+          date="Menos de un día"
           onClick={handleCloseMenu}
       /> :
       ""
@@ -180,12 +180,6 @@ function DashboardNavbar({ absolute, light, isMini }) {
         </SoftBox>
         {isMini ? null : (
           <SoftBox sx={(theme) => navbarRow(theme, { isMini })}>
-            <SoftBox pr={1}>
-              <SoftInput
-                placeholder="Escriba su búsqueda aquí"
-                icon={{ component: "search", direction: "left" }}
-              />
-            </SoftBox>
             <SoftBox color={light ? "white" : "inherit"}>
               {!localStorage.getItem("token") && <Link to="/authentication/sign-in">
                 <IconButton sx={navbarIconButton} size="small">
@@ -245,7 +239,7 @@ function DashboardNavbar({ absolute, light, isMini }) {
               </IconButton>
               <IconButton
                 size="small"
-                color="inherit"
+                color={rows.length > 0 ? "error" : "inherit"}
                 sx={navbarIconButton}
                 aria-controls="notification-menu"
                 aria-haspopup="true"
