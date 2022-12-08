@@ -26,6 +26,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { IconButton, Tooltip } from '@mui/material';
 import TablePagination from '@mui/material/TablePagination';
 import SoftAvatar from "components/SoftAvatar";
+import TextField from '@mui/material/TextField';
 
 // Button, Navigation
 import SoftButton from "components/SoftButton";
@@ -40,6 +41,7 @@ function Tablas(props) {
 
   const [rows, setRows] = useState([]);
   const [page, setPage] = useState(0);
+  const [message, setMessage] = useState('');
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [loadingRows, setLoadingRows] = useState(false);
   const [jsonResponseMessage, setJsonResponseMessage] = useState('');
@@ -139,6 +141,13 @@ function Tablas(props) {
                 <SoftButton variant="outlined" color="white" size="small"  style={{ marginLeft: "auto" }} onClick={navigateToCreateNewTeam}>
                   +
                 </SoftButton>
+                <TextField
+                  id="outlined-number1"
+                  type="text"
+                  variant="standard"
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                  /> 
               </SoftBox>
               <SoftBox pt={3}>
               <TableContainer component={Paper}>
@@ -154,7 +163,7 @@ function Tablas(props) {
                     {(rowsPerPage > 0
                       ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                       : rows
-                    ).map((row) => (
+                    ).map((row) => ( row.nombre.includes(message) ? 
                       <TableRow
                         key={row.id}
                         sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
@@ -179,7 +188,7 @@ function Tablas(props) {
                           </Tooltip>
                         </SoftTypography> 
                         </TableCell>
-                      </TableRow>
+                      </TableRow> : ""
                     ))}
                   </TableBody>
                 </Table>
