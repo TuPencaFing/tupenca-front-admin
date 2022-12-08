@@ -110,12 +110,7 @@ function CreatePencaPC() {
       campeonato: {
         id: campeonato
       },
-      puntajeId: 0,
-      puntaje: {
-        id: 0,
-        resultado: 0,
-        resultadoExacto: 0
-      },
+      puntajeId: 1,
       premios: premios,
       costEntry: costoEntrada,
       commission: comision
