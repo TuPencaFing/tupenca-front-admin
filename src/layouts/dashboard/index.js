@@ -236,12 +236,12 @@ function Dashboard() {
                   {
                     icon: { color: "primary", component: "library_books" },
                     label: "Pencas Empresa",
-                    progress: { content: cantPencasEmpresa, percentage: (cantPencasEmpresa*100/cantPencasEmpresa+cantPencasPC) },
+                    progress: { content: cantPencasEmpresa, percentage: (cantPencasEmpresa*100/(cantPencasEmpresa+cantPencasPC)) },
                   },
                   {
                     icon: { color: "info", component: "touch_app" },
                     label: "Pencas PC",
-                    progress: { content: cantPencasPC, percentage: (cantPencasPC*100/cantPencasEmpresa+cantPencasPC) },
+                    progress: { content: cantPencasPC, percentage: (cantPencasPC*100/(cantPencasEmpresa+cantPencasPC)) },
                   },
                 ]}
               />

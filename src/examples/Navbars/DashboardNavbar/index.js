@@ -239,7 +239,9 @@ function DashboardNavbar({ absolute, light, isMini }) {
               </IconButton>
               <IconButton
                 size="small"
-                color={rows.length > 0 ? "error" : "inherit"}
+                color={rows.find(obj => {
+                  return !obj.habilitado;
+                }) ? "error" : "inherit"}
                 sx={navbarIconButton}
                 aria-controls="notification-menu"
                 aria-haspopup="true"
