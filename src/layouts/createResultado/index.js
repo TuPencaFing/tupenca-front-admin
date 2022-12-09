@@ -73,9 +73,11 @@ function CreateResultado() {
   );
 
   const submitResultado = async () => {
+    var enumResultado = puntajeLocal == puntajeVisitante ? 0 : puntajeLocal > puntajeVisitante ? 1 : 2;
     const data = {
         puntajeEquipoLocal: puntajeLocal,
         puntajeEquipoVisitante: puntajeVisitante,
+        resultado: enumResultado,
         eventoId: itemId
    }
    createResultadoApi(data).then(response => {
