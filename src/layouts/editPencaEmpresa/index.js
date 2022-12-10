@@ -283,25 +283,6 @@ function EditPencaEmpresa() {
                       renderInput={(params) => <TextField {...params} label="" />}
                     />
                 </SoftBox>*/}
-                <SoftBox p={2}>
-                    <SoftTypography variant="h5">Premios *</SoftTypography>
-                    <SoftBox p={1}></SoftBox>
-                    <InputLabel></InputLabel>
-                    <Select
-                      multiple
-                      value={premios}
-                      renderValue={(premios) => (
-                        <div>
-                          {premios.map((ev) => (
-                            <Chip key={ev.id} label={ev.label} />
-                          ))}
-                        </div>
-                      )}
-                    >
-                      {prizes.map(ev =>  <MenuItem onClick={() => selectionChangeHandler(ev.id,ev.label)} value={ev.id} label={ev.label}>{ev.label}</MenuItem>)}
-                    </Select>
-                    <FormHelperText>Seleccione los premios de la penca</FormHelperText>
-                </SoftBox>
                 <SoftBox p={2}> 
                 <input type="file" onChange={saveFileSelected} />
                 <input type="button" value="Subir imágen" onClick={importFile} />
