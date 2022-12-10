@@ -26,14 +26,14 @@ import SoftBox from "components/SoftBox";
 import SoftTypography from "components/SoftTypography";
 import SoftAlert from "components/SoftAlert";
 import SoftButton from "components/SoftButton";
-import { Select, MenuItem, FormHelperText, FormControl, InputLabel, Chip } from '@material-ui/core';
-
+import createPremioApi from "../../api/createPremio";
 
 // Material Dashboard 2 React example components
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
 import createPencaEmpresaApi from "../../api/createPencaEmpresa";
+import createPuntajeAPI from "../../api/createPuntaje";
 import getCampeonatosAPI from "../../api/getCampeonatos";
 import getPremiosAPI from "../../api/getPremios";
 import getEmpresasAPI from "../../api/getEmpresas";
@@ -57,11 +57,19 @@ function CreatePencaEmpresa() {
   const [empresa, setEmpresa] = useState([]);
   const [empresas, setEmpresas] = useState([]);
   const [planId, setPlanId] = useState([]);
+  const [tenantCode, setTenantCode] = useState('');
+  const [resultado, setResultado] = useState(0);
+  const [resultadoExacto, setResultadoExacto] = useState(0);
+  const [porcentaje1, setPorcentaje1] = useState(0);
+  const [porcentaje2, setPorcentaje2] = useState(0);
+  const [porcentaje3, setPorcentaje3] = useState(0);
+  const [porcentaje4, setPorcentaje4] = useState(0);
+  const [porcentaje5, setPorcentaje5] = useState(0);
   const navigate = useNavigate();
 
   const alertContent = () => (
     <SoftTypography variant="body2" color="white">
-      La penca debe tener al menos un premio asocialdo
+      La penca debe tener al menos un premio asociado
     </SoftTypography>
   );
 
@@ -104,33 +112,77 @@ function CreatePencaEmpresa() {
   }
 
   const submitPenca = async () => {
-    const data = {
-      id: 0,
-      title: title,
-      description: description,
-      image: "string",
-      campeonato: {
-        id: campeonato
-      },
-      puntajeId: 0,
-      puntaje: {
-        id: 0,
-        resultado: 0,
-        resultadoExacto: 0
-      },
-      premios: premios,
-      empresa: {
-         id: empresa,
-         planId: planId
+    var premiosIds = [];
+    var dataPremios = [];
+    const dataPremio1 = {
+      position: 1,
+      percentage: porcentaje1
+    }
+    const dataPremio2 = {
+      position: 2,
+      percentage: porcentaje2
+    }
+    const dataPremio3 = {
+      position: 3,
+      percentage: porcentaje3
+    }
+    const dataPremio4 = {
+      position: 4,
+      percentage: porcentaje4
+    }
+    const dataPremio5 = {
+      position: 5,
+      percentage: porcentaje5
+    }
+    dataPremios.push(dataPremio1);
+    dataPremios.push(dataPremio2);
+    dataPremios.push(dataPremio3);
+    dataPremios.push(dataPremio4);
+    dataPremios.push(dataPremio5);
+    dataPremios.map((dp) => {
+      if(dp.percentage !== 0){
+        createPremioApi(dp).then(response => {
+         response.json().then(r => {
+          const dataPremioCreado = {
+            id: r.id
+          }
+          premiosIds.push(dataPremioCreado);
+         });
+      });
       }
-    };
-   createPencaEmpresaApi(data).then(response => {
-      setIsSuccess(response.ok);
-      setShowMsg(true);
-      response.json().then(msg => {
-        setJsonResponseMessage("No se pudo dar de alta la penca.");
-      })
-   });
+    });
+    const dataPuntaje = {
+      id: 0,
+      resultado: resultado,
+      resultadoExacto: resultadoExacto
+    }
+    createPuntajeAPI(dataPuntaje).then(responsePuntaje => {
+      responsePuntaje.json().then(r => {
+        const data = {
+          id: 0,
+          title: title,
+          description: description,
+          image: "string",
+          campeonato: {
+            id: campeonato
+          },
+          puntajeId: r.id,
+          premios: premiosIds,
+          empresa: {
+             id: empresa,
+             planId: planId,
+             tenantCode: tenantCode
+          }
+        };
+       createPencaEmpresaApi(data).then(response => {
+          setIsSuccess(response.ok);
+          setShowMsg(true);
+          response.json().then(msg => {
+            setJsonResponseMessage("No se pudo dar de alta la penca.");
+          })
+       });
+      });
+    });
   };
 
   const fetchCampeonatos = async () => {
@@ -158,7 +210,7 @@ function CreatePencaEmpresa() {
     getEmpresasAPI().then((response) => {
       if (response.ok) {
         response.json().then((r) => {
-          r.map((row)=> empresas.push({ label: row.razonsocial, planId: row.planId, id: row.id }));
+          r.map((row)=> empresas.push({ label: row.razonsocial, planId: row.planId, id: row.id, tenantCode: row.tenantCode }));
         });
 
       } else {
@@ -179,9 +231,10 @@ function CreatePencaEmpresa() {
     fetchCampeonatos();
   }, []);
 
-  function handleEmpresaChange(id, plan){
+  function handleEmpresaChange(id, plan, tenantCode){
     setEmpresa(id);
     setPlanId(plan);
+    setTenantCode(tenantCode);
   }
 
   return (
@@ -262,22 +315,117 @@ function CreatePencaEmpresa() {
                 </SoftBox>
                 <SoftBox p={2}>
                     <SoftTypography variant="h5">Premios *</SoftTypography>
+                      <Grid container spacing={20} justifyContent="left" >
+                        <Grid item xs={2} lg={2}>
+                              <SoftBox p={2}>
+                                <SoftBox p={2}></SoftBox>
+                                <TextField
+                                      id="outlined-number1"
+                                      label="1° %"
+                                      type="number"
+                                      value={porcentaje1}
+                                      InputLabelProps={{
+                                          shrink: true,
+                                      }}
+                                      InputProps={{ inputProps: { min: 0, max: 5 } }}
+                                      onChange={(e) => setPorcentaje1(e.target.value)}
+                                      /> 
+                              </SoftBox>
+                        </Grid>
+                        <Grid item xs={2} lg={2}>
+                              <SoftBox p={2}>
+                                <SoftBox p={2}></SoftBox>
+                                <TextField
+                                      id="outlined-number2"
+                                      label="2° %"
+                                      type="number"
+                                      value={porcentaje2}
+                                      InputLabelProps={{
+                                          shrink: true,
+                                      }}
+                                      InputProps={{ inputProps: { min: 0, max: 5 } }}
+                                      onChange={(e) => setPorcentaje2(e.target.value)}
+                                      /> 
+                              </SoftBox>
+                        </Grid>
+                        <Grid item xs={2} lg={2}>
+                              <SoftBox p={2}>
+                                <SoftBox p={2}></SoftBox>
+                                <TextField
+                                      id="outlined-number3"
+                                      label="3° %"
+                                      type="number"
+                                      value={porcentaje3}
+                                      InputLabelProps={{
+                                          shrink: true,
+                                      }}
+                                      InputProps={{ inputProps: { min: 0, max: 5 } }}
+                                      onChange={(e) => setPorcentaje3(e.target.value)}
+                                      /> 
+                              </SoftBox>
+                        </Grid>
+                        <Grid item xs={2} lg={2}>
+                              <SoftBox p={2}>
+                                <SoftBox p={2}></SoftBox>
+                                <TextField
+                                      id="outlined-number4"
+                                      label="4° %"
+                                      type="number"
+                                      value={porcentaje4}
+                                      InputLabelProps={{
+                                          shrink: true,
+                                      }}
+                                      InputProps={{ inputProps: { min: 0, max: 5 } }}
+                                      onChange={(e) => setPorcentaje4(e.target.value)}
+                                      /> 
+                              </SoftBox>
+                        </Grid>
+                        <Grid item xs={2} lg={2}>
+                              <SoftBox p={2}>
+                                <SoftBox p={2}></SoftBox>
+                                <TextField
+                                      id="outlined-number5"
+                                      label="5° %"
+                                      type="number"
+                                      value={porcentaje5}
+                                      InputLabelProps={{
+                                          shrink: true,
+                                      }}
+                                      InputProps={{ inputProps: { min: 0, max: 5 } }}
+                                      onChange={(e) => setPorcentaje5(e.target.value)}
+                                      /> 
+                              </SoftBox>
+                        </Grid>
+                    </Grid>
+                </SoftBox>
+                <SoftBox p={2}>
+                    <SoftTypography variant="h5">Puntaje *</SoftTypography>
                     <SoftBox p={1}></SoftBox>
-                    <InputLabel></InputLabel>
-                    <Select
-                      multiple
-                      value={premios}
-                      renderValue={(premios) => (
-                        <div>
-                          {premios.map((ev) => (
-                            <Chip key={ev.id} label={ev.label} />
-                          ))}
-                        </div>
-                      )}
-                    >
-                      {prizes.map(ev =>  <MenuItem onClick={() => selectionChangeHandler(ev.id,ev.label)} value={ev.id} label={ev.label}>{ev.label}</MenuItem>)}
-                    </Select>
-                    <FormHelperText>Seleccione los premios de la penca</FormHelperText>
+                    <TextField
+                        id="outlined-number8"
+                        label="resultado"
+                        type="number"
+                        variant="standard"
+                        value={resultado}
+                        InputLabelProps={{
+                            shrink: true,
+                        }}
+                        InputProps={{ inputProps: { min: 0, max: 100 } }}
+                        onChange={(e) => setResultado(e.target.value)}
+                        /> 
+                        <SoftBox p={1}></SoftBox>
+                    <TextField
+                        id="outlined-number9"
+                        label="resultado exacto"
+                        type="number"
+                        variant="standard"
+                        value={resultadoExacto}
+                        InputLabelProps={{
+                            shrink: true,
+                        }}
+                        InputProps={{ inputProps: { min: 0, max: 100 } }}
+                        onChange={(e) => setResultadoExacto(e.target.value)}
+                        /> 
                 </SoftBox>
                 <SoftBox p={2}>
                 <SoftTypography variant="h5">Empresa *</SoftTypography>
@@ -286,7 +434,7 @@ function CreatePencaEmpresa() {
                       id="combo-box-demo"
                       options={empresas}
                       sx={{ width: 300 }}
-                      onChange={(event, value) => handleEmpresaChange(value.id, value.planId)}
+                      onChange={(event, value) => handleEmpresaChange(value.id, value.planId, value.tenantCode)}
                       renderInput={(params) => <TextField {...params} label="" />}
                     />
                 </SoftBox>

@@ -64,7 +64,7 @@ function EditPencaPC() {
 
   const alertContent = () => (
     <SoftTypography variant="body2" color="white">
-      La penca debe tener al menos un premio asocialdo
+      La penca debe tener al menos un premio asociado
     </SoftTypography>
   );
 

@@ -61,12 +61,14 @@ function EditPencaEmpresa() {
   const [mostrarImagen, setMostrarImagen] = useState(true);
   const [fileSelected, setFileSelected] = useState();
   const [planId, setPlanId] = useState([]);
+  const [tenantCode, setTenantCode] = useState('');
   const [razonSocial, setRazonSocial] = useState([]);
+  const [puntajeId, setPuntajeId] = useState(0);
   const navigate = useNavigate();
 
   const alertContent = () => (
     <SoftTypography variant="body2" color="white">
-      La penca debe tener al menos un premio asocialdo
+      La penca debe tener al menos un premio asociado
     </SoftTypography>
   );
 
@@ -116,16 +118,12 @@ function EditPencaEmpresa() {
         campeonato: {
           
         },
-        puntajeId: 0,
-        puntaje: {
-          id: 0,
-          resultado: 0,
-          resultadoExacto: 0
-        },
+        puntajeId: puntajeId,
         premios: premios,
         empresa: {
            id: empresa,
-           planId: planId
+           planId: planId,
+           tenantCode: tenantCode
         }
       };
    editPencaEmpresaApi(itemId,data).then(response => {
@@ -193,6 +191,9 @@ function EditPencaEmpresa() {
         setCampeonato(response.campeonato.id);
         setNombreCampeonato(response.campeonato.name);
         setRazonSocial(response.empresa.razonsocial);
+        setPlanId(response.empresa.planId);
+        setTenantCode(response.empresa.tenantCode);
+        setPuntajeId(response.puntajeId);
         response.premios.map((row)=> premios.push({ label: row.position + ": " + row.percentage + "%", id: row.id }));
       })
     });
