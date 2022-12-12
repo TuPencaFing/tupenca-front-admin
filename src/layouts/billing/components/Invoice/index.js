@@ -23,7 +23,7 @@ import Icon from "@mui/material/Icon";
 import SoftBox from "components/SoftBox";
 import SoftTypography from "components/SoftTypography";
 
-function Invoice({ date, id, price, noGutter }) {
+function Invoice({ date, id, price, noGutter, reclamado }) {
   return (
     <SoftBox
       component="li"
@@ -47,9 +47,8 @@ function Invoice({ date, id, price, noGutter }) {
           {price}
         </SoftTypography>
         <SoftBox display="flex" alignItems="center" lineHeight={0} ml={3} sx={{ cursor: "poiner" }}>
-          <Icon fontSize="small">picture_as_pdf</Icon>
-          <SoftTypography variant="button" fontWeight="bold">
-            &nbsp;PDF
+          <SoftTypography fontWeight="regular" color={reclamado ? "success" : "error"}>
+            {reclamado ? "Realizado" : "Pendiente"}
           </SoftTypography>
         </SoftBox>
       </SoftBox>
@@ -68,6 +67,7 @@ Invoice.propTypes = {
   id: PropTypes.string.isRequired,
   price: PropTypes.string.isRequired,
   noGutter: PropTypes.bool,
+  reclamado: PropTypes.bool,
 };
 
 export default Invoice;
