@@ -36,6 +36,7 @@ import createPuntajeAPI from "../../api/createPuntaje";
 import getCampeonatosAPI from "../../api/getCampeonatos";
 import createPremioApi from "../../api/createPremio";
 import getPremiosAPI from "../../api/getPremios";
+import { Select, MenuItem, FormHelperText, FormControl, InputLabel, Chip } from '@material-ui/core';
 
 // API requests
 import { useNavigate } from "react-router-dom";
@@ -57,11 +58,11 @@ function CreatePencaPC() {
   const [comision, setComision] = useState(0);
   const [resultado, setResultado] = useState(0);
   const [resultadoExacto, setResultadoExacto] = useState(0);
-  const [porcentaje1, setPorcentaje1] = useState(0);
+  /*const [porcentaje1, setPorcentaje1] = useState(0);
   const [porcentaje2, setPorcentaje2] = useState(0);
   const [porcentaje3, setPorcentaje3] = useState(0);
   const [porcentaje4, setPorcentaje4] = useState(0);
-  const [porcentaje5, setPorcentaje5] = useState(0);
+  const [porcentaje5, setPorcentaje5] = useState(0);*/
   const navigate = useNavigate();
 
   const alertContent = () => (
@@ -109,7 +110,7 @@ function CreatePencaPC() {
   }
 
   const submitPenca = async () => {
-    var premiosIds = [];
+    /*var premiosIds = [];
     var dataPremios = [];
     const dataPremio1 = {
       position: 1,
@@ -147,7 +148,7 @@ function CreatePencaPC() {
          });
       });
       }
-    });
+    });*/
     const dataPuntaje = {
       id: 0,
       resultado: resultado,
@@ -164,7 +165,7 @@ function CreatePencaPC() {
             id: campeonato
           },
           puntajeId: r.id,
-          premios: premiosIds,
+          premios: premios,
           costEntry: costoEntrada,
           commission: comision
         };
@@ -315,7 +316,7 @@ function CreatePencaPC() {
               </SoftBox>
                 <SoftBox p={2}>
                     <SoftTypography variant="h5">Premios *</SoftTypography>
-                      <Grid container spacing={20} justifyContent="left" >
+                      {/*<Grid container spacing={20} justifyContent="left" >
                         <Grid item xs={2} lg={2}>
                               <SoftBox p={2}>
                                 <SoftBox p={2}></SoftBox>
@@ -396,7 +397,23 @@ function CreatePencaPC() {
                                       /> 
                               </SoftBox>
                         </Grid>
-                    </Grid>
+                                    </Grid>*/}
+                  <SoftBox p={1}></SoftBox>
+                    <InputLabel></InputLabel>
+                    <Select
+                      multiple
+                      value={premios}
+                      renderValue={(premios) => (
+                        <div>
+                          {premios.map((ev) => (
+                            <Chip key={ev.id} label={ev.label} />
+                          ))}
+                        </div>
+                      )}
+                    >
+                      {prizes.map(ev =>  <MenuItem onClick={() => selectionChangeHandler(ev.id,ev.label)} value={ev.id} label={ev.label}>{ev.label}</MenuItem>)}
+                    </Select>
+                    <FormHelperText>Seleccione los premios de la penca</FormHelperText>                                    
                 </SoftBox>
                 <SoftBox p={2}>
                     <SoftTypography variant="h5">Puntaje *</SoftTypography>
