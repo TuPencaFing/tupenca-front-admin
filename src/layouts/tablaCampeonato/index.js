@@ -177,8 +177,8 @@ function Tablas(props) {
                         <TableCell component="th" scope="row" align="center" style={{width: 1}}>
                           {row.name}
                         </TableCell>
-                        <TableCell align="center">{Moment(new Date(row.startDate)).format('DD-MM-YYYY HH:mm')}</TableCell>
-                        <TableCell align="center">{Moment(new Date(row.finishDate)).format('DD-MM-YYYY HH:mm')}</TableCell>
+                        <TableCell align="center">{Moment(new Date(row.startDate)).subtract(3,'h').format('DD-MM-YYYY HH:mm')}</TableCell>
+                        <TableCell align="center">{Moment(new Date(row.finishDate)).subtract(3,'h').format('DD-MM-YYYY HH:mm')}</TableCell>
                         <TableCell align="center">{row.deporte.nombre}</TableCell>
                         <TableCell align="center">
                         <SoftTypography component="a" href="#" variant="caption" color="text" fontWeight="medium" onClick={() => navigate("/editCampeonato/" + row.id )}>

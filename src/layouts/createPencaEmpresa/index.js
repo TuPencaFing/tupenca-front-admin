@@ -35,7 +35,7 @@ import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
 import createPencaEmpresaApi from "../../api/createPencaEmpresa";
 import createPuntajeAPI from "../../api/createPuntaje";
-import getCampeonatosAPI from "../../api/getCampeonatos";
+import getCampeonatosFinalizadosAPI from "../../api/getCampeonatosFinalizados";
 import getPremiosAPI from "../../api/getPremios";
 import getEmpresasAPI from "../../api/getEmpresas";
 
@@ -188,7 +188,7 @@ function CreatePencaEmpresa() {
 
   const fetchCampeonatos = async () => {
     setLoadingRows(true);
-    getCampeonatosAPI().then((response) => {
+    getCampeonatosFinalizadosAPI().then((response) => {
       if (response.ok) {
         response.json().then((r) => {
           r.map((row)=> campeonatos.push({ label: row.name, id: row.id }));

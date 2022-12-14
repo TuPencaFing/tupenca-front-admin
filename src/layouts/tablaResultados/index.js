@@ -160,7 +160,7 @@ function Tablas(props) {
                           {row.id}
                         </TableCell>
                         <TableCell align="center">
-                          {Moment(new Date(row.fechaInicial)).format('DD-MM-YYYY HH:mm')}
+                          {Moment(new Date(row.fechaInicial)).subtract(3,'h').format('DD-MM-YYYY HH:mm')}
                         </TableCell>
                         <TableCell align="center">
                           {row.equipoLocal.nombre}
