@@ -107,6 +107,7 @@ function EditCampeonato() {
       name: nombreCampeonato,
       startDate: fechaInicio,
       finishDate: fechaFin,
+      image: fileSelected,
       deporte: {
         id: deporte
       },

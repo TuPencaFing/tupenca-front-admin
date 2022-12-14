@@ -19,6 +19,7 @@ import { useState, useEffect} from "react";
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
 import TextField from '@mui/material/TextField';
+import Autocomplete from '@mui/material/Autocomplete';
 
 
 // Material Dashboard 2 React components
@@ -50,6 +51,10 @@ function CreateResultado() {
   const [nombreLocal, setNombreLocal] = useState('');
   const [puntajeVisitante, setPuntajeVisitante] = useState('');
   const [puntajeLocal, setPuntajeLocal] = useState('');
+  const [resultadoGanador, setResultadoGanador] = useState(0);
+  const [isPuntajeValid, setIsPuntajeValid] = useState(false);
+  const [isEmpateValid, setIsEmpateValid] = useState(false);
+  const [winnerOptions, setWinnerOptions] = useState([]);
 
   const navigate = useNavigate();
 
@@ -73,20 +78,37 @@ function CreateResultado() {
   );
 
   const submitResultado = async () => {
-    var enumResultado = puntajeLocal == puntajeVisitante ? 0 : puntajeLocal > puntajeVisitante ? 1 : 2;
+    if(isPuntajeValid){
+      var enumResultado = puntajeLocal == puntajeVisitante ? 0 : puntajeLocal > puntajeVisitante ? 1 : 2;
+      const data = {
+          puntajeEquipoLocal: puntajeLocal,
+          puntajeEquipoVisitante: puntajeVisitante,
+          resultado: enumResultado,
+          eventoId: itemId
+        };
+        createResultadoApi(data).then(response => {
+          setIsSuccess(response.ok);
+          setShowMsg(true);
+          response.json().then(msg => {
+            setJsonResponseMessage("No se pudo cargar el resultado.");
+          })
+      });
+    }
+   else{
     const data = {
-        puntajeEquipoLocal: puntajeLocal,
-        puntajeEquipoVisitante: puntajeVisitante,
-        resultado: enumResultado,
-        eventoId: itemId
-   }
-   createResultadoApi(data).then(response => {
+      puntajeEquipoLocal: null,
+      puntajeEquipoVisitante: null,
+      resultado: resultadoGanador,
+      eventoId: itemId
+    };
+    createResultadoApi(data).then(response => {
       setIsSuccess(response.ok);
       setShowMsg(true);
       response.json().then(msg => {
         setJsonResponseMessage("No se pudo cargar el resultado.");
       })
-   });
+   }); 
+   }
   }
 
 
@@ -97,6 +119,23 @@ function CreateResultado() {
           res.json().then(response => {
             setNombreLocal(response.equipoLocal.nombre);
             setNombreVisitante(response.equipoVisitante.nombre);
+            setIsEmpateValid(response.isEmpateValid);
+            setIsPuntajeValid(response.isPuntajeEquipoValid);
+            if(response.isEmpateValid){
+              const winnerOpt = [
+                { label: response.equipoLocal.nombre, wo: 1 },
+                { label: response.equipoVisitante.nombre, wo: 2 },
+                { label: 'Empate', wo: 0 }
+              ];
+              setWinnerOptions(winnerOpt);
+            }
+           else{
+            const winnerOpt = [
+              { label: response.equipoLocal.nombre, wo: 1 },
+              { label: response.equipoVisitante.nombre, wo: 2 }
+            ];
+            setWinnerOptions(winnerOpt);
+           }
           })
         });
     }
@@ -159,8 +198,9 @@ function CreateResultado() {
                   {alertContent("info")}
                 </SoftAlert>
               </SoftBox>
-              <form>
-              <SoftBox p={3}>
+              {isPuntajeValid && 
+                <form>
+                <SoftBox p={3}>
                     <SoftTypography variant="h5">{nombreLocal}</SoftTypography>
                     <SoftBox p={1}></SoftBox>
                     <TextField
@@ -190,7 +230,22 @@ function CreateResultado() {
                         onChange={(e) => setPuntajeVisitante(e.target.value)}
                         /> 
               </SoftBox>
-              </form>
+              </form>}
+              {!isPuntajeValid && 
+                <form>
+                <SoftBox p={2}>
+                    <SoftTypography variant="h5">Ganador</SoftTypography>
+                    <SoftBox p={1}></SoftBox>
+                    <Autocomplete
+                      disablePortal
+                      id="combo-box-demo"
+                      options={winnerOptions}
+                      sx={{ width: 300 }}
+                      onChange={(event, value) => setResultadoGanador(value.wo)}
+                      renderInput={(params) => <TextField {...params} label="" />}
+                    />
+                </SoftBox>
+              </form>}
               {showMsg &&!isSuccess && <SoftBox pt={2} px={2}>
                 <SoftAlert color="error">
                   {jsonError(jsonResponseMessage)}
