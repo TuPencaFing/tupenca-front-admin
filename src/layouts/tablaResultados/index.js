@@ -183,13 +183,13 @@ function Tablas(props) {
                             </IconButton>
                           </Tooltip>
                         </SoftTypography> }
-                        <SoftTypography component="a" href="#" variant="caption" color="text" fontWeight="medium" onClick={() => { if (window.confirm('Confirma eliminar el resultado?')) handleDeleteResultado(row.id) } }>
+                        {row.tieneResultado && <SoftTypography component="a" href="#" variant="caption" color="text" fontWeight="medium" onClick={() => { if (window.confirm('Confirma eliminar el resultado?')) handleDeleteResultado(row.id) } }>
                           <Tooltip title="Eliminar">
                             <IconButton>
                               <DeleteIcon/>
                             </IconButton>
                           </Tooltip>
-                        </SoftTypography> 
+                        </SoftTypography> }
                         </TableCell>
                       </TableRow>
                     ))}

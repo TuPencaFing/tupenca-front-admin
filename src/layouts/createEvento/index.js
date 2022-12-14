@@ -21,6 +21,7 @@ import Card from "@mui/material/Card";
 import DateTimePicker from 'react-datetime-picker'
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
+import Switch from '@mui/material/Switch';
 
 
 // Material Dashboard 2 React components
@@ -53,8 +54,28 @@ function CreateEvento() {
   const [teams, setTeams] = useState([]);
   const [equipoLocalId, setEquipoLocalId] = useState('');
   const [equipoVisitanteId, setEquipoVisitanteId] = useState('');
+  const [isPuntajeValid, setIsPuntajeValid] = useState(true);
+  const [isEmpateValid, setIsEmpateValid] = useState(true);
   const navigate = useNavigate();
 
+
+  function handlePuntajeChange() {
+    if (isPuntajeValid) {
+      setIsPuntajeValid(false);
+    }
+    else {
+      setIsPuntajeValid(true);
+    }
+  };
+
+  function handleEmpateChange() {
+    if (isEmpateValid) {
+      setIsEmpateValid(false);
+    }
+    else {
+      setIsEmpateValid(true);
+    }
+  };
 
   const alertContent = () => (
     <SoftTypography variant="body2" color="white">
@@ -78,7 +99,9 @@ function CreateEvento() {
     const data = {
       fechaInicial: fechaInicial,
       equipoLocalId: equipoLocalId,
-      equipoVisitanteId: equipoVisitanteId
+      equipoVisitanteId: equipoVisitanteId,
+      isEmpateValid: isEmpateValid,
+      isPuntajeEquipoValid: isPuntajeValid
    }
    createEventoApi(data).then(response => {
       setIsSuccess(response.ok);
@@ -198,6 +221,22 @@ function CreateEvento() {
                       onChange={(event, value) => setEquipoVisitanteId(value.team)}
                       renderInput={(params) => <TextField {...params} label="" />}
                     />
+               </SoftBox>
+               <SoftBox  p={3}>
+               <SoftTypography variant="h5">Habilita resultado por puntos?</SoftTypography>
+                  <Switch
+                    checked={isPuntajeValid}
+                    onChange={handlePuntajeChange}
+                    inputProps={{ 'aria-label': 'controlled' }}
+                  />
+               </SoftBox>
+               <SoftBox  p={3}>
+               <SoftTypography variant="h5">Habilita empate?</SoftTypography>
+                  <Switch
+                    checked={isEmpateValid}
+                    onChange={handleEmpateChange}
+                    inputProps={{ 'aria-label': 'controlled' }}
+                  />
                </SoftBox>
               </form>
               {showMsg &&!isSuccess && <SoftBox pt={2} px={2}>

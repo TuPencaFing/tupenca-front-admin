@@ -19,6 +19,7 @@ import { useState, useEffect} from "react";
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
 import TextField from '@mui/material/TextField';
+import Autocomplete from '@mui/material/Autocomplete';
 
 
 // Material Dashboard 2 React components
@@ -52,6 +53,10 @@ function EditResultado() {
   const [resultado, setResultado] = useState('');
   const [puntajeVisitante, setPuntajeVisitante] = useState('');
   const [puntajeLocal, setPuntajeLocal] = useState('');
+  const [resultadoGanador, setResultadoGanador] = useState(0);
+  const [isPuntajeValid, setIsPuntajeValid] = useState(false);
+  const [isEmpateValid, setIsEmpateValid] = useState(false);
+  const [winnerOptions, setWinnerOptions] = useState([]);
 
   const navigate = useNavigate();
 
@@ -75,20 +80,37 @@ function EditResultado() {
   );
 
   const submitResultado = async () => {
-    var enumResultado = puntajeLocal == puntajeVisitante ? 0 : puntajeLocal > puntajeVisitante ? 1 : 2;
+    if(isPuntajeValid){
+      var enumResultado = puntajeLocal == puntajeVisitante ? 0 : puntajeLocal > puntajeVisitante ? 1 : 2;
+      const data = {
+          puntajeEquipoLocal: puntajeLocal,
+          puntajeEquipoVisitante: puntajeVisitante,
+          resultado: enumResultado,
+          eventoId: itemId
+     }
+     editResultadoApi(resultado,data).then(response => {
+        setIsSuccess(response.ok);
+        setShowMsg(true);
+        response.json().then(msg => {
+          setJsonResponseMessage("No se pudo editar el resultado.");
+        })
+     });
+    }
+   else{
     const data = {
-        puntajeEquipoLocal: puntajeLocal,
-        puntajeEquipoVisitante: puntajeVisitante,
-        resultado: enumResultado,
-        eventoId: itemId
+      puntajeEquipoLocal: null,
+      puntajeEquipoVisitante: null,
+      resultado: resultadoGanador,
+      eventoId: itemId
+      }
+      editResultadoApi(resultado,data).then(response => {
+          setIsSuccess(response.ok);
+          setShowMsg(true);
+          response.json().then(msg => {
+            setJsonResponseMessage("No se pudo editar el resultado.");
+          })
+      });
    }
-   editResultadoApi(resultado,data).then(response => {
-      setIsSuccess(response.ok);
-      setShowMsg(true);
-      response.json().then(msg => {
-        setJsonResponseMessage("No se pudo editar el resultado.");
-      })
-   });
   }
 
   const fetchEvento = async () => {
@@ -96,6 +118,23 @@ function EditResultado() {
           res.json().then(response => {
             setNombreLocal(response.equipoLocal.nombre);
             setNombreVisitante(response.equipoVisitante.nombre);
+            setIsEmpateValid(response.isEmpateValid);
+            setIsPuntajeValid(response.isPuntajeEquipoValid);
+            if(response.isEmpateValid){
+              const winnerOpt = [
+                { label: response.equipoLocal.nombre, wo: 1 },
+                { label: response.equipoVisitante.nombre, wo: 2 },
+                { label: 'Empate', wo: 0 }
+              ];
+              setWinnerOptions(winnerOpt);
+            }
+           else{
+            const winnerOpt = [
+              { label: response.equipoLocal.nombre, wo: 1 },
+              { label: response.equipoVisitante.nombre, wo: 2 }
+            ];
+            setWinnerOptions(winnerOpt);
+           }
           })
         });
 }
@@ -108,6 +147,7 @@ function EditResultado() {
             setResultado(response.id);
             setPuntajeLocal(response.puntajeEquipoLocal);
             setPuntajeVisitante(response.puntajeEquipoVisitante);
+            setResultadoGanador(response.resultado);
           })
         });
     }
@@ -170,6 +210,7 @@ function EditResultado() {
                   {alertContent("info")}
                 </SoftAlert>
               </SoftBox>
+              {isPuntajeValid && 
               <form>
               <SoftBox p={3}>
                     <SoftTypography variant="h5">{nombreLocal}</SoftTypography>
@@ -201,7 +242,23 @@ function EditResultado() {
                         onChange={(e) => setPuntajeVisitante(e.target.value)}
                         /> 
               </SoftBox>
-              </form>
+              </form>}
+              {!isPuntajeValid && 
+                <form>
+                <SoftBox p={2}>
+                    <SoftTypography variant="h5">Ganador</SoftTypography>
+                    <SoftBox p={1}></SoftBox>
+                    <Autocomplete
+                      disablePortal
+                      id="combo-box-demo"
+                      options={winnerOptions}
+                      value={resultadoGanador == 0 ? "Empate" : resultadoGanador == 1 ? nombreLocal : nombreVisitante}
+                      sx={{ width: 300 }}
+                      onChange={(event, value) => setResultadoGanador(value.wo)}
+                      renderInput={(params) => <TextField {...params} label="" />}
+                    />
+                </SoftBox>
+              </form>}
               {showMsg &&!isSuccess && <SoftBox pt={2} px={2}>
                 <SoftAlert color="error">
                   {jsonError(jsonResponseMessage)}
