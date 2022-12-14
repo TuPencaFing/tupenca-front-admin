@@ -33,7 +33,7 @@ import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
 import createPencaPCApi from "../../api/createPencaPC";
 import createPuntajeAPI from "../../api/createPuntaje";
-import getCampeonatosAPI from "../../api/getCampeonatos";
+import getCampeonatosFinalizadosAPI from "../../api/getCampeonatosFinalizados";
 import createPremioApi from "../../api/createPremio";
 import getPremiosAPI from "../../api/getPremios";
 import { Select, MenuItem, FormHelperText, FormControl, InputLabel, Chip } from '@material-ui/core';
@@ -182,7 +182,7 @@ function CreatePencaPC() {
 
   const fetchCampeonatos = async () => {
     setLoadingRows(true);
-    getCampeonatosAPI().then((response) => {
+    getCampeonatosFinalizadosAPI().then((response) => {
       if (response.ok) {
         response.json().then((r) => {
           r.map((row)=> campeonatos.push({ label: row.name, id: row.id }));
