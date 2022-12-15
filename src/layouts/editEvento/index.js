@@ -49,7 +49,7 @@ function EditEvento() {
   const [id, setId] = useState([]);
   const [loadingRows, setLoadingRows] = useState(false);
   const [fechaInicial, setFechaInicial] = useState('');
-  const [mostrarImagen, setMostrarImagen] = useState(true);
+  const [mostrarImagen, setMostrarImagen] = useState(false);
   const [fileSelected, setFileSelected] = useState();
   const [jsonResponseMessageImage, setJsonResponseMessageImage] = useState('');
   const [isSuccessImage, setIsSuccessImage] = useState('');
@@ -131,6 +131,9 @@ function EditEvento() {
             setId(itemId);
             setFechaInicial(new Date(response.fechaInicial));
             setFileSelected(response.image);
+            if(response.image != null && response.image != "string"){
+              setMostrarImagen(true);
+            }
           })
         });
     }

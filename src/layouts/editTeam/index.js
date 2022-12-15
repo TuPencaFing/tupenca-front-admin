@@ -48,7 +48,7 @@ function EditTeam() {
   const [showMsg, setShowMsg] = useState(false);
   const [nombre, setNombre] = useState('');
   const [id, setId] = useState('');
-  const [mostrarImagen, setMostrarImagen] = useState(true);
+  const [mostrarImagen, setMostrarImagen] = useState(false);
   const [fileSelected, setFileSelected] = useState();
   const [jsonResponseMessageImage, setJsonResponseMessageImage] = useState('');
   const [isSuccessImage, setIsSuccessImage] = useState('');
@@ -128,6 +128,9 @@ function EditTeam() {
             setId(itemId);
             setNombre(response.nombre);
             setFileSelected(response.image);
+            if(response.image != null && response.image != "string"){
+              setMostrarImagen(true);
+            }
           })
         });
     }

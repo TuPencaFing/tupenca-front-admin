@@ -57,7 +57,7 @@ function EditPencaPC() {
   const [premios, setPremios] = useState([]);
   const [prizes, setPrizes] = useState([]);
   const [costoEntrada, setCostoEntrada] = useState([]);
-  const [mostrarImagen, setMostrarImagen] = useState(true);
+  const [mostrarImagen, setMostrarImagen] = useState(false);
   const [fileSelected, setFileSelected] = useState();
   const [comision, setComision] = useState([]);
   const [jsonResponseMessageImage, setJsonResponseMessageImage] = useState('');
@@ -190,6 +190,9 @@ function EditPencaPC() {
         setDescription(response.description);
         setCostoEntrada(response.costEntry);
         setFileSelected(response.image);
+        if(response.image != null && response.image != "string"){
+          setMostrarImagen(true);
+        }
         setNombreCampeonato(response.campeonato.name);
         setComision(response.commission);
         response.premios.map((row)=> premios.push({ label: row.position + ": " + row.percentage + "%", id: row.id }));

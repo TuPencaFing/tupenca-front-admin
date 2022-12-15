@@ -58,7 +58,7 @@ function EditPencaEmpresa() {
   const [prizes, setPrizes] = useState([]);
   const [empresa, setEmpresa] = useState([]);
   const [empresas, setEmpresas] = useState([]);
-  const [mostrarImagen, setMostrarImagen] = useState(true);
+  const [mostrarImagen, setMostrarImagen] = useState(false);
   const [fileSelected, setFileSelected] = useState();
   const [planId, setPlanId] = useState([]);
   const [tenantCode, setTenantCode] = useState('');
@@ -202,6 +202,9 @@ function EditPencaEmpresa() {
         setTitle(response.title);
         setDescription(response.description);
         setFileSelected(response.image);
+        if(response.image != null && response.image != "string"){
+          setMostrarImagen(true);
+        }
         setEmpresa(response.empresa.id);
         setCampeonato(response.campeonato.id);
         setNombreCampeonato(response.campeonato.name);

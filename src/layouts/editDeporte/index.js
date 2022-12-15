@@ -49,7 +49,7 @@ function EditDeporte() {
   const [nombre, setNombre] = useState('');
   const [id, setId] = useState('');
   const [fileSelected, setFileSelected] = useState();
-  const [mostrarImagen, setMostrarImagen] = useState(true);
+  const [mostrarImagen, setMostrarImagen] = useState(false);
   const [jsonResponseMessageImage, setJsonResponseMessageImage] = useState('');
   const [isSuccessImage, setIsSuccessImage] = useState('');
   const [showMsgImage, setShowMsgImage] = useState(false);
@@ -101,6 +101,9 @@ function EditDeporte() {
             setId(itemId);
             setNombre(response.nombre);
             setFileSelected(response.image);
+            if(response.image != null && response.image != "string"){
+              setMostrarImagen(true);
+            }
           })
         });
     }

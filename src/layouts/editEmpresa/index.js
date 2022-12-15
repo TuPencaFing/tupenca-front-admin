@@ -50,7 +50,7 @@ function EditEmpresa() {
   const [razonsocial, setRazonsocial] = useState('');
   const [rut, setRut] = useState('');
   const [id, setId] = useState('');
-  const [mostrarImagen, setMostrarImagen] = useState(true);
+  const [mostrarImagen, setMostrarImagen] = useState(false);
   const [planes, setPlanes] = useState([]);
   const [plan, setPlan] = useState('');
   const [loadingRows, setLoadingRows] = useState(false);
@@ -128,6 +128,9 @@ function EditEmpresa() {
             setRazonsocial(response.razonsocial);
             setRut(response.rut);
             setFileSelected(response.image);
+            if(response.image != null && response.image != "string"){
+              setMostrarImagen(true);
+            }
             setPlan(response.planId);
             setPlanRow("usuarios: " + response.plan.cantUser + " , costo: " + response.plan.percentageCost);
           })

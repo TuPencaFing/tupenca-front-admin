@@ -58,7 +58,7 @@ function EditCampeonato() {
   const [sports, setSports] = useState([]);
   const [events, setEvents] = useState([]);
   const [eventos, setEventos] = useState([]);
-  const [mostrarImagen, setMostrarImagen] = useState(true);
+  const [mostrarImagen, setMostrarImagen] = useState(false);
   const [fileSelected, setFileSelected] = useState();
   const [jsonResponseMessageImage, setJsonResponseMessageImage] = useState('');
   const [isSuccessImage, setIsSuccessImage] = useState('');
@@ -172,6 +172,9 @@ function EditCampeonato() {
         setDeporte(response.deporte.id);
         setNombreDeporte(response.deporte.nombre);
         setFileSelected(response.image);
+        if(response.image != null && response.image != "string"){
+          setMostrarImagen(true);
+        }
         response.eventos.map((row)=> eventos.push({ label: row.equipoLocal.nombre + " vs " + row.equipoVisitante.nombre, id: row.id, equipoLocal: {id: 0,nombre:""}, equipoVisitante: {id: 0, nombre:"" } }));
       })
     });
