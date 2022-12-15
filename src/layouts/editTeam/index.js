@@ -50,6 +50,9 @@ function EditTeam() {
   const [id, setId] = useState('');
   const [mostrarImagen, setMostrarImagen] = useState(true);
   const [fileSelected, setFileSelected] = useState();
+  const [jsonResponseMessageImage, setJsonResponseMessageImage] = useState('');
+  const [isSuccessImage, setIsSuccessImage] = useState('');
+  const [showMsgImage, setShowMsgImage] = useState(false);
   const navigate = useNavigate();
 
 
@@ -71,6 +74,12 @@ function EditTeam() {
     </SoftTypography>
   );
 
+  const jsonSuccessImage = () => (
+    <SoftTypography variant="body2" color="white">
+      Se ha subido la imágen.
+    </SoftTypography>
+  );
+
   const submitEquipo = async () => {
     const data = {
       nombre: nombre
@@ -79,7 +88,7 @@ function EditTeam() {
       setIsSuccess(response.ok);
       setShowMsg(true);
       response.json().then(msg => {
-        setJsonResponseMessage("No se pudo eitar el equipo.");
+        setJsonResponseMessage("No se pudo editar el equipo.");
       })
    });
   };
@@ -99,7 +108,13 @@ function EditTeam() {
         "Authorization": `Bearer ${localStorage.getItem("token")}`
       },
       body: file
-     })
+     }).then(response => {
+        setIsSuccessImage(response.ok);
+        setShowMsgImage(true);
+        response.json().then(msg => {
+          setJsonResponseMessageImage("No se pudo editar la imágen.");
+        })
+     });
     } catch (ex) {
       console.log(ex);
     }
@@ -183,7 +198,6 @@ function EditTeam() {
                 </SoftBox>
                 <SoftBox p={2}> 
                 <input type="file" onChange={saveFileSelected} />
-                <input type="button" value="Subir imágen" onClick={importFile} />
                 {fileSelected && mostrarImagen && <div>
                   <img style={{width: 400, height: 400}} src={`${fileSelected}`}/>
                 </div>}
@@ -199,9 +213,17 @@ function EditTeam() {
                   {jsonSuccess()}
                 </SoftAlert>
               </SoftBox>}
+              {showMsgImage && isSuccessImage && <SoftBox pt={2} px={2}>
+                <SoftAlert color="success">
+                  {jsonSuccessImage()}
+                </SoftAlert>
+              </SoftBox>}
               <SoftBox p={2}>
                 <SoftButton variant="outlined" color="info" size="small"  style={{ marginRight: "auto" }} onClick={submitEquipo}>
                     Editar equipo
+                </SoftButton>
+                <SoftButton variant="outlined" color="info" size="small"  style={{ marginRight: "auto" }} onClick={importFile}>
+                    Subir imágen
                 </SoftButton>
                 <SoftButton variant="outlined" color="error" size="small"  style={{ marginRight: "auto" }} onClick={() => navigate(-2)}>
                     Volver
