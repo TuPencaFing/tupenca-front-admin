@@ -68,7 +68,7 @@ function Invoices() {
       <SoftBox p={2}>
         <SoftBox component="ul" display="flex" flexDirection="column" p={0} m={0}>
             {rows.length > 0 ? rows.map((row) => ( row.reclamado ? 
-                <Invoice date={row.banco + "-" + row.cuentaBancaria} id={"#TuPenca-"+row.id*1000} price={"$"+row.premio} reclamado={row.reclamado}/> : ""
+                <Invoice date={row.banco + "-" + row.cuentaBancaria} id={"#TuPenca-"+row.id*1000} price={"$"+row.premio} reclamado={!row.pendientePago}/> : ""
               )) : <SoftTypography>No hay egresos recientes</SoftTypography>}
         </SoftBox>
       </SoftBox>
