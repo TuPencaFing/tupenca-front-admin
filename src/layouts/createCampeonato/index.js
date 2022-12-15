@@ -46,8 +46,8 @@ function CreateCampeonato() {
   
   const [deporte, setDeporte] = useState('');
   const [loadingRows, setLoadingRows] = useState(false);
-  const [fechaInicio, setFechaInicio] = useState(new Date('2022-10-18T21:11:54'));
-  const [fechaFin, setFechaFin] = useState(new Date('2022-12-18T21:11:54'));
+  const [fechaInicio, setFechaInicio] = useState(new Date('2022-12-15T19:11:54'));
+  const [fechaFin, setFechaFin] = useState(new Date('2022-12-18T19:11:54'));
   const [jsonResponseMessage, setJsonResponseMessage] = useState('');
   const [isSuccess, setIsSuccess] = useState('');
   const [showMsg, setShowMsg] = useState(false);

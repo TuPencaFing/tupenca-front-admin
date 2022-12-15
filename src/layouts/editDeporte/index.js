@@ -49,6 +49,10 @@ function EditDeporte() {
   const [nombre, setNombre] = useState('');
   const [id, setId] = useState('');
   const [fileSelected, setFileSelected] = useState();
+  const [mostrarImagen, setMostrarImagen] = useState(false);
+  const [jsonResponseMessageImage, setJsonResponseMessageImage] = useState('');
+  const [isSuccessImage, setIsSuccessImage] = useState('');
+  const [showMsgImage, setShowMsgImage] = useState(false);
   const navigate = useNavigate();
 
 
@@ -67,6 +71,12 @@ function EditDeporte() {
   const jsonSuccess = () => (
     <SoftTypography variant="body2" color="white">
       El deporte se ha editado con éxito.
+    </SoftTypography>
+  );
+
+  const jsonSuccessImage = () => (
+    <SoftTypography variant="body2" color="white">
+      Se ha subido la imágen.
     </SoftTypography>
   );
 
@@ -90,6 +100,10 @@ function EditDeporte() {
           res.json().then(response => {
             setId(itemId);
             setNombre(response.nombre);
+            setFileSelected(response.image);
+            if(response.image != null && response.image != "string"){
+              setMostrarImagen(true);
+            }
           })
         });
     }
@@ -100,6 +114,7 @@ function EditDeporte() {
 
 const saveFileSelected= (e) => {
   setFileSelected(e.target.files[0]);
+  setMostrarImagen(false);
 };
 
 const importFile= async (e) => {
@@ -112,7 +127,13 @@ const importFile= async (e) => {
       "Authorization": `Bearer ${localStorage.getItem("token")}`
     },
     body: file
-   })
+   }).then(response => {
+        setIsSuccessImage(response.ok);
+        setShowMsgImage(true);
+        response.json().then(msg => {
+          setJsonResponseMessageImage("No se pudo editar la imágen.");
+        })
+    });
   } catch (ex) {
     console.log(ex);
   }
@@ -179,8 +200,12 @@ const importFile= async (e) => {
                   <SoftTypography variant="h5">Nombre del deporte *</SoftTypography>
                   <TextField id="standard-basic" variant="standard" value={nombre} onChange={(e) => setNombre(e.target.value)}/>
                 </SoftBox>
+                <SoftBox p={2}> 
                 <input type="file" onChange={saveFileSelected} />
-                <input type="button" value="Subir imágen" onClick={importFile} />
+                {fileSelected && mostrarImagen && <div>
+                  <img style={{width: 400, height: 400}} src={`${fileSelected}`}/>
+                </div>}
+                </SoftBox>
               </form>
               {showMsg &&!isSuccess && <SoftBox pt={2} px={2}>
                 <SoftAlert color="error">
@@ -192,9 +217,17 @@ const importFile= async (e) => {
                   {jsonSuccess()}
                 </SoftAlert>
               </SoftBox>}
+              {showMsgImage && isSuccessImage && <SoftBox pt={2} px={2}>
+                <SoftAlert color="success">
+                  {jsonSuccessImage()}
+                </SoftAlert>
+              </SoftBox>}
               <SoftBox p={2}>
                 <SoftButton variant="outlined" color="info" size="small"  style={{ marginRight: "auto" }} onClick={submitDeporte}>
                     Editar deporte
+                </SoftButton>
+                <SoftButton variant="outlined" color="info" size="small"  style={{ marginRight: "auto" }} onClick={importFile}>
+                    Subir imágen
                 </SoftButton>
                 <SoftButton variant="outlined" color="error" size="small"  style={{ marginRight: "auto" }} onClick={() => navigate(-2)}>
                     Volver

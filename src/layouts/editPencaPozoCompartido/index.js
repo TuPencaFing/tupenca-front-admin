@@ -57,9 +57,12 @@ function EditPencaPC() {
   const [premios, setPremios] = useState([]);
   const [prizes, setPrizes] = useState([]);
   const [costoEntrada, setCostoEntrada] = useState([]);
-  const [mostrarImagen, setMostrarImagen] = useState(true);
+  const [mostrarImagen, setMostrarImagen] = useState(false);
   const [fileSelected, setFileSelected] = useState();
   const [comision, setComision] = useState([]);
+  const [jsonResponseMessageImage, setJsonResponseMessageImage] = useState('');
+  const [isSuccessImage, setIsSuccessImage] = useState('');
+  const [showMsgImage, setShowMsgImage] = useState(false);
   const navigate = useNavigate();
 
   const alertContent = () => (
@@ -77,6 +80,12 @@ function EditPencaPC() {
   const jsonSuccess = () => (
     <SoftTypography variant="body2" color="white">
       La penca se ha editado con éxito.
+    </SoftTypography>
+  );
+
+  const jsonSuccessImage = () => (
+    <SoftTypography variant="body2" color="white">
+      Se ha subido la imágen.
     </SoftTypography>
   );
 
@@ -162,7 +171,13 @@ function EditPencaPC() {
         "Authorization": `Bearer ${localStorage.getItem("token")}`
       },
       body: file
-     })
+     }).then(response => {
+          setIsSuccessImage(response.ok);
+          setShowMsgImage(true);
+          response.json().then(msg => {
+            setJsonResponseMessageImage("No se pudo editar la imágen.");
+          })
+      });
     } catch (ex) {
       console.log(ex);
     }
@@ -175,6 +190,9 @@ function EditPencaPC() {
         setDescription(response.description);
         setCostoEntrada(response.costEntry);
         setFileSelected(response.image);
+        if(response.image != null && response.image != "string"){
+          setMostrarImagen(true);
+        }
         setNombreCampeonato(response.campeonato.name);
         setComision(response.commission);
         response.premios.map((row)=> premios.push({ label: row.position + ": " + row.percentage + "%", id: row.id }));
@@ -301,7 +319,6 @@ function EditPencaPC() {
               </SoftBox>
                 <SoftBox p={2}> 
                 <input type="file" onChange={saveFileSelected} />
-                <input type="button" value="Subir imágen" onClick={importFile} />
                 {fileSelected && mostrarImagen && <div>
                   <img style={{width: 400, height: 400}} src={`${fileSelected}`}/>
                 </div>}
@@ -342,9 +359,17 @@ function EditPencaPC() {
                   {jsonSuccess()}
                 </SoftAlert>
               </SoftBox>}
+              {showMsgImage && isSuccessImage && <SoftBox pt={2} px={2}>
+                <SoftAlert color="success">
+                  {jsonSuccessImage()}
+                </SoftAlert>
+              </SoftBox>}
               <SoftBox p={2}>
                 <SoftButton variant="outlined" color="info" size="small"  style={{ marginRight: "auto" }} onClick={submitPenca}>
                     Editar penca
+                </SoftButton>
+                <SoftButton variant="outlined" color="info" size="small"  style={{ marginRight: "auto" }} onClick={importFile}>
+                    Subir imágen
                 </SoftButton>
                 <SoftButton variant="outlined" color="error" size="small"  style={{ marginRight: "auto" }} onClick={() => navigate(-2)}>
                     Volver
